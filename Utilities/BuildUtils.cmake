@@ -803,11 +803,11 @@ macro( INITIALISE_PROJECT_PATH )
     # Help information.
     message_header( INITIALISE_PROJECT_PATH )
     message_help( "Available options:" )
-    message_help( "[Binary]     -> Output path of binary files. Default: 'bin'." )
-    message_help( "[Include]    -> Output path of include files. Default: 'include'." )
-    message_help( "[Library]    -> Output path of library files. Default: 'lib'." )
+    message_help( "[Binary]     -> Output path of binary files. Default: 'Binary'." )
+    message_help( "[Include]    -> Output path of include files. Default: 'Include'." )
+    message_help( "[Library]    -> Output path of library files. Default: 'Library'." )
     if( MSVC )
-        message_help( "[PDB]        -> Output path of PDB files. Default: 'pdb'." )
+        message_help( "[PDB]        -> Output path of PDB files. Default: 'Pdb'." )
     endif()  
     
     # Parse options.
@@ -818,25 +818,25 @@ macro( INITIALISE_PROJECT_PATH )
     cmake_parse_arguments(INITIALISE_PROJECT_PATH "" "${oneValueArgs}" "" ${ARGN} )
     
     # Parse binary path.
-    set( PathBinary "bin" )
+    set( PathBinary "Binary" )
     if( INITIALISE_PROJECT_PATH_Binary )
         set( PathBinary ${INITIALISE_PROJECT_PATH_Binary} )
     endif()
     
     # Parse include path.
-    set( PathInclude "include" )
+    set( PathInclude "Include" )
     if( INITIALISE_PROJECT_PATH_Include )
         set( PathInclude ${INITIALISE_PROJECT_PATH_Include} )
     endif()
     
     # Parse library path.
-    set( PathLibrary "lib" )
+    set( PathLibrary "Library" )
     if( INITIALISE_PROJECT_PATH_Library )
         set( PathLibrary ${INITIALISE_PROJECT_PATH_Library} )
     endif()
     
     # Parse PDB path.
-    set( PathPDB "pdb" )
+    set( PathPDB "Pdb" )
     if( INITIALISE_PROJECT_PATH_PDB )
         set( PathPDB ${INITIALISE_PROJECT_PATH_PDB} )
     endif()
@@ -846,10 +846,10 @@ macro( INITIALISE_PROJECT_PATH )
     set( PROJECT_PATH_ROOT "${CMAKE_CURRENT_SOURCE_DIR}" )
 	
     # Output path.
-    set( PROJECT_PATH_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/output" )
+    set( PROJECT_PATH_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/Output" )
 
 	# Install directory.
-    set( PROJECT_PATH_INSTALL "${CMAKE_CURRENT_BINARY_DIR}/install" CACHE PATH "Installation directory." )
+    set( PROJECT_PATH_INSTALL "${CMAKE_CURRENT_BINARY_DIR}/Install" CACHE PATH "Installation directory." )
     
     
     # Check for changes.
@@ -865,9 +865,9 @@ macro( INITIALISE_PROJECT_PATH )
     set( BuildTargetDebug "" )
     set( BuildTargetRelease "" )
     if( PROJECT_BUILD_TARGET_DEBUG )
-        set( BuildTarget "debug" )
+        set( BuildTarget "Debug" )
     elseif( PROJECT_BUILD_TARGET_RELEASE )
-        set( BuildTarget "release" )
+        set( BuildTarget "Release" )
     endif()
 
     if( MSVC )
