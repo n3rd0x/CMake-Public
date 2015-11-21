@@ -25,16 +25,16 @@
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE)
 
 # Path to the CMake repository.
-set(PROJECT_PATH_CMAKE_ROOT        "${CMAKE_CURRENT_SOURCE_DIR}/SubRepo/CMake-Public")
-set(PROJECT_PATH_CMAKE_TEMPLATE    "${PROJECT_PATH_CMAKE_ROOT}/Templates")
+set(PROJECT_PATH_CMAKE_PUBLIC      "${CMAKE_CURRENT_SOURCE_DIR}/Sub-Repo/CMake-Public")
+set(PROJECT_PATH_CMAKE_TEMPLATE    "${PROJECT_PATH_CMAKE_PUBLIC}/Templates")
 
 # Include necessary sub-modules.
 set(CMAKE_MODULE_PATH
     "${CMAKE_CURRENT_SOURCE_DIR}/Source/CMake"
-    "${PROJECT_PATH_CMAKE_ROOT}"
-    "${PROJECT_PATH_CMAKE_ROOT}/Packages"
-    "${PROJECT_PATH_CMAKE_ROOT}/Third-Parties/Ogre"
-    "${PROJECT_PATH_CMAKE_ROOT}/Utilities"
+    "${PROJECT_PATH_CMAKE_PUBLIC}"
+    "${PROJECT_PATH_CMAKE_PUBLIC}/Packages"
+    "${PROJECT_PATH_CMAKE_PUBLIC}/Third-Parties/Ogre"
+    "${PROJECT_PATH_CMAKE_PUBLIC}/Utilities"
 )
 
 # Include necessary modules. 
