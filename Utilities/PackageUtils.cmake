@@ -68,9 +68,44 @@ endmacro()
 
 
 # ************************************************************
+# Append names
+macro(PACKAGE_APPEND_NAMES Prefix Name)
+    message_verbose(STATUS "Append ${Name} to ${Prefix}.")
+
+    set(NewNames "")
+    foreach(Var ${${Prefix}})
+        set(NewNames ${NewNames} "${Var}${Name}")
+    endforeach()
+    
+    set(${Prefix} "${NewNames}")
+    unset(NewNames)
+	message_debug(STATUS "Append names: ${${Prefix}}")
+endmacro()
+
+
+
+
+# ************************************************************
 # Begin the package
 macro( PACKAGE_BEGIN Prefix )
     message_status( STATUS "Looking for the ${Prefix} library." )
+endmacro()
+
+
+
+
+# ************************************************************
+# Create binary names
+macro( PACKAGE_CREATE_BINARY_NAMES Prefix )
+    message_verbose( STATUS "Creating binary names ${${Prefix}}." )
+    create_dynamic_extension( DynamicSuffix )
+    
+    foreach(name ${${Prefix}})
+        set(${Prefix} ${${Prefix}} "${name}.${DynamicSuffix}")
+    endforeach()
+    
+    unset( DynamicSuffix )
+	message_debug( STATUS "Binary names: ${${Prefix}}" )
 endmacro()
 
 
@@ -439,6 +474,7 @@ macro( PACKAGE_CREATE_DEBUG_NAMES Prefix )
              ${${Prefix}_DEBUG}
              "${name}d"
              "${name}D"
+             "${name}-d"
              "${name}_d"
              "${name}_D"
              "${name}_debug"
@@ -463,6 +499,7 @@ macro( PACKAGE_CREATE_DEBUG_BINARY_NAMES Prefix )
              ${${Prefix}_DEBUG}
              "${name}d.${DynamicSuffix}"
              "${name}D.${DynamicSuffix}"
+             "${name}-d.${DynamicSuffix}"
              "${name}_d.${DynamicSuffix}"
              "${name}_D.${DynamicSuffix}"
              "${name}_debug.${DynamicSuffix}"
@@ -506,6 +543,7 @@ macro( PACKAGE_CREATE_STATICAL_NAMES Var )
         set( ${Var}
 			"${name}s"
 			"${name}S"
+			"${name}-s"
 			"${name}_static"
 			"${name}_Static"
 			"${name}_s"
