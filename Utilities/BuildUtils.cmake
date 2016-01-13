@@ -803,11 +803,11 @@ macro( INITIALISE_PROJECT_PATH )
     # Help information.
     message_header( INITIALISE_PROJECT_PATH )
     message_help( "Available options:" )
-    message_help( "[Binary]     -> Output path of binary files. Default: 'Binary'." )
-    message_help( "[Include]    -> Output path of include files. Default: 'Include'." )
-    message_help( "[Library]    -> Output path of library files. Default: 'Library'." )
+    message_help( "[Binary]     -> Output path of binary files. Default: 'bin'." )
+    message_help( "[Include]    -> Output path of include files. Default: 'include'." )
+    message_help( "[Library]    -> Output path of library files. Default: 'lib'." )
     if( MSVC )
-        message_help( "[PDB]        -> Output path of PDB files. Default: 'Pdb'." )
+        message_help( "[PDB]        -> Output path of PDB files. Default: 'pdb'." )
     endif()  
     
     # Parse options.
@@ -818,25 +818,25 @@ macro( INITIALISE_PROJECT_PATH )
     cmake_parse_arguments(INITIALISE_PROJECT_PATH "" "${oneValueArgs}" "" ${ARGN} )
     
     # Parse binary path.
-    set( PathBinary "Binary" )
+    set( PathBinary "bin" )
     if( INITIALISE_PROJECT_PATH_Binary )
         set( PathBinary ${INITIALISE_PROJECT_PATH_Binary} )
     endif()
     
     # Parse include path.
-    set( PathInclude "Include" )
+    set( PathInclude "include" )
     if( INITIALISE_PROJECT_PATH_Include )
         set( PathInclude ${INITIALISE_PROJECT_PATH_Include} )
     endif()
     
     # Parse library path.
-    set( PathLibrary "Library" )
+    set( PathLibrary "lib" )
     if( INITIALISE_PROJECT_PATH_Library )
         set( PathLibrary ${INITIALISE_PROJECT_PATH_Library} )
     endif()
     
     # Parse PDB path.
-    set( PathPDB "Pdb" )
+    set( PathPDB "pdb" )
     if( INITIALISE_PROJECT_PATH_PDB )
         set( PathPDB ${INITIALISE_PROJECT_PATH_PDB} )
     endif()
@@ -928,10 +928,10 @@ endmacro()
 # Initialise local path
 macro( INITIALISE_LOCAL_VARIABLE )
     # Path to the header directory.
-    set( LOCAL_PATH_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/Include" )
+    set( LOCAL_PATH_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 
     # Path to the source directory.
-    set( LOCAL_PATH_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/Source" )
+    set( LOCAL_PATH_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src" )
 endmacro()
 
 
