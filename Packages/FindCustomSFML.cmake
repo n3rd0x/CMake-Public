@@ -83,7 +83,6 @@ endforeach()
 
 
 
-
 # ************************************************************
 # Find binaries on Windows
 if(WIN32 AND NOT SFML_STATIC_LIBRARIES)
@@ -111,6 +110,7 @@ if(WIN32 AND NOT SFML_STATIC_LIBRARIES)
             package_append_names(SFML_BINARY_NAMES_DEBUG "-${SFML_VERSION_MAJOR}")
             
             # Create binary names.
+            
             package_create_release_binary_names(SFML_BINARY_NAMES)
             package_create_binary_names(SFML_BINARY_NAMES_DEBUG)
 
@@ -121,6 +121,11 @@ if(WIN32 AND NOT SFML_STATIC_LIBRARIES)
             
             set(SFML_BINARY_DEBUG ${SFML_BINARY_DEBUG} "${SFML_${ComponentUpper}_BINARY_DEBUG}")
             set(SFML_BINARY_RELEASE ${SFML_BINARY_RELEASE} "${SFML_${ComponentUpper}_BINARY_RELEASE}")
+            
+            unset(SFML_BINARY_NAMES_DEBUG)
+            unset(SFML_BINARY_NAMES_RELEASE)
+            unset(SFML_${ComponentUpper}_BINARY_DEBUG)
+            unset(SFML_${ComponentUpper}_BINARY_RELEASE)
         endforeach()
     endif()
 endif()
