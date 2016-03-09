@@ -60,6 +60,6 @@ package_make_library( JSONCPP_LIBRARY JSONCPP_LIBRARY_DEBUG JSONCPP_LIBRARY_RELE
 # ************************************************************
 # Finalize package
 package_validate( JSONCPP )
-package_add_parent_dir( JSONCPP )
+package_add_parent_dir(JSONCPP)
 package_end( JSONCPP )
 message_footer( JSONCPP )

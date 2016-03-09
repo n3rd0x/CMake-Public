@@ -55,13 +55,50 @@ endmacro()
 
 # ************************************************************
 # Add parent directory
-macro( PACKAGE_ADD_PARENT_DIR Prefix )
-    if( ${Prefix}_FOUND )
-        # Should only add parent if there's a sub directory.
-        get_filename_component( Path "${${Prefix}_PATH_INCLUDE}/.." ABSOLUTE )
-        set( ${Prefix}_INCLUDE_DIR ${${Prefix}_INCLUDE_DIR} ${Path} )
-        unset( Path CACHE )
+# Ex: /usr/include/json -> /usr/include
+macro(PACKAGE_ADD_PARENT_DIR Prefix)
+    # Help information.
+    message_header(PACKAGE_ADD_PARENT_DIR)
+    message_help("Required:")
+    message_help("[Prefix]      -> Prefix of the variable to process.")
+    message_help("Optional:")
+    message_help("ADD_PARENT    -> Flag to add parent directory.")
+    #message_help("[Suffixes]    -> Suffixes to process.")
+    
+    if(${Prefix}_FOUND)
+        # Parse options.
+        set(options ADD_PARENT)
+        #set(multiValueArgs Suffixes)
+        cmake_parse_arguments(PACKAGE_ADD_PARENT_DIR "${options}" "" "" ${ARGN})
+        
+        #foreach(Var ${PACKAGE_ADD_PARENT_DIR_Suffixes})
+        #    string(REGEX MATCH "/${Var}" ValueFound "${${Prefix}_INCLUDE_DIR}")
+        #    if(ValueFound)
+        #        string(REGEX REPLACE "/${Var}" "" PathParent "${${Prefix}_INCLUDE_DIR}")
+        #        if(PACKAGE_ADD_PARENT_DIR_ONLY_PARENT)
+        #            set(${Prefix}_INCLUDE_DIR ${PathParent})
+        #        else()
+        #            set(${Prefix}_INCLUDE_DIR ${PathParent} ${${Prefix}_INCLUDE_DIR})
+        #        endif()
+        #        unset(PathParent)
+        #    endif()
+        #endforeach()
+        get_filename_component(Path ${${Prefix}_INCLUDE_DIR} PATH)
+        if(PACKAGE_ADD_PARENT_DIR_ADD_PARENT)
+            set(${Prefix}_INCLUDE_DIR ${Path} ${${Prefix}_INCLUDE_DIR})
+        else()
+            set(${Prefix}_INCLUDE_DIR ${Path})
+        endif()
     endif()
+    
+    #unset(ValueFound)
+    unset(options)
+    #unset(multiValueArgs)
+    unset(PACKAGE_ADD_PARENT_DIR_ADD_PARENT)
+    #unset(PACKAGE_ADD_PARENT_DIR_Suffixes)
+    unset(Path CACHE)
+
+    message_footer(PACKAGE_ADD_PARENT_DIR)
 endmacro()
 
 

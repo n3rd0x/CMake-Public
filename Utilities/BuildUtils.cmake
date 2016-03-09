@@ -20,13 +20,30 @@
 
 
 # ************************************************************
-# Add value into variable
-macro( ADD_CX11_SUPPORT )
-    string( REGEX MATCH "-std=c+" ValueFound "${CMAKE_CXX_FLAGS}" )
-    if( NOT ValueFound )
-        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x" CACHE STRING "CXX flags." FORCE )
+# Add new C++ features
+macro(ADD_NEW_CXX_FEATURES)
+    check_cxx_compiler_flag(-std=c++11 CompilerSupports_CXX11)
+    check_cxx_compiler_flag(-std=c++0x CompilerSupports_CXX0X)
+    
+    set(Value "")
+    if(CompilerSupports_CXX11)
+        set(Value "-std=c++11")
+        set(PROJECT_CXX_SUPPORTS TRUE)
+    elseif(CompilerSupports_CXX0X)
+        set(Value "-std=c++0x")
+        set(PROJECT_CXX_SUPPORTS TRUE)
+    else()
+        message_status("" "The compiler ${CMAKE_CXX_COMPILER} has no support for new C++ features.")
+        set(PROJECT_CXX_SUPPORTS FALSE)
     endif()
-    unset( ValueFound )
+    
+    if(PROJECT_CXX_SUPPORTS)
+        add_value("${Value}" PROJECT_CXX_FLAGS CACHING)
+    endif()
+    
+    unset(Value)
+    unset(CompilerSupports_CXX11)
+    unset(CompilerSupports_CXX0X)
 endmacro()
 
 
@@ -118,12 +135,38 @@ endmacro()
 
 # ************************************************************
 # Add value into variable
-macro( ADD_VALUE Value Prefix Description )
-    string( REGEX MATCH ${Value} ValueFound "${${Prefix}}" )
-    if( NOT ValueFound )
-        set( ${Prefix} "${${Prefix}} ${Value}" CACHE STRING "${Description}" FORCE )
+macro(ADD_VALUE Value Prefix)
+     # Help information.
+    message_header(ADD_VALUE)
+    message_help("Required:")
+    message_help("[Value]       -> Value to validate.")
+    message_help("[Prefix]      -> Prefix of the variable to process.")
+    message_help("Optional:")
+    message_help("[CACHING]     -> Flag to caching.")
+    message_help("[Description] -> Description.")
+    
+    # Parse options.
+    set(options CACHING)
+    set(oneValueArgs Description)
+    cmake_parse_arguments(ADD_VALUE "${options}" "${oneValueArgs}" "" ${ARGN})
+
+    regex_compatible("${Value}" RegexVar)
+    string(REGEX MATCH "${RegexVar}" ValueFound "${${Prefix}}")
+    if(NOT ValueFound)
+        if(ADD_VALUE_CACHING)
+            set(${Prefix} "${${Prefix}} ${Value}" CACHE STRING "${ADD_VALUE_Description}" FORCE)
+        else()
+            set(${Prefix} "${${Prefix}} ${Value}")
+        endif()
     endif()
-    unset( ValueFound )
+    
+    unset(ValueFound)
+    unset(options)
+    unset(oneValueArgs)
+    unset(ADD_VALUE_CACHING)
+    unset(ADD_VALUE_Description)
+    
+    message_footer(ADD_VALUE)
 endmacro()
 
 
@@ -687,7 +730,6 @@ endmacro()
 # Initialise project environments
 macro( INITIALISE_PROJECT_ENVIRONMENT )
     # Setting default target mode.
-    set( FlagsDescription "Flags used by the compiler during all build types." )
     if( MINGW OR UNIX )
         option( PROJECT_BUILD_AS_RELEASE "Build project as release" OFF )
         
@@ -729,16 +771,16 @@ macro( INITIALISE_PROJECT_ENVIRONMENT )
 
     # Set multi processor compilation.
     # For UNIX / MinGW the user has to use the flag -jX, where X is number of processor.
-    if( MSVC )
-        option( PROJECT_ENABLE_MULTI_PROCESSOR_COMPILATION "Enable multi processor compilation." ON )
+    if(MSVC)
+        option(PROJECT_ENABLE_MULTI_PROCESSOR_COMPILATION "Enable multi processor compilation." ON)
         if( PROJECT_ENABLE_MULTI_PROCESSOR_COMPILATION )
-            message_status( STATUS "Enable multi processor compilation." )
-            add_value( "/MP" CMAKE_CXX_FLAGS "${FlagsDescription}" )
-            add_value( "/MP" CMAKE_C_FLAGS "${FlagsDescription}" )
+            message_status(STATUS "Enable multi processor compilation.")
+            add_value("/MP" PROJECT_C_FLAGS)
+            add_value("/MP" PROJECT_CXX_FLAGS)
         else()
-            message_status( STATUS "Disable multi processor compilation." )
-            remove_value( "/MP" CMAKE_CXX_FLAGS "${FlagsDescription}" )
-            remove_value( "/MP" CMAKE_C_FLAGS "${FlagsDescription}" )
+            message_status(STATUS "Disable multi processor compilation.")
+            remove_value("/MP" PROJECT_C_FLAGS)
+            remove_value("/MP" PROJECT_CXX_FLAGS)
         endif()
     endif()
     
@@ -759,26 +801,36 @@ macro( INITIALISE_PROJECT_ENVIRONMENT )
             add_definitions( -D_WIN32_WINNT=0x0501 )
         endif()
     endif()
-    
+
     # Warnings.
-    if( MSVC )
-        #4018 -> signed / unsigned mismatch.
-        #4244 -> Conversion from X to Y, possible loss of data.
-        set( CommonWarnings "/wd4251 /wd4193 /wd4275 /wd4244" )
-        set( CMAKE_C_FLAGS      "${CMAKE_C_FLAGS}   ${CommonWarnings}" )
-        set( CMAKE_CXX_FLAGS    "${CMAKE_CXX_FLAGS} ${CommonWarnings}"  )
-        unset( CommonWarnings )
+    option(PROJECT_ENABLE_DEFAULT_WARNINGS "Enable default warnings." ON)
+    if(PROJECT_ENABLE_DEFAULT_WARNINGS)
+        message_status(STATUS "Enable default warnings.")
+        if(MSVC)
+            #4018 -> signed / unsigned mismatch.
+            #4244 -> Conversion from X to Y, possible loss of data.
+            set(CommonWarnings "/wd4251 /wd4193 /wd4275 /wd4244")
+        elseif(UNIX)
+            # Following OGRE warning settings.
+            set(CommonWarnings "-Wall -Wcast-qual -Wextra -Winit-self -Wno-long-long -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-overloaded-virtual -Wshadow -Wwrite-strings")
+        endif()
+        
+        set(PROJECT_C_FLAGS ${CommonWarnings} CACHE STRING "C flags in this project.")
+        set(PROJECT_CXX_FLAGS ${CommonWarnings} CACHE STRING "CXX flags in this project.")
+        unset(CommonWarnings)
     endif()
-    
-    # Enable C++11 by default.
-    if( MINGW OR UNIX )
-        option( PROJECT_ENABLE_C++11 "Enable C++11 feature." ON )
-        if( PROJECT_ENABLE_C++11 )
-            message_status( STATUS "Enable C++11 feature." )
-            add_cx11_support()
+
+    # Enable new C++ features.
+    if(MINGW OR UNIX)
+        option(PROJECT_ENABLE_CXX_FETURES "Enable new C++ features." ON)
+        if(PROJECT_ENABLE_CXX_FETURES)
+            add_new_cxx_features()
+            if(PROJECT_CXX_SUPPORTS)
+                message_status(STATUS "Enable new C++ features.")
+            endif()
         else()
-            message_status( STATUS "Disable C++11 feature." )
-            #remove_cx11_support()
+            remove_new_cxx_features()
+            message_status(STATUS "Disable new C++ features.")
         endif()
     endif()
     
@@ -790,8 +842,6 @@ macro( INITIALISE_PROJECT_ENVIRONMENT )
     # Copy runtime dependencies target and data files.
     add_custom_target( ALL_CopyData )
     add_custom_target( ALL_CopyRuntime )
-    
-    unset( FlagsDescription )
 endmacro()
 
 
@@ -1196,13 +1246,18 @@ endmacro()
 
 
 # ************************************************************
-# Remove value from the variable
-macro( REMOVE_CX11_SUPPORT )
-    #string( REGEX REPLACE "-std=c++0x" "" VALUE_FOUND "${CMAKE_CXX_FLAGS}" )
-    #if( VALUE_FOUND )
-    #    set( CMAKE_CXX_FLAGS "${VALUE_FOUND}" CACHE STRING "CXX flags." FORCE )
-    #endif()
-    #unset( VALUE_FOUND )
+# Remove new C++ features
+macro(REMOVE_NEW_CXX_FEATURES)
+    check_cxx_compiler_flag(-std=c++11 CompilerSupports_CXX11)
+    check_cxx_compiler_flag(-std=c++0x CompilerSupports_CXX0X)
+    set(Value "")
+    if(CompilerSupports_CXX11)
+        set(Value " -std=c++11")
+    elseif(CompilerSupports_CXX0X)
+        set(Value " -std=c+0x")
+    endif()
+    remove_value("${Value}" PROJECT_CXX_FLAGS CACHING)
+    unset(Value)
 endmacro()
 
 
@@ -1210,12 +1265,49 @@ endmacro()
 
 # ************************************************************
 # Remove value from the variable
-macro( REMOVE_VALUE Value Prefix Description )
-    string( REGEX REPLACE "${Value}" "" ValueFound "${${Prefix}}" )
-    if( ValueFound )
-        set( ${Prefix} "${ValueFound}" CACHE STRING "${Description}" FORCE )
+macro(REMOVE_VALUE Value Prefix)
+    # Help information.
+    message_header(REMOVE_VALUE)
+    message_help("Required:")
+    message_help("[Value]       -> Value to validate.")
+    message_help("[Prefix]      -> Prefix of the variable to process.")
+    message_help("Optional:")
+    message_help("[CACHING]     -> Flag to caching.")
+    message_help("[Description] -> Description.")
+    
+    # Parse options.
+    set(options CACHING)
+    set(oneValueArgs Description)
+    cmake_parse_arguments(REMOVE_VALUE "${options}" "${oneValueArgs}" "" ${ARGN})
+      
+    regex_compatible("${Value}" RegexVar)
+    string(REGEX REPLACE "${RegexVar}" "" ValueFound "${${Prefix}}")
+    if(ValueFound)
+        if(REMOVE_VALUE_CACHING)
+            set(${Prefix} "${ValueFound}" CACHE STRING "${REMOVE_VALUE_Description}" FORCE)
+        else()
+            set(${Prefix} "${ValueFound}")
+        endif()
     endif()
-    unset( ValueFound )
+    
+    unset(ValueFound)
+    unset(options)
+    unset(oneValueArgs)
+    unset(REMOVE_VALUE_CACHING)
+    unset(REMOVE_VALUE_Description)
+    
+    message_footer(REMOVE_VALUE)
+endmacro()
+
+
+
+# ************************************************************
+# Regex compatiple.
+macro(REGEX_COMPATIBLE Var OutVar)
+    string(REPLACE "+" "\\+" ModVar "${Var}")
+    string(REPLACE "/" "\\/" ModVar "${ModVar}")
+    set(${OutVar} ${ModVar})
+    unset(ModVar)
 endmacro()
 
 
