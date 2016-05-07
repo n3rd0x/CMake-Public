@@ -30,6 +30,7 @@ option( QT_COMPILED_WITH_ANGLE "Qt compiled with ANGLE." OFF )
 option( QT_HAS_ICU_SUPPORT "Qt has ICU support." OFF )
 option( QT_SQL_DRIVER_SQLITE "SQLite plug-in driver." OFF )
 option( QT_VERSION_5_3_2 "Using QT version 5.3.2 and greater." OFF )
+option( QT_VERSION_5_6_0 "Using QT version 5.6.0 and greater." OFF )
 
 
 # Set components.
@@ -76,6 +77,8 @@ if( QT_HAS_ICU_SUPPORT )
     set( QtIcuVersion "51" )
     if( QT_VERSION_5_3_2 )
         set( QtIcuVersion "52" )
+    elseif(QT_VERSION_5_6_0)
+        set(QtIcuVersion "54")
     endif()
     
     set( QT_NECESSARY_BINARY_BIN
