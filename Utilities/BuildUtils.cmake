@@ -773,14 +773,14 @@ macro( INITIALISE_PROJECT_ENVIRONMENT )
     # For UNIX / MinGW the user has to use the flag -jX, where X is number of processor.
     if(MSVC)
         option(PROJECT_ENABLE_MULTI_PROCESSOR_COMPILATION "Enable multi processor compilation." ON)
-        if( PROJECT_ENABLE_MULTI_PROCESSOR_COMPILATION )
+        if(PROJECT_ENABLE_MULTI_PROCESSOR_COMPILATION)
             message_status(STATUS "Enable multi processor compilation.")
-            add_value("/MP" PROJECT_C_FLAGS)
-            add_value("/MP" PROJECT_CXX_FLAGS)
+            add_value("/MP" CMAKE_C_FLAGS CACHING)
+            add_value("/MP" CMAKE_CXX_FLAGS CACHING)
         else()
             message_status(STATUS "Disable multi processor compilation.")
-            remove_value("/MP" PROJECT_C_FLAGS)
-            remove_value("/MP" PROJECT_CXX_FLAGS)
+            remove_value("/MP" CMAKE_C_FLAGS CACHING)
+            remove_value("/MP" CMAKE_CXX_FLAGS CACHING)
         endif()
     endif()
     
@@ -810,6 +810,7 @@ macro( INITIALISE_PROJECT_ENVIRONMENT )
             #4018 -> signed / unsigned mismatch.
             #4244 -> Conversion from X to Y, possible loss of data.
             set(CommonWarnings "/wd4251 /wd4193 /wd4275 /wd4244")
+            set(CommonWarnings "")
         elseif(UNIX)
             # Following OGRE warning settings.
             set(CommonWarnings "-Wall -Wcast-qual -Wextra -Winit-self -Wno-long-long -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-overloaded-virtual -Wshadow -Wwrite-strings")
@@ -838,6 +839,9 @@ macro( INITIALISE_PROJECT_ENVIRONMENT )
     #if( MSVC )
         #option( PROJECT_INSTALL_DEBUG_SYMBOLS "Install debug symbols." ON )
     #endif()
+    
+    #set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${PROJECT_C_FLAGS})
+    #set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${PROJECT_CXX_FLAGS})
     
     # Copy runtime dependencies target and data files.
     add_custom_target( ALL_CopyData )

@@ -283,10 +283,10 @@ endif()
 
 # ************************************************************
 # Finalize package
-package_add_parent_dir( OGRE )
-if( OGRE_USE_CUSTOM_PACKAGE )
-	package_validate( OGRE )
+package_add_parent_dir(OGRE ADD_PARENT)
+if(OGRE_USE_CUSTOM_PACKAGE)
+	package_validate(OGRE)
 endif()
-package_end( OGRE )
-message_footer( OGRE )
+package_end(OGRE)
+message_footer(OGRE)
 
