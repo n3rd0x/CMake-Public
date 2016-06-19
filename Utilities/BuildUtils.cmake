@@ -22,28 +22,38 @@
 # ************************************************************
 # Add new C++ features
 macro(ADD_NEW_CXX_FEATURES)
-    check_cxx_compiler_flag(-std=c++11 CompilerSupports_CXX11)
-    check_cxx_compiler_flag(-std=c++0x CompilerSupports_CXX0X)
+    if(UNIX OR MINGW)
+        check_cxx_compiler_flag(-std=c++11 CompilerSupports_CXX11)
+        check_cxx_compiler_flag(-std=c++0x CompilerSupports_CXX0X)
     
-    set(Value "")
-    if(CompilerSupports_CXX11)
-        set(Value "-std=c++11")
-        set(PROJECT_CXX_SUPPORTS TRUE)
-    elseif(CompilerSupports_CXX0X)
-        set(Value "-std=c++0x")
-        set(PROJECT_CXX_SUPPORTS TRUE)
-    else()
-        message_status("" "The compiler ${CMAKE_CXX_COMPILER} has no support for new C++ features.")
-        set(PROJECT_CXX_SUPPORTS FALSE)
+        set(Value "")
+        if(CompilerSupports_CXX11)
+            set(Value "-std=c++11")
+            set(PROJECT_COMPILER_NEW_CXX_SUPPORT TRUE)
+        elseif(CompilerSupports_CXX0X)
+            set(Value "-std=c++0x")
+            set(PROJECT_COMPILER_NEW_CXX_SUPPORT TRUE)
+        else()
+            message_status("" "The compiler ${CMAKE_CXX_COMPILER} has no support for new C++ features.")
+            set(PROJECT_COMPILER_NEW_CXX_SUPPORT FALSE)
+        endif()
+    
+        if(PROJECT_COMPILER_NEW_CXX_SUPPORT)
+            add_value(PROJECT_COMPILER_CXX_FLAGS ${Value} CACHING)
+        endif()
+        
+        unset(Value)
+        unset(CompilerSupports_CXX11)
+        unset(CompilerSupports_CXX0X)
+    elseif(MSVC)
+        # New C++ features are supported from Visual Studio 2013 (v12.0).
+        if(MSVC_VERSION GREATER 1700)
+            set(PROJECT_COMPILER_NEW_CXX_SUPPORT TRUE)
+        else()
+            message_status("" "The compiler ${CMAKE_CXX_COMPILER} has no support for new C++ features. This feature are available from Visual Studio 2013 (v12.0).")
+            set(PROJECT_COMPILER_NEW_CXX_SUPPORT FALSE)
+        endif()
     endif()
-    
-    if(PROJECT_CXX_SUPPORTS)
-        add_value("${Value}" PROJECT_CXX_FLAGS CACHING)
-    endif()
-    
-    unset(Value)
-    unset(CompilerSupports_CXX11)
-    unset(CompilerSupports_CXX0X)
 endmacro()
 
 
@@ -135,12 +145,12 @@ endmacro()
 
 # ************************************************************
 # Add value into variable
-macro(ADD_VALUE Value Prefix)
+macro(ADD_VALUE Prefix Value)
      # Help information.
-    message_header(ADD_VALUE)
+    message_help_star_line()
     message_help("Required:")
-    message_help("[Value]       -> Value to validate.")
     message_help("[Prefix]      -> Prefix of the variable to process.")
+    message_help("[Value]       -> Value to validate.")
     message_help("Optional:")
     message_help("[CACHING]     -> Flag to caching.")
     message_help("[Description] -> Description.")
@@ -154,10 +164,22 @@ macro(ADD_VALUE Value Prefix)
     string(REGEX MATCH "${RegexVar}" ValueFound "${${Prefix}}")
     if(NOT ValueFound)
         if(ADD_VALUE_CACHING)
-            set(${Prefix} "${${Prefix}} ${Value}" CACHE STRING "${ADD_VALUE_Description}" FORCE)
+            message_debug(STATUS "Adding '${Value}' to ${Prefix} in CACHING mode.")
+            if(${Prefix} STREQUAL "")
+                set(${Prefix} "${Value}" CACHE STRING "${ADD_VALUE_Description}" FORCE)
+            else()
+                set(${Prefix} "${${Prefix}} ${Value}" CACHE STRING "${ADD_VALUE_Description}" FORCE)
+            endif()
         else()
-            set(${Prefix} "${${Prefix}} ${Value}")
+            message_debug(STATUS "Adding '${Value}' to ${Prefix}.")
+            if(${Prefix} STREQUAL "")
+                set(${Prefix} "${Value}")
+            else()
+                set(${Prefix} "${${Prefix}} ${Value}")
+            endif()
         endif()
+    else()
+        message_debug(STATUS "Value '${Value}' exists, skipping adding to ${Prefix}.")
     endif()
     
     unset(ValueFound)
@@ -166,7 +188,7 @@ macro(ADD_VALUE Value Prefix)
     unset(ADD_VALUE_CACHING)
     unset(ADD_VALUE_Description)
     
-    message_footer(ADD_VALUE)
+    message_help_star_line()
 endmacro()
 
 
@@ -711,129 +733,237 @@ endmacro()
 
 
 # ************************************************************
-# Initialise sub project details
-macro( INITIALISE_LOCAL_PROJECT Title Description )
+# Initialise sub project details.
+macro(INITIALISE_LOCAL_PROJECT Title Description)
     # Define policies.
     # Use project version.
-    cmake_policy( SET CMP0048 NEW )
+    cmake_policy(SET CMP0048 NEW)
     
-    project( ${Title} )
-    message( STATUS "**********************************************************************" )
-    message( STATUS "* Project:     ${Title}" )
-    message( STATUS "* Description: ${Description}" )
+    project(${Title})
+    message(STATUS "**********************************************************************")
+    message(STATUS "* Project:     ${Title}")
+    message(STATUS "* Description: ${Description}")
+endmacro()
+
+
+
+# ************************************************************
+# Initialise compiler flags.
+macro(INITIALISE_PROJECT_COMPILER_FLAGS)
+    message_debug(STATUS "Project C Flags:   ${PROJECT_COMPILER_C_FLAGS}")
+    message_debug(STATUS "Project Cxx Flags: ${PROJECT_COMPILER_CXX_FLAGS}")
+    #set(CMAKE_C_FLAGS "${PROJECT_COMPILER_C_FLAGS}" CACHE STRING "Project C flags." FORCE)
+    #set(CMAKE_CXX_FLAGS "${PROJECT_COMPILER_CXX_FLAGS}" CACHE STRING "Project CXX flags." FORCE)
+    
+    
+    message_debug(STATUS "----------------------------------------")
+    message_debug(STATUS "Adding compiler flags to CMAKE:")
+    separate_arguments(PROJECT_COMPILER_C_FLAGS)
+    foreach(Flag ${PROJECT_COMPILER_C_FLAGS})
+        message_debug(STATUS "Iterate C Flag: ${Flag}")
+        add_value(CMAKE_C_FLAGS "${Flag}" CACHING "C flags for all builds.")
+    endforeach()
+    
+    separate_arguments(PROJECT_COMPILER_CXX_FLAGS)
+    foreach(Flag ${PROJECT_COMPILER_CXX_FLAGS})
+        message_debug(STATUS "Iterate CXX Flag: ${Flag}")
+        add_value(CMAKE_CXX_FLAGS "${Flag}" CACHING "C++ flags for all builds.")
+    endforeach()
+    message_debug(STATUS "----------------------------------------")
 endmacro()
 
 
 
 
 # ************************************************************
-# Initialise project environments
-macro( INITIALISE_PROJECT_ENVIRONMENT )
+# Initialise project environments.
+macro(INITIALISE_PROJECT_ENVIRONMENT)
+    message_header(INITIALISE_PROJECT_ENVIRONMENT)
+    
+    # ----------------------------------------
+    # Build Target Mode
+    # ----------------------------------------
     # Setting default target mode.
-    if( MINGW OR UNIX )
-        option( PROJECT_BUILD_AS_RELEASE "Build project as release" OFF )
+    if(MINGW OR UNIX)
+        option(PROJECT_BUILD_AS_RELEASE "Build project as release" OFF)
         
-        if( PROJECT_BUILD_AS_RELEASE )
-            set( PROJECT_BUILD_TARGET_DEBUG FALSE )
-            set( PROJECT_BUILD_TARGET_RELEASE TRUE )
-            set( SELECTED_TARGET "Release" )
-            message_status( STATUS "Build as RELEASE." )
+        if(PROJECT_BUILD_AS_RELEASE)
+            set(PROJECT_BUILD_TARGET_DEBUG FALSE)
+            set(PROJECT_BUILD_TARGET_RELEASE TRUE)
+            set(SelectTarget "Release")
+            message_status(STATUS "Build as RELEASE.")
         else()
-            set( PROJECT_BUILD_TARGET_DEBUG TRUE )
-            set( PROJECT_BUILD_TARGET_RELEASE FALSE )
-            set( SELECTED_TARGET "Debug" )
-            message_status( STATUS "Build as DEBUG." )
+            set(PROJECT_BUILD_TARGET_DEBUG TRUE)
+            set(PROJECT_BUILD_TARGET_RELEASE FALSE)
+            set(SelectTarget "Debug")
+            message_status( STATUS "Build as DEBUG.")
         endif()
         
         # Set target mode.
-        set( CMAKE_BUILD_TYPE "${SELECTED_TARGET}" CACHE STRING "Target mode of this project." FORCE )
-        
-        set( BUILD_TARGET_MODES "[Debug] [Release]" )
-        if( CMAKE_BUILD_TYPE STREQUAL "" OR NOT CMAKE_BUILD_TYPE )
-            set( CMAKE_BUILD_TYPE "Release" CACHE STRING "Valid build targets are: ${BUILD_TARGET_MODES}" FORCE )
-            message_verbose( STATUS "Set to Release mode due to the build target is not set." )
-        endif()
-
-		unset( SELECTED_TARGET )
+        set(CMAKE_BUILD_TYPE "${SelectTarget}" CACHE STRING "Target mode of this project." FORCE)
+		unset(SelectTarget)
     endif()
+    
+    
+    # ----------------------------------------
+    # Cache Variables
+    # ----------------------------------------
+    # Compiler flags.
+    set(PROJECT_COMPILER_C_FLAGS "" CACHE STRING "Compiler C flags.")
+    set(PROJECT_COMPILER_CXX_FLAGS "" CACHE STRING "Compiler CXX flags.")
 
     # Set debug suffix.
-    set( CMAKE_DEBUG_POSTFIX "_d" )
+    set(CMAKE_DEBUG_POSTFIX "_d")
     
     # Set state for displaying debug message.
-    option( PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE      "Enable debug message"      OFF )
+    option(PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE "Enable debug message" OFF)
     
     # Set state for displaying options message.
-    option( PROJECT_CMAKE_ENABLE_HELP_MESSAGE       "Enable help message."      OFF )
+    option(PROJECT_CMAKE_ENABLE_HELP_MESSAGE "Enable help message." OFF)
 
     # Set state for displaying verbose message.
-    option( PROJECT_CMAKE_ENABLE_VERBOSE_MESSAGE    "Enable verbose message"    OFF )
+    option(PROJECT_CMAKE_ENABLE_VERBOSE_MESSAGE "Enable verbose message" OFF)
 
+    
+    # ----------------------------------------
+    # Multiple Compilation
     # Set multi processor compilation.
-    # For UNIX / MinGW the user has to use the flag -jX, where X is number of processor.
+    # For UNIX / MinGW: Use the flag -j X, where X is number of processor, for make program.
+    # ----------------------------------------
     if(MSVC)
         option(PROJECT_ENABLE_MULTI_PROCESSOR_COMPILATION "Enable multi processor compilation." ON)
         if(PROJECT_ENABLE_MULTI_PROCESSOR_COMPILATION)
             message_status(STATUS "Enable multi processor compilation.")
-            add_value("/MP" CMAKE_C_FLAGS CACHING)
-            add_value("/MP" CMAKE_CXX_FLAGS CACHING)
+            add_value(PROJECT_COMPILER_C_FLAGS "/MP" CACHING)
+            add_value(PROJECT_COMPILER_CXX_FLAGS "/MP" CACHING)
         else()
             message_status(STATUS "Disable multi processor compilation.")
-            remove_value("/MP" CMAKE_C_FLAGS CACHING)
-            remove_value("/MP" CMAKE_CXX_FLAGS CACHING)
+            remove_value(PROJECT_COMPILER_C_FLAGS "/MP" CACHING)
+            remove_value(PROJECT_COMPILER_CXX_FLAGS "/MP" CACHING)
         endif()
     endif()
     
+    
+    # ----------------------------------------
+    # Toolset & OS
+    # ----------------------------------------
     # Set option for build for targeting XP.
-    if( WIN32 )
-        option( PROJECT_BUILD_FOR_WIN_XP "Build for Windows XP SP3." OFF )
+    if(WIN32)
+        option(PROJECT_BUILD_FOR_WIN_XP "Build for Windows XP SP3." OFF)
         
-        if( PROJECT_BUILD_FOR_WIN_XP )
+        if(PROJECT_BUILD_FOR_WIN_XP)
             # This apply only for Visual Studio 2012 and greater.
-            if( MSVC_VERSION GREATER  1600 )
-                set( TOOLSET "" )
-                create_msvc_toolset( TOOLSET )
-                set( TOOLSET "${TOOLSET}_xp" )
-                set( CMAKE_GENERATOR_TOOLSET ${TOOLSET} CACHE STRING "Platform toolset." FORCE )
+            if(MSVC_VERSION GREATER 1600)
+                set(Toolset "")
+                create_msvc_toolset(Toolset)
+                set(Toolset "${Toolset}_xp")
+                set(CMAKE_GENERATOR_TOOLSET ${Toolset} CACHE STRING "Platform toolset." FORCE)
+                unset(Toolset)
             endif()
             
             # Add definitions.
-            add_definitions( -D_WIN32_WINNT=0x0501 )
+            add_definitions(-D_WIN32_WINNT=0x0501)
         endif()
     endif()
 
-    # Warnings.
-    option(PROJECT_ENABLE_DEFAULT_WARNINGS "Enable default warnings." ON)
-    if(PROJECT_ENABLE_DEFAULT_WARNINGS)
-        message_status(STATUS "Enable default warnings.")
+    
+    # ----------------------------------------
+    # New C++ Features
+    # ----------------------------------------
+    option(PROJECT_ENABLE_COMPILER_NEW_CXX_FETURES "Enable new C++ features." ON)
+    if(PROJECT_ENABLE_COMPILER_NEW_CXX_FETURES)
+        add_new_cxx_features()
+        if(PROJECT_COMPILER_NEW_CXX_SUPPORT)
+            message_status(STATUS "Enable COMPILER_NEW_C++_FEATURES.")
+        endif()
+    else()
+        remove_new_cxx_features()
+        message_status(STATUS "Disable COMPILER_NEW_C++_FEATURES.")
+    endif()
+    
+    
+    # ----------------------------------------
+    # Default Compiler Flags
+    # ----------------------------------------
+    option(PROJECT_ENABLE_COMPILER_DEFAULT_FLAGS "Enable default compiler flags." ON)
+    if(PROJECT_ENABLE_COMPILER_DEFAULT_FLAGS)
+        message_status(STATUS "Enable COMPILER_DEFAULT_FLAGS.")
+        if(UNIX)
+            # Following OGRE warning settings.
+            # -fPIC
+            #   Emit position independent code, suitable for dynamic linking
+            #   and avoiding any limit on the size of the global offset table.
+            set(CommonFlags
+                "-fPIC"
+            )
+        endif()
+    
+        message_debug(STATUS "----------------------------------------")
+        message_debug(STATUS "Setting default flags:")
+        foreach(Flag ${CommonFlags})
+            message_debug(STATUS "Iterate: ${Flag}")
+            add_value(PROJECT_COMPILER_C_FLAGS ${Flag} CACHING)
+            add_value(PROJECT_COMPILER_CXX_FLAGS ${Flag} CACHING)
+        endforeach()
+        message_debug(STATUS "----------------------------------------")
+        unset(CommonFlags)
+    endif()
+    
+    
+    # ----------------------------------------
+    # Warnings
+    # ----------------------------------------
+    option(PROJECT_ENABLE_COMPILER_DEFAULT_WARNINGS "Enable default compiler warnings." ON)
+    option(PROJECT_DISABLE_COMPILER_DEFAULT_WARNINGS "Disable default compiler warnings." OFF)
+    if(PROJECT_ENABLE_COMPILER_DEFAULT_WARNINGS OR PROJECT_DISABLE_COMPILER_DEFAULT_WARNINGS)
+        if(PROJECT_DISABLE_COMPILER_DEFAULT_WARNINGS)
+            message_status(STATUS "Disable COMPILER_DEFAULT_WARNINGS.")
+        else()
+            message_status(STATUS "Enable COMPILER_DEFAULT_WARNINGS.")
+        endif()
+        
         if(MSVC)
             #4018 -> signed / unsigned mismatch.
             #4244 -> Conversion from X to Y, possible loss of data.
-            set(CommonWarnings "/wd4251 /wd4193 /wd4275 /wd4244")
-            set(CommonWarnings "")
+            set(CommonWarnings
+                "/wd4251"
+                "/wd4193"
+                "/wd4275"
+                "/wd4244"
+            )
         elseif(UNIX)
             # Following OGRE warning settings.
-            set(CommonWarnings "-Wall -Wcast-qual -Wextra -Winit-self -Wno-long-long -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-overloaded-virtual -Wshadow -Wwrite-strings")
+            set(CommonWarnings
+                "-Wall"
+                "-Wcast-qual"
+                "-Wextra"
+                "-Winit-self"
+                "-Wno-long-long"
+                "-Wno-missing-field-initializers"
+                "-Wno-unused-parameter"
+                "-Wno-unused-but-set-parameter"
+                "-Wno-overloaded-virtual"
+                "-Wshadow"
+                "-Wwrite-strings"
+            )
         endif()
-        
-        set(PROJECT_C_FLAGS ${CommonWarnings} CACHE STRING "C flags in this project.")
-        set(PROJECT_CXX_FLAGS ${CommonWarnings} CACHE STRING "CXX flags in this project.")
+    
+        message_debug(STATUS "----------------------------------------")
+        message_debug(STATUS "Setting warnings flags:")
+        foreach(Flag ${CommonWarnings})
+            message_debug(STATUS "Iterate: ${Flag}")
+            if(PROJECT_DISABLE_COMPILER_DEFAULT_WARNINGS)
+                remove_value(PROJECT_COMPILER_C_FLAGS ${Flag} CACHING)
+                remove_value(PROJECT_COMPILER_CXX_FLAGS ${Flag} CACHING)
+            else()
+                add_value(PROJECT_COMPILER_C_FLAGS ${Flag} CACHING)
+                add_value(PROJECT_COMPILER_CXX_FLAGS ${Flag} CACHING)
+            endif()
+        endforeach()
+        message_debug(STATUS "----------------------------------------")
         unset(CommonWarnings)
     endif()
-
-    # Enable new C++ features.
-    if(MINGW OR UNIX)
-        option(PROJECT_ENABLE_CXX_FETURES "Enable new C++ features." ON)
-        if(PROJECT_ENABLE_CXX_FETURES)
-            add_new_cxx_features()
-            if(PROJECT_CXX_SUPPORTS)
-                message_status(STATUS "Enable new C++ features.")
-            endif()
-        else()
-            remove_new_cxx_features()
-            message_status(STATUS "Disable new C++ features.")
-        endif()
-    endif()
+    
     
     # Install debug symbols.
     #if( MSVC )
@@ -844,32 +974,34 @@ macro( INITIALISE_PROJECT_ENVIRONMENT )
     #set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${PROJECT_CXX_FLAGS})
     
     # Copy runtime dependencies target and data files.
-    add_custom_target( ALL_CopyData )
-    add_custom_target( ALL_CopyRuntime )
+    add_custom_target(ALL_CopyData)
+    add_custom_target(ALL_CopyRuntime)
+    
+    message_footer(INITIALISE_PROJECT_ENVIRONMENT)
 endmacro()
 
 
 
 
 # ************************************************************
-# Initialise default project paths
-macro( INITIALISE_PROJECT_PATH )
+# Initialise default project paths.
+macro(INITIALISE_PROJECT_PATH)
     # Help information.
-    message_header( INITIALISE_PROJECT_PATH )
-    message_help( "Available options:" )
-    message_help( "[Binary]     -> Output path of binary files. Default: 'bin'." )
-    message_help( "[Include]    -> Output path of include files. Default: 'include'." )
-    message_help( "[Library]    -> Output path of library files. Default: 'lib'." )
-    if( MSVC )
-        message_help( "[PDB]        -> Output path of PDB files. Default: 'pdb'." )
+    message_header(INITIALISE_PROJECT_PATH)
+    message_help("Available options:")
+    message_help("[Binary]     -> Output path of binary files. Default: 'bin'.")
+    message_help("[Include]    -> Output path of include files. Default: 'include'.")
+    message_help("[Library]    -> Output path of library files. Default: 'lib'.")
+    if(MSVC)
+        message_help("[PDB]        -> Output path of PDB files. Default: 'pdb'.")
     endif()  
     
     # Parse options.
-    set( oneValueArgs Binary Include Library )
-    if( MSVC )
-        set( oneValueArgs ${oneValueArgs} PDB )
+    set(oneValueArgs Binary Include Library)
+    if(MSVC)
+        set(oneValueArgs ${oneValueArgs} PDB)
     endif()
-    cmake_parse_arguments(INITIALISE_PROJECT_PATH "" "${oneValueArgs}" "" ${ARGN} )
+    cmake_parse_arguments(INITIALISE_PROJECT_PATH "" "${oneValueArgs}" "" ${ARGN})
     
     # Parse binary path.
     set( PathBinary "bin" )
@@ -878,88 +1010,89 @@ macro( INITIALISE_PROJECT_PATH )
     endif()
     
     # Parse include path.
-    set( PathInclude "include" )
-    if( INITIALISE_PROJECT_PATH_Include )
-        set( PathInclude ${INITIALISE_PROJECT_PATH_Include} )
+    set(PathInclude "include")
+    if(INITIALISE_PROJECT_PATH_Include)
+        set(PathInclude ${INITIALISE_PROJECT_PATH_Include})
     endif()
     
     # Parse library path.
-    set( PathLibrary "lib" )
-    if( INITIALISE_PROJECT_PATH_Library )
-        set( PathLibrary ${INITIALISE_PROJECT_PATH_Library} )
+    set(PathLibrary "lib")
+    if(INITIALISE_PROJECT_PATH_Library)
+        set(PathLibrary ${INITIALISE_PROJECT_PATH_Library})
     endif()
     
     # Parse PDB path.
-    set( PathPDB "pdb" )
-    if( INITIALISE_PROJECT_PATH_PDB )
-        set( PathPDB ${INITIALISE_PROJECT_PATH_PDB} )
+    set(PathPDB "pdb")
+    if(INITIALISE_PROJECT_PATH_PDB)
+        set( PathPDB ${INITIALISE_PROJECT_PATH_PDB})
     endif()
     
  
     # Root path where the root CMakeList is located.
-    set( PROJECT_PATH_ROOT "${CMAKE_CURRENT_SOURCE_DIR}" )
+    set(PROJECT_PATH_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
 	
     # Output path.
-    set( PROJECT_PATH_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/Output" )
+    set(PROJECT_PATH_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/Output")
 
 	# Install directory.
-    set( PROJECT_PATH_INSTALL "${CMAKE_CURRENT_BINARY_DIR}/Install" CACHE PATH "Installation directory." )
+    set(PROJECT_PATH_INSTALL "${CMAKE_CURRENT_BINARY_DIR}/Install" CACHE PATH "Installation directory.")
     
-    
-    # Check for changes.
-    #if( NOT "${CMAKE_BUILD_TYPE}" STREQUAL "${CMAKE_BUILD_TYPE_INT_CHECK}" )
-    #    message_verbose( STATUS "TARGET MODE CHANGED => ${CMAKE_BUILD_TYPE}" )
-    #    set( FORCE_CHANGE "FORCE" )
-    #else()
-    #    set( FORCE_CHANGE "" )
-    #endif()
-    #set( CMAKE_BUILD_TYPE_INT_CHECK ${CMAKE_BUILD_TYPE} CACHE INTERNAL "x" FORCE )
-
-    set( BuildTarget "" )
-    set( BuildTargetDebug "" )
-    set( BuildTargetRelease "" )
-    if( PROJECT_BUILD_TARGET_DEBUG )
-        set( BuildTarget "Debug" )
-    elseif( PROJECT_BUILD_TARGET_RELEASE )
-        set( BuildTarget "Release" )
+    set(BuildTarget "")
+    set(BuildTargetDebug "")
+    set(BuildTargetRelease "")
+    if(PROJECT_BUILD_TARGET_DEBUG)
+        set( BuildTarget "Debug")
+    elseif(PROJECT_BUILD_TARGET_RELEASE)
+        set(BuildTarget "Release")
     endif()
 
-    if( MSVC )
-        set( BuildTargetDebug    "Debug"     )
-        set( BuildTargetRelease  "Release"   )
+    if(MSVC)
+        set(BuildTargetDebug "Debug")
+        set(BuildTargetRelease "Release")
     else()
-        set( BuildTargetDebug    "${BuildTarget}" )
-        set( BuildTargetRelease  "${BuildTarget}" )
+        set(BuildTargetDebug "${BuildTarget}")
+        set(BuildTargetRelease "${BuildTarget}")
     endif()
-
 
     # Executable directory.
-    set( PROJECT_PATH_OUTPUT_EXECUTABLE         "${PROJECT_PATH_OUTPUT}/${PathBinary}/${BuildTarget}" CACHE PATH "Executable output directory." )
-    set( PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG   "${PROJECT_PATH_OUTPUT}/${PathBinary}/${BuildTargetDebug}" )
-    set( PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE "${PROJECT_PATH_OUTPUT}/${PathBinary}/${BuildTargetRelease}" )
+    set(PROJECT_PATH_OUTPUT_EXECUTABLE         "${PROJECT_PATH_OUTPUT}/${PathBinary}/${BuildTarget}" CACHE PATH "Executable output directory.")
+    set(PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG   "${PROJECT_PATH_OUTPUT}/${PathBinary}/${BuildTargetDebug}")
+    set(PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE "${PROJECT_PATH_OUTPUT}/${PathBinary}/${BuildTargetRelease}")
     
     # Include directory.
-    set( PROJECT_PATH_OUTPUT_INCLUDE "${PROJECT_PATH_OUTPUT}/${PathInclude}" CACHE PATH "Include output directory." )
+    set(PROJECT_PATH_OUTPUT_INCLUDE "${PROJECT_PATH_OUTPUT}/${PathInclude}" CACHE PATH "Include output directory.")
     
     # Library directory.
-    set( PROJECT_PATH_OUTPUT_LIBRARY            "${PROJECT_PATH_OUTPUT}/${PathLibrary}/${BuildTarget}" CACHE PATH "Library output directory." )
-    set( PROJECT_PATH_OUTPUT_LIBRARY_DEBUG      "${PROJECT_PATH_OUTPUT}/${PathLibrary}/${BuildTargetDebug}" )
-    set( PROJECT_PATH_OUTPUT_LIBRARY_RELEASE    "${PROJECT_PATH_OUTPUT}/${PathLibrary}/${BuildTargetRelease}" )
+    set(PROJECT_PATH_OUTPUT_LIBRARY            "${PROJECT_PATH_OUTPUT}/${PathLibrary}/${BuildTarget}" CACHE PATH "Library output directory.")
+    set(PROJECT_PATH_OUTPUT_LIBRARY_DEBUG      "${PROJECT_PATH_OUTPUT}/${PathLibrary}/${BuildTargetDebug}")
+    set(PROJECT_PATH_OUTPUT_LIBRARY_RELEASE    "${PROJECT_PATH_OUTPUT}/${PathLibrary}/${BuildTargetRelease}")
     
-    if( MSVC )
+    if(MSVC)
         # PDB directory.
-        set( PROJECT_PATH_OUTPUT_PDB            "${PROJECT_PATH_OUTPUT}/${PathPDB}" CACHE PATH "PDB output directory." )   
-        set( PROJECT_PATH_OUTPUT_PDB_DEBUG      "${PROJECT_PATH_OUTPUT}/${PathPDB}/${BuildTargetDebug}" )   
-        set( PROJECT_PATH_OUTPUT_PDB_RELEASE    "${PROJECT_PATH_OUTPUT}/${PathPDB}/${BuildTargetRelease}" )   
+        set(PROJECT_PATH_OUTPUT_PDB            "${PROJECT_PATH_OUTPUT}/${PathPDB}" CACHE PATH "PDB output directory.")   
+        set(PROJECT_PATH_OUTPUT_PDB_DEBUG      "${PROJECT_PATH_OUTPUT}/${PathPDB}/${BuildTargetDebug}")   
+        set(PROJECT_PATH_OUTPUT_PDB_RELEASE    "${PROJECT_PATH_OUTPUT}/${PathPDB}/${BuildTargetRelease}")   
     endif()
 
     # Caching.
-    set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_PATH_OUTPUT_EXECUTABLE}   CACHE PATH "Executable directory."  FORCE )
-    set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_PATH_OUTPUT_LIBRARY}      CACHE PATH "Library directory."     FORCE )
-    set( CMAKE_INSTALL_PREFIX           ${PROJECT_PATH_INSTALL}             CACHE PATH "Install directory."     FORCE )
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_PATH_OUTPUT_EXECUTABLE} CACHE PATH "Executable directory." FORCE)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_PATH_OUTPUT_LIBRARY} CACHE PATH "Library directory." FORCE)
+    set(CMAKE_INSTALL_PREFIX ${PROJECT_PATH_INSTALL} CACHE PATH "Install directory." FORCE)
+    if(MSVC)
+        set(CMAKE_PDB_OUTPUT_DIRECTORY ${PROJECT_PATH_OUTPUT_PDB} CACHE PATH "PDB directory." FORCE)
+    endif()
     
-    if( MSVC )
-        set( CMAKE_PDB_OUTPUT_DIRECTORY ${PROJECT_PATH_OUTPUT_PDB} CACHE PATH "PDB directory." FORCE )
+    message_debug(STATUS "Executable Path:              '${PROJECT_PATH_OUTPUT_EXECUTABLE}'")
+    message_debug(STATUS "Executable Path (Debug):      '${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}'")
+    message_debug(STATUS "Executable Path (Release):    '${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}'")
+    message_debug(STATUS "Include Path:                 '${PROJECT_PATH_OUTPUT_INCLUDE}'")
+    message_debug(STATUS "Library Path:                 '${PROJECT_PATH_OUTPUT_LIBRARY}'")
+    message_debug(STATUS "Library Path (Debug):         '${PROJECT_PATH_OUTPUT_LIBRARY_DEBUG}'")
+    message_debug(STATUS "Library Path (Release):       '${PROJECT_PATH_OUTPUT_LIBRARY_RELEASE}'")
+    if(MSVC)
+        message_debug(STATUS "PDB Path:                     '${PROJECT_PATH_OUTPUT_PDB}'")
+        message_debug(STATUS "PDB Path (Debug):             '${PROJECT_PATH_OUTPUT_PDB_DEBUG}'")
+        message_debug(STATUS "PDB Path (Release):           '${PROJECT_PATH_OUTPUT_PDB_RELEASE}'")
     endif()
 	
     # Clean up.
@@ -1252,16 +1385,19 @@ endmacro()
 # ************************************************************
 # Remove new C++ features
 macro(REMOVE_NEW_CXX_FEATURES)
-    check_cxx_compiler_flag(-std=c++11 CompilerSupports_CXX11)
-    check_cxx_compiler_flag(-std=c++0x CompilerSupports_CXX0X)
-    set(Value "")
-    if(CompilerSupports_CXX11)
-        set(Value " -std=c++11")
-    elseif(CompilerSupports_CXX0X)
-        set(Value " -std=c+0x")
+    if(UNIX OR MINGW)
+        check_cxx_compiler_flag(-std=c++11 CompilerSupports_CXX11)
+        check_cxx_compiler_flag(-std=c++0x CompilerSupports_CXX0X)
+        if(CompilerSupports_CXX11)
+            remove_value(PROJECT_COMPILER_CXX_FLAGS "-std=c++11" CACHING)
+        elseif(CompilerSupports_CXX0X)
+            remove_value(PROJECT_COMPILER_CXX_FLAGS "-std=c++0x" CACHING)
+        endif()
+        unset(CompilerSupports_CXX11)
+        unset(CompilerSupports_CXX0X)
     endif()
-    remove_value("${Value}" PROJECT_CXX_FLAGS CACHING)
-    unset(Value)
+    
+    set(PROJECT_CXX_SUPPORTS FALSE)
 endmacro()
 
 
@@ -1269,38 +1405,50 @@ endmacro()
 
 # ************************************************************
 # Remove value from the variable
-macro(REMOVE_VALUE Value Prefix)
+macro(REMOVE_VALUE Prefix Value)
     # Help information.
-    message_header(REMOVE_VALUE)
+    message_help_star_line()
     message_help("Required:")
-    message_help("[Value]       -> Value to validate.")
     message_help("[Prefix]      -> Prefix of the variable to process.")
+    message_help("[Value]       -> Value to validate.")
     message_help("Optional:")
     message_help("[CACHING]     -> Flag to caching.")
     message_help("[Description] -> Description.")
+    message_debug(STATUS "Value to remove: '${Value}' from '${${Prefix}}'")
     
     # Parse options.
     set(options CACHING)
     set(oneValueArgs Description)
     cmake_parse_arguments(REMOVE_VALUE "${options}" "${oneValueArgs}" "" ${ARGN})
       
-    regex_compatible("${Value}" RegexVar)
-    string(REGEX REPLACE "${RegexVar}" "" ValueFound "${${Prefix}}")
-    if(ValueFound)
+    string(REPLACE "${Value}" "" NoSpace "${${Prefix}}")
+    string(REPLACE " ${Value}" "" Space "${${Prefix}}")
+    
+    if(NoSpacE)
+        set(ValueToSet ${NoSpace})
+    elseif(Space)
+        set(ValueToSet ${Space})
+    endif()
+    
+    if(NOT ValueToSet STREQUAL "${${Prefix}}")   
         if(REMOVE_VALUE_CACHING)
-            set(${Prefix} "${ValueFound}" CACHE STRING "${REMOVE_VALUE_Description}" FORCE)
+            message_debug(STATUS "Remove '${Value}' from ${Prefix} in CACHE mode.")
+            set(${Prefix} "${ValueToSet}" CACHE STRING "${REMOVE_VALUE_Description}" FORCE)
         else()
-            set(${Prefix} "${ValueFound}")
+            message_debug(STATUS "Remove '${Value}' from ${Prefix}.")
+            set(${Prefix} "${ValueToSet}")
         endif()
     endif()
     
-    unset(ValueFound)
+    unset(NoSpace)
+    unset(Space)
+    unset(ValueToSet)
     unset(options)
     unset(oneValueArgs)
     unset(REMOVE_VALUE_CACHING)
     unset(REMOVE_VALUE_Description)
     
-    message_footer(REMOVE_VALUE)
+    message_help_star_line()
 endmacro()
 
 
