@@ -652,81 +652,92 @@ endmacro()
 
 # ************************************************************
 # Initialise main project details
-macro( INITIALISE_PROJECT Title )
-    # Define policies.
-    # Use project version.
-    cmake_policy( SET CMP0048 NEW )
-    
-    # Compiler definitions.
-    cmake_policy( SET CMP0043 NEW )
+macro(INITIALISE_PROJECT Title)
+    if(CMAKE_MAJOR_VERSION GREATER 2)
+        # Define policies.
+        # Use project version.
+        cmake_policy(SET CMP0048 NEW)
+        
+        # Compiler definitions.
+        cmake_policy(SET CMP0043 NEW)
+    endif()
 
     # Help information.
-    message_header( INITIALISE_PROJECT )
-    message_help( "Required:" )
-    message_help( "[Title]          -> Title of this project." )
-    message_help( "Optional:" )
-    message_help( "[Description]    -> Description of this project." )
-    message_help( "[Major]          -> The major version." )
-    message_help( "[Minor]          -> The minor version." )
-    message_help( "[Path]           -> The patch version." )
-    message_help( "[Twaek]          -> The twaek version." )
+    message_header(INITIALISE_PROJECT)
+    message_help("Required:")
+    message_help("[Title]          -> Title of this project.")
+    message_help("Optional:")
+    message_help("[Description]    -> Description of this project.")
+    message_help("[Major]          -> The major version.")
+    message_help("[Minor]          -> The minor version.")
+    message_help("[Path]           -> The patch version.")
+    message_help("[Twaek]          -> The twaek version.")
     
-    message( STATUS "**********************************************************************" )
-    message( STATUS "* Project:     ${Title}" )
+    message(STATUS "**********************************************************************")
+    message(STATUS "* Project:     ${Title}")
     
     # Parse options.
-    set( oneValueArgs Description Major Minor Patch Tweak )
-    cmake_parse_arguments(INITIALISE_PROJECT "" "${oneValueArgs}" "" ${ARGN} )
+    set(oneValueArgs Description Major Minor Patch Tweak)
+    cmake_parse_arguments(INITIALISE_PROJECT "" "${oneValueArgs}" "" ${ARGN})
     
     # Description.
-    if( INITIALISE_PROJECT_Description )
-        message( STATUS "* Description: ${INITIALISE_PROJECT_Description}" )
+    if(INITIALISE_PROJECT_Description)
+        message(STATUS "* Description: ${INITIALISE_PROJECT_Description}")
     endif()
     
     # Major version.
-    set( MajorVersion "0" )
-    if( INITIALISE_PROJECT_Major )
-        set( MajorVersion ${INITIALISE_PROJECT_Major} )
+    set(MajorVersion "0")
+    if(INITIALISE_PROJECT_Major)
+        set(MajorVersion ${INITIALISE_PROJECT_Major})
     endif()
     
     # Minor version.
-    set( MinorVersion "0" )
-    if( INITIALISE_PROJECT_Minor )
-        set( MinorVersion ${INITIALISE_PROJECT_Minor} )
+    set(MinorVersion "0")
+    if(INITIALISE_PROJECT_Minor)
+        set(MinorVersion ${INITIALISE_PROJECT_Minor})
     endif()
     
     # Patch version.
-    set( PatchVersion "1" )
-    if( INITIALISE_PROJECT_Patch )
-        set( PatchVersion ${INITIALISE_PROJECT_Patch} )
+    set(PatchVersion "1")
+    if(INITIALISE_PROJECT_Patch)
+        set(PatchVersion ${INITIALISE_PROJECT_Patch})
     endif()
     
     # Tweak version.
-    set( TweakVersion "0" )
-    if( INITIALISE_PROJECT_Tweak )
-        set( TweakVersion ${INITIALISE_PROJECT_Tweak} )
+    set(TweakVersion "0")
+    if(INITIALISE_PROJECT_Tweak)
+        set(TweakVersion ${INITIALISE_PROJECT_Tweak})
     endif()
     
     # Set the project title.
-    project( ${Title} VERSION "${MajorVersion}.${MinorVersion}.${PatchVersion}.${TweakVersion}" )
+    if(CMAKE_MAJOR_VERSION GREATER 2)
+        project(${Title} VERSION "${MajorVersion}.${MinorVersion}.${PatchVersion}.${TweakVersion}")
+    else()
+        project(${Title})
+        set(PROJECT_MAJOR_VERSION ${MajorVersion})
+        set(PROJECT_MINOR_VERSION ${MinorVersion})
+        set(PROJECT_PATCH_VERSION ${PatchVersion})
+        set(PROJECT_VERSION "${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION}")
+    endif()
     
     # Build timestamp.
-    string( TIMESTAMP PROJECT_BUILD_TIME "%d/%m-%Y" )
+    string(TIMESTAMP PROJECT_BUILD_TIME "%d/%m-%Y")
     
     # Project version.
-    message( STATUS "* Version:     ${PROJECT_VERSION}" )
-    message( STATUS "* Time:        ${PROJECT_BUILD_TIME}" )
+    message(STATUS "* Version:     ${PROJECT_VERSION}")
+    message(STATUS "* Time:        ${PROJECT_BUILD_TIME}")
     
     
 
     # Clean up.
-    unset( oneValueArgs )
-    unset( INITIALISE_PROJECT_Description )
-    unset( INITIALISE_PROJECT_Major )
-    unset( INITIALISE_PROJECT_Minor )
-    unset( INITIALISE_PROJECT_Patch )
+    unset(oneValueArgs)
+    unset(INITIALISE_PROJECT_Description)
+    unset(INITIALISE_PROJECT_Major)
+    unset(INITIALISE_PROJECT_Minor)
+    unset(INITIALISE_PROJECT_Patch)
+    unset(INITIALISE_PROJECT_Tweak)
     
-    message_footer( INITIALISE_PROJECT )
+    message_footer(INITIALISE_PROJECT)
 endmacro()
 
 
@@ -735,9 +746,11 @@ endmacro()
 # ************************************************************
 # Initialise sub project details.
 macro(INITIALISE_LOCAL_PROJECT Title Description)
-    # Define policies.
-    # Use project version.
-    cmake_policy(SET CMP0048 NEW)
+    if(CMAKE_MAJOR_VERSION GREATER 2)
+        # Define policies.
+        # Use project version.
+        cmake_policy(SET CMP0048 NEW)
+    endif()
     
     project(${Title})
     message(STATUS "**********************************************************************")
@@ -870,15 +883,17 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
     # ----------------------------------------
     # New C++ Features
     # ----------------------------------------
-    option(PROJECT_ENABLE_COMPILER_NEW_CXX_FETURES "Enable new C++ features." ON)
-    if(PROJECT_ENABLE_COMPILER_NEW_CXX_FETURES)
-        add_new_cxx_features()
-        if(PROJECT_COMPILER_NEW_CXX_SUPPORT)
-            message_status(STATUS "Enable COMPILER_NEW_C++_FEATURES.")
+    if(CMAKE_MAJOR_VERSION GREATER 2)
+        option(PROJECT_ENABLE_COMPILER_NEW_CXX_FETURES "Enable new C++ features." ON)
+        if(PROJECT_ENABLE_COMPILER_NEW_CXX_FETURES)
+            add_new_cxx_features()
+            if(PROJECT_COMPILER_NEW_CXX_SUPPORT)
+                message_status(STATUS "Enable COMPILER_NEW_C++_FEATURES.")
+            endif()
+        else()
+            remove_new_cxx_features()
+            message_status(STATUS "Disable COMPILER_NEW_C++_FEATURES.")
         endif()
-    else()
-        remove_new_cxx_features()
-        message_status(STATUS "Disable COMPILER_NEW_C++_FEATURES.")
     endif()
     
     
