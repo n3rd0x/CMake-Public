@@ -145,11 +145,11 @@ foreach( VAR ${QT_CLEAR_IF_CHANGED} )
     )
 endforeach()
 
-set( FoundMsvcEnv "" )
-verify_msvc_env( FoundMsvcEnv )
+#set( FoundMsvcEnv "" )
+#verify_msvc_env( FoundMsvcEnv )
 
 # Continue when the Qt directory is located.
-if( QT_HOME AND FoundMsvcEnv )
+if(QT_HOME AND MSVC)
 	# Add the directory to the CMake search path.
 	set( CMAKE_PREFIX_PATH ${QT_HOME} )
 	
