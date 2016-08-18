@@ -207,19 +207,18 @@ if(QT_HOME)
                 
                 # Find files.
                 if(MSVC)
-                    # TODO: Why doesn't package_find_file work?
-                    #package_find_file(DebugFile "${Component}d.dll" "${QT_BINARY_DIR}" "")
-                    #package_find_file(ReleaseFile "${Component}.dll" "${QT_BINARY_DIR}" "")
+                    package_find_file(DebugFile "${Component}d.dll" "${QT_BINARY_DIR}" "")
+                    package_find_file(ReleaseFile "${Component}.dll" "${QT_BINARY_DIR}" "")
                     
                     
-                    find_file(DebugFile NAMES "${Component}d.dll" HINTS "${QT_BINARY_DIR}" PATH_SUFFIXES "" NO_DEFAULT_PATH)
-                    find_file(ReleaseFile NAMES "${Component}.dll" HINTS "${QT_BINARY_DIR}" PATH_SUFFIXES "" NO_DEFAULT_PATH)
+                    #find_file(DebugFile NAMES "${Component}d.dll" HINTS "${QT_BINARY_DIR}" PATH_SUFFIXES "" NO_DEFAULT_PATH)
+                    #find_file(ReleaseFile NAMES "${Component}.dll" HINTS "${QT_BINARY_DIR}" PATH_SUFFIXES "" NO_DEFAULT_PATH)
                 else()
-                    #package_find_file(DebugFile "lib${Component}d.so" "${QT_LIBRARY_DIR}" "")
-                    #package_find_file(ReleaseFile "lib${Component}.so" "${QT_LIBRARY_DIR}" "")
+                    package_find_file(DebugFile "lib${Component}d.so" "${QT_LIBRARY_DIR}" "")
+                    package_find_file(ReleaseFile "lib${Component}.so" "${QT_LIBRARY_DIR}" "")
                     
-                    find_file(DebugFile NAMES "lib${Component}d.so" HINTS "${QT_LIBRARY_DIR}" PATH_SUFFIXES "" NO_DEFAULT_PATH)
-                    find_file(ReleaseFile NAMES "lib${Component}.so" HINTS "${QT_LIBRARY_DIR}" PATH_SUFFIXES "" NO_DEFAULT_PATH)
+                    #find_file(DebugFile NAMES "lib${Component}d.so" HINTS "${QT_LIBRARY_DIR}" PATH_SUFFIXES "" NO_DEFAULT_PATH)
+                    #find_file(ReleaseFile NAMES "lib${Component}.so" HINTS "${QT_LIBRARY_DIR}" PATH_SUFFIXES "" NO_DEFAULT_PATH)
                 endif()
                 
                 # Set name.

@@ -739,21 +739,22 @@ endmacro()
 
 
 # ************************************************************
-# Find include directory
-macro( PACKAGE_FIND_PATH Prefix Files SearchPath Suffixes )
-	message_sub_header( "Package Find Path (${Prefix})" )
-    message_debug( STATUS "Files:           ${Files}"       )
-    message_debug( STATUS "Search path:     ${SearchPath}"  )
-    message_debug( STATUS "Suffixes:        ${Suffixes}"    )
+# Find file
+macro(PACKAGE_FIND_FILE Prefix SearchName SearchPath Suffixes)
+    message_sub_header("Package Find File (${Prefix})")
+    message_verbose(STATUS "Searching files: ${SearchName}")
+    message_debug(STATUS "Names:           ${SearchName}")
+    message_debug(STATUS "Search path:     ${SearchPath}")
+    message_debug(STATUS "Suffixes:        ${Suffixes}")
     
-    find_path( ${Prefix} NAMES ${Files} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH )
-    if( ${Prefix} )
-        message_debug( STATUS "Found path:      ${${Prefix}}" )
+    find_file(${Prefix} NAMES ${SearchName} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
+    if(${Prefix})
+        message_debug(STATUS "Found file:      ${${Prefix}}")
     else()
-        message_verbose( "" "Failed to locate one of these paths: ${SearchPath}" )
+        message_verbose("" "Failed to locate one of these files: ${SearchName}")
     endif()
     
-    message_sub_footer( "Package Find Path (${Prefix})" )
+    message_sub_footer("Package Find File (${Prefix})")
 endmacro()
 
 
