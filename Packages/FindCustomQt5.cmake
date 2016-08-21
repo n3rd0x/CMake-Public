@@ -33,7 +33,7 @@ option(QT_VERSION_5_3_2 "Using QT version 5.3.2 and greater." OFF)
 
 
 option(QT_DEPLOY_LIBRARY "Flag to deploy QT libraries." OFF)
-option(QT_PLUGIN_ENABLE_SQL_DRIVER_SQLITE "Enable SQLite plug-in driver." OFF)
+option(QT_PLUGIN_SQL_DRIVER_SQLITE "Enable SQLite plug-in driver." OFF)
 
 
 # Set components.
@@ -129,7 +129,7 @@ if(QT_DEPLOY_LIBRARY)
 
     # Add .
     set(QT_NECESSARY_BINARY_PLUGINS "${QT_Qt5Core_BINARY_PLUGINS}")
-    if(QT_PLUGIN_ENABLE_SQL_DRIVER_SQLITE)
+    if(QT_PLUGIN_SQL_DRIVER_SQLITE)
         set(QT_NECESSARY_BINARY_PLUGINS
             "${QT_NECESSARY_BINARY_PLUGINS}"
             "${QT_Qt5Sql_Sqlite_BINARY_PLUGINS}"
