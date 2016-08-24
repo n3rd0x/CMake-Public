@@ -33,7 +33,7 @@ option(QT_VERSION_5_3_2 "Using QT version 5.3.2 and greater." OFF)
 
 
 option(QT_DEPLOY_LIBRARY "Flag to deploy QT libraries." OFF)
-option(QT_PLUGIN_SQL_DRIVER_SQLITE "Enable SQLite plug-in driver." OFF)
+option(QT_PLUGIN_ENABLE_SQL_DRIVER_SQLITE "Enable SQLite plug-in driver." OFF)
 
 
 # Set components.
@@ -129,7 +129,7 @@ if(QT_DEPLOY_LIBRARY)
 
     # Add .
     set(QT_NECESSARY_BINARY_PLUGINS "${QT_Qt5Core_BINARY_PLUGINS}")
-    if(QT_PLUGIN_SQL_DRIVER_SQLITE)
+    if(QT_PLUGIN_ENABLE_SQL_DRIVER_SQLITE)
         set(QT_NECESSARY_BINARY_PLUGINS
             "${QT_NECESSARY_BINARY_PLUGINS}"
             "${QT_Qt5Sql_Sqlite_BINARY_PLUGINS}"
@@ -166,8 +166,19 @@ endforeach()
 # ************************************************************
 # Continue when the Qt directory is located.
 if(QT_HOME)
-	# Add the directory to the CMake search path.
-	set(CMAKE_PREFIX_PATH ${QT_HOME})
+    # Create search path
+    set(QT_PREFIX_PATH ${QT_HOME})
+    package_create_search_path_include(QT)
+    package_create_search_path_library(QT)
+
+	# Find paths.
+    package_find_path(QT_PATH_BINARY "qmake;qmake.exe" "${QT_SEARCH_PATH_LIBRARY}" "bin;qt5/bin")
+    package_find_path(QT_PATH_CMAKE "Qt5" "${QT_SEARCH_PATH_LIBRARY}" "cmake")
+    package_find_path(QT_PATH_LIBRARY "libQt5Core.so;Qt5Core.lib" "${QT_SEARCH_PATH_LIBRARY}" "lib")
+    package_find_path(QT_PATH_PLUGIN "platforms" "${QT_SEARCH_PATH_LIBRARY}" "plugins;qt5/plugins")
+    
+    # Add the directory to the CMake search path.
+	set(CMAKE_PREFIX_PATH ${QT_PATH_CMAKE})
 	
 	# Tell CMake to run MOC when necessary.
 	#set(CMAKE_AUTOMOC ON)
@@ -175,12 +186,6 @@ if(QT_HOME)
 	# As MOC files are generated in the binary directory,
 	# tell CMake to always look for includes there.
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
-	
-	# Set paths.
-    
-	set(QT_BINARY_DIR "${QT_HOME}/bin" CACHE PATH "Path of Qt5 binary directory.")
-	set(QT_LIBRARY_DIR "${QT_HOME}/lib" CACHE PATH "Path of Qt5 library directory.")
-    set(QT_PLUGIN_DIR "${QT_HOME}/plugins" CACHE PATH "Path of Qt5 plugin directory.")
 
 	# Set components.
 	set(QT_COMPONENTS "${CustomQt5_FIND_COMPONENTS}" CACHE STRING "Qt5 components.")
@@ -204,36 +209,29 @@ if(QT_HOME)
             
             # Update binaries.
             if(AddComponent)
-                
                 # Find files.
                 if(MSVC)
-                    package_find_file(DebugFile "${Component}d.dll" "${QT_BINARY_DIR}" "")
-                    package_find_file(ReleaseFile "${Component}.dll" "${QT_BINARY_DIR}" "")
-                    
-                    
-                    #find_file(DebugFile NAMES "${Component}d.dll" HINTS "${QT_BINARY_DIR}" PATH_SUFFIXES "" NO_DEFAULT_PATH)
-                    #find_file(ReleaseFile NAMES "${Component}.dll" HINTS "${QT_BINARY_DIR}" PATH_SUFFIXES "" NO_DEFAULT_PATH)
+                    # TODO: Why it fails when using DebugFile or ReleaseFile, because it been used in foreach??
+                    package_find_file(QtDebugFile "${Component}d.dll" "${QT_PATH_BINARY}" "")
+                    package_find_file(QtReleaseFile "${Component}.dll" "${QT_PATH_BINARY}" "")
                 else()
-                    package_find_file(DebugFile "lib${Component}d.so" "${QT_LIBRARY_DIR}" "")
-                    package_find_file(ReleaseFile "lib${Component}.so" "${QT_LIBRARY_DIR}" "")
-                    
-                    #find_file(DebugFile NAMES "lib${Component}d.so" HINTS "${QT_LIBRARY_DIR}" PATH_SUFFIXES "" NO_DEFAULT_PATH)
-                    #find_file(ReleaseFile NAMES "lib${Component}.so" HINTS "${QT_LIBRARY_DIR}" PATH_SUFFIXES "" NO_DEFAULT_PATH)
-                endif()
-                
-                # Set name.
-                if(ReleaseFile)
-                    list(APPEND QT_BINARY_RELEASE ${ReleaseFile})
+                    package_find_file(QtDebugFile "lib${Component}d.so" "${QT_PATH_LIBRARY}" "")
+                    package_find_file(QtReleaseFile "lib${Component}.so" "${QT_PATH_LIBRARY}" "")
                 endif()
 
-                if(DebugFile)
-                    list(APPEND QT_BINARY_DEBUG ${DebugFile})
+                # Set name.
+                if(QtReleaseFile)
+                    list(APPEND QT_BINARY_RELEASE ${QtReleaseFile})
+                endif()
+
+                if(QtDebugFile)
+                    list(APPEND QT_BINARY_DEBUG ${QtDebugFile})
                 else()
-                    list(APPEND QT_BINARY_DEBUG ${ReleaseFile})
+                    list(APPEND QT_BINARY_DEBUG ${QtReleaseFile})
                 endif()
             
-                unset(DebugFile CACHE)
-                unset(ReleaseFile CACHE)
+                unset(QtDebugFile CACHE)
+                unset(QtReleaseFile CACHE)
             endif()
             unset(AddComponent)
 		endforeach()

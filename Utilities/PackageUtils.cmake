@@ -333,12 +333,12 @@ endmacro()
 
 # ************************************************************
 # Create search include path
-macro( PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix )
-    message_verbose( STATUS "Creating ${Prefix} include search path." )
+macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
+    message_verbose(STATUS "Creating ${Prefix} include search path.")
     
     # Create search for "default" directories.
-    foreach( dir ${${Prefix}_PREFIX_PATH} )
-        set( ${Prefix}_SEARCH_PATH_INCLUDE
+    foreach(dir ${${Prefix}_PREFIX_PATH})
+        set(${Prefix}_SEARCH_PATH_INCLUDE
 			"${${Prefix}_SEARCH_PATH_INCLUDE}"
 			"${dir}/inc"
             "${dir}/Inc"
@@ -348,18 +348,21 @@ macro( PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix )
     endforeach()
     
     # Add for UNIX system.
-    if( UNIX )
-        set( ${Prefix}_SEARCH_PATH_INCLUDE
-			"${${Prefix}_SEARCH_PATH_INCLUDE}"
+    if(UNIX)
+        set(${Prefix}_SEARCH_PATH_INCLUDE
+            "${${Prefix}_SEARCH_PATH_INCLUDE}"
 			"/usr/include"
 			"/usr/local/include"
 	    )
     endif()
     
-     # Create specific directories.
-	package_create_prefix_subpath( ${Prefix}_SEARCH_PATH_INCLUDE ${Prefix} )
+    # Clear temp vars.
+    unset(dir)
     
-    message_debug( STATUS "Include search path: ${${Prefix}_SEARCH_PATH_INCLUDE}" )
+    # Create specific directories.
+	package_create_prefix_subpath(${Prefix}_SEARCH_PATH_INCLUDE ${Prefix})
+    
+    message_debug(STATUS "Include search path: ${${Prefix}_SEARCH_PATH_INCLUDE}")
 endmacro()
 
 
@@ -367,13 +370,13 @@ endmacro()
 
 # ************************************************************
 # Create search library path
-macro( PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix )
-    message_verbose( STATUS "Creating ${Prefix} library search path." )
+macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
+    message_verbose(STATUS "Creating ${Prefix} library search path.")
     
     # Create search for "default" directories.
-    foreach( dir ${${Prefix}_PREFIX_PATH} )
-        set( ${Prefix}_SEARCH_PATH_LIBRARY
-			"${${Prefix}_SEARCH_PATH_LIBRARY}"
+    foreach(dir ${${Prefix}_PREFIX_PATH})
+        list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
+            "${dir}"
             "${dir}/lib"
             "${dir}/Lib"
             "${dir}/library"
@@ -382,21 +385,26 @@ macro( PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix )
     endforeach()
     
     # Add for UNIX system.
-    if( UNIX )
-        set( ${Prefix}_SEARCH_PATH_LIBRARY
-			"${${Prefix}_SEARCH_PATH_LIBRARY}"
+    if(UNIX)
+        list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
 			"/usr/lib"
 			"/usr/lib/x86_64-linux-gnu"
 			"/usr/local/lib"
+            "/usr/lib/i386-linux-gnu"
+            "/usr/lib/arm-linux-gnueabihf"
 	    )
     endif()
     
-    # Also create "default platform" specific directories.
-    package_create_search_platform( ${Prefix}_SEARCH_PATH_LIBRARY           )
-	package_create_prefix_subpath(  ${Prefix}_SEARCH_PATH_LIBRARY ${Prefix} )
+    # Clear temp vars.
+    unset(dir)
     
-    message_debug( STATUS "Library search path: ${${Prefix}_SEARCH_PATH_LIBRARY}" )
+    # Also create "default platform" specific directories.
+    package_create_search_platform(${Prefix}_SEARCH_PATH_LIBRARY)
+	package_create_prefix_subpath(${Prefix}_SEARCH_PATH_LIBRARY ${Prefix})
+    
+    message_debug(STATUS "Library search path: ${${Prefix}_SEARCH_PATH_LIBRARY}")
 endmacro()
+
 
 
 
@@ -676,6 +684,23 @@ macro( PACKAGE_CREATE_VERSIONAL_NAMES Var Versions )
     message_debug( "" "Final: ${${Var}}" )
     message_footer_debug( "PACKAGE_CREATE_VERSIONAL_NAMES" )
 endmacro()
+
+
+
+
+# ************************************************************
+# Display library
+macro(PACKAGE_DISPLAY_LIBRARY Libraries)
+    foreach(lib ${Libraries})
+        if(NOT ${lib} STREQUAL "optimized" AND NOT ${lib} STREQUAL "debug")
+            message_verbose(STATUS "  * ${lib}")
+        else()
+            message_verbose(STATUS "[${lib}]")
+        endif()
+    endforeach()
+    unset(lib)
+endmacro()
+
 
 
 
