@@ -903,6 +903,7 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
     # ----------------------------------------
     # New C++ Features
     # ----------------------------------------
+    # Reauired CMake macro "check_cxx_compiler_flag".
     if(CMAKE_MAJOR_VERSION GREATER 2)
         option(PROJECT_ENABLE_COMPILER_NEW_CXX_FETURES "Enable new C++ features." ON)
         if(PROJECT_ENABLE_COMPILER_NEW_CXX_FETURES)
