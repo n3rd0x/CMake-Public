@@ -780,6 +780,7 @@ endmacro()
 
 
 
+
 # ************************************************************
 # Initialise compiler flags.
 macro(INITIALISE_PROJECT_COMPILER_FLAGS)
@@ -829,6 +830,7 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
             set(PROJECT_BUILD_TARGET_DEBUG TRUE)
             set(PROJECT_BUILD_TARGET_RELEASE FALSE)
             set(SelectTarget "Debug")
+            add_definitions(-DDEBUG_VERSION)
             message_status( STATUS "Build as DEBUG.")
         endif()
         
@@ -1077,7 +1079,7 @@ macro(INITIALISE_PROJECT_PATH)
     set(BuildTargetDebug "")
     set(BuildTargetRelease "")
     if(PROJECT_BUILD_TARGET_DEBUG)
-        set( BuildTarget "Debug")
+        set(BuildTarget "Debug")
     elseif(PROJECT_BUILD_TARGET_RELEASE)
         set(BuildTarget "Release")
     endif()
@@ -1184,17 +1186,28 @@ endmacro()
 
 # ************************************************************
 # Initialise library in the project SDK
-macro( INITIALISE_PROJECT_SDK_LIBRARY )
-    if( PROJECT_PATH_SDK_HOME )
-        # Locate the IncludeSdk.cmake
-        find_file( SdkFile "IncludeSdk.cmake" HINTS "${PROJECT_PATH_SDK_HOME}" )
-        if( SdkFile )
-            message_debug( STATUS "IncludeSdk.cmake is located." )
-            include( ${SdkFile} )
+macro(INITIALISE_PROJECT_SDK_LIBRARY)
+    if(PROJECT_PATH_SDK_HOME)
+        # Locate the IncludeCustom.cmake.
+        find_file(SdkCustomFile "IncludeCustom.cmake" HINTS "${PROJECT_PATH_SDK_HOME}")
+        if(SdkCustomFile)
+            message_debug(STATUS "IncludeCustom.cmake is located.")
+            include(${SdkCustomFile})
         else()
-            message_status( "" "Failed to locate the IncludeSdk.cmake." )
+            message_status(STATUS "Failed to locate the IncludeCustom.cmake.")
         endif()
-        unset( SdkFile CACHE )
+        
+        # Locate the IncludeSdk.cmake.
+        find_file(SdkFile "IncludeSdk.cmake" HINTS "${PROJECT_PATH_SDK_HOME}")
+        if(SdkFile)
+            message_debug(STATUS "IncludeSdk.cmake is located.")
+            include(${SdkFile})
+        else()
+            message_status("" "Failed to locate the IncludeSdk.cmake.")
+        endif()
+        
+        unset(SdkCustomFile CACHE)
+        unset(SdkFile CACHE)
     endif()
 endmacro()
 

@@ -23,13 +23,13 @@
 
 # ************************************************************
 # Copy binaries from target.
-macro( PACKAGE_ADD_RUNTIME_TARGET SrcFile Path )
+macro(PACKAGE_ADD_RUNTIME_TARGET SrcFile Path)
     # TST 2014-09-19
     # We assume that the source file do exists.
     # This would increase the processing speed.
     
     # Find the existence of the source.
-    get_filename_component( FileName ${SrcFile} NAME )
+    get_filename_component(FileName ${SrcFile} NAME)
     #get_filename_component( FilePath ${SrcFile} PATH )
     #find_file( FileFound NAMES ${FileName} HINTS ${FilePath} )
     #if( FileFound )
@@ -40,13 +40,13 @@ macro( PACKAGE_ADD_RUNTIME_TARGET SrcFile Path )
             ${SrcFile}
             "${Path}/${FileName}"
         )
-        message_verbose( STATUS "Adding [${SrcFile}] to ALL_CopyRuntime target." )
+        message_verbose(STATUS "Adding [${SrcFile}] to [${Path}] in ALL_CopyRuntime target.")
     #else()
     #    message_status( "" "Failed to locate: ${SrcFile}" )
     #endif()
     
     #unset( FileFound CACHE )
-    unset( FileName )
+    unset(FileName)
     #unset( FilePath )
 endmacro()
 
@@ -266,18 +266,18 @@ endmacro()
 
 # ************************************************************
 # Create prefix as sub directory
-macro( PACKAGE_CREATE_PREFIX_SUBPATH Output Prefix )
+macro(PACKAGE_CREATE_PREFIX_SUBPATH Output Prefix)
 	# Example: c:/ogre/include
     # Assume that Prefix is Ogre.
     # This will generate the following lines:
     # c:/ogre/include/Ogre
     # c:/ogre/include/OGRE
     # c:/ogre/include/ogre
-    string( TOUPPER ${Prefix} Uppercase )
-	string( TOLOWER ${Prefix} Lowercase )
-	set( WorkVar ${${Output}} )
-	foreach( var ${${Output}} )
-		set( WorkVar
+    string(TOUPPER ${Prefix} Uppercase)
+	string(TOLOWER ${Prefix} Lowercase)
+	set(WorkVar ${${Output}})
+	foreach(var ${${Output}})
+		set(WorkVar
             ${WorkVar}
 			"${var}/${Prefix}"
 			"${var}/${Uppercase}"
@@ -286,12 +286,13 @@ macro( PACKAGE_CREATE_PREFIX_SUBPATH Output Prefix )
 	endforeach()
     
     # Set to output.
-	set( ${Output} ${WorkVar} )
+	set(${Output} ${WorkVar})
 	
     # Clean up.
-    unset( Uppercase )
-	unset( Lowercase )
-	unset( WorkVar )
+    unset(Uppercase)
+	unset(Lowercase)
+	unset(WorkVar)
+    unset(var)
 endmacro()
 
 
@@ -706,13 +707,14 @@ endmacro()
 
 # ************************************************************
 # End the package
-macro( PACKAGE_END Prefix )
-	if( ${Prefix}_FOUND )
-        message_verbose( STATUS "${Prefix} libraries: ${${Prefix}_LIBRARIES}" )
-        message_verbose( STATUS "${Prefix} includes:  ${${Prefix}_INCLUDE_DIR}" )
-        message_status( STATUS "The ${Prefix} library is located." )
+macro(PACKAGE_END Prefix)
+	if(${Prefix}_FOUND)
+        message_verbose(STATUS "${Prefix} libraries:")
+        package_display_library("${${Prefix}_LIBRARIES}")
+        message_verbose(STATUS "${Prefix} includes:  ${${Prefix}_INCLUDE_DIR}")
+        message_status(STATUS "The ${Prefix} library is located." )
     else()
-        message_status( "" "Failed to locate the ${Prefix} library." )
+        message_status("" "Failed to locate the ${Prefix} library.")
     endif()
 endmacro()
 
@@ -720,22 +722,25 @@ endmacro()
 
 
 # ************************************************************
-# Find directory
-macro(PACKAGE_FIND_PATH Prefix Files SearchPath Suffixes)
-	message_sub_header("Package Find Path (${Prefix})")
-    message_debug(STATUS "Files:           ${Files}")
+# Find file
+macro(PACKAGE_FIND_FILE Prefix SearchName SearchPath Suffixes)
+    message_sub_header("Package Find File (${Prefix})")
+    message_verbose(STATUS "Searching files: ${SearchName}")
+    message_debug(STATUS "Names:           ${SearchName}")
     message_debug(STATUS "Search path:     ${SearchPath}")
     message_debug(STATUS "Suffixes:        ${Suffixes}")
     
-    find_path(${Prefix} NAMES ${Files} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
+    find_file(${Prefix} NAMES ${SearchName} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
     if(${Prefix})
-        message_debug(STATUS "Found path:      ${${Prefix}}")
+        message_debug(STATUS "Found file:      ${${Prefix}}")
     else()
-        message_verbose("" "Failed to locate one of these paths: ${SearchPath}")
+        message_verbose("" "Failed to locate one of these files: ${SearchName}")
     endif()
     
-    message_sub_footer("Package Find Path (${Prefix})")
+    message_sub_footer("Package Find File (${Prefix})")
 endmacro()
+
+
 
 
 
@@ -761,24 +766,22 @@ endmacro()
 
 
 
-
 # ************************************************************
-# Find file
-macro(PACKAGE_FIND_FILE Prefix SearchName SearchPath Suffixes)
-    message_sub_header("Package Find File (${Prefix})")
-    message_verbose(STATUS "Searching files: ${SearchName}")
-    message_debug(STATUS "Names:           ${SearchName}")
+# Find directory
+macro(PACKAGE_FIND_PATH Prefix Files SearchPath Suffixes)
+	message_sub_header("Package Find Path (${Prefix})")
+    message_debug(STATUS "Files:           ${Files}")
     message_debug(STATUS "Search path:     ${SearchPath}")
     message_debug(STATUS "Suffixes:        ${Suffixes}")
     
-    find_file(${Prefix} NAMES ${SearchName} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
+    find_path(${Prefix} NAMES ${Files} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
     if(${Prefix})
-        message_debug(STATUS "Found file:      ${${Prefix}}")
+        message_debug(STATUS "Found path:      ${${Prefix}}")
     else()
-        message_verbose("" "Failed to locate one of these files: ${SearchName}")
+        message_verbose("" "Failed to locate one of these paths: ${SearchPath}")
     endif()
     
-    message_sub_footer("Package Find File (${Prefix})")
+    message_sub_footer("Package Find Path (${Prefix})")
 endmacro()
 
 
