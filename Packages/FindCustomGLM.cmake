@@ -57,7 +57,7 @@ if(GLM_PATH_INCLUDE)
     message_status(STATUS "The GLM library is located...")
     set(GLM_FOUND TRUE)
     set(GLM_INCLUDE_DIR "${GLM_PATH_INCLUDE}")
-    package_add_parent_dir(GLM)
+    package_add_parent_dir(GLM ADD_PARENT)
 else()
     message_status("" "Failed to locate the GLM library.")
     set(GLM_FOUND FALSE)
@@ -162,5 +162,5 @@ MACRO(ENABLE_LIBRARY_GLM_FILES)
 ENDMACRO()
 
 
-message_footer( GLM )
+message_footer(GLM)
 
