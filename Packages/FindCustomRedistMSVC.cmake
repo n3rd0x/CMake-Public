@@ -51,20 +51,29 @@ set(MSVCP_NAME "msvcp${VERSION_VALUE}")
 set(MSVCR_NAME "msvcr${VERSION_VALUE}")
 package_create_debug_binary_names(MSVCP_NAME)
 package_create_release_binary_names(MSVCP_NAME)
-package_create_debug_binary_names(MSVCR_NAME)
-package_create_release_binary_names(MSVCR_NAME)
+if(NOT MSVC14)
+    package_create_debug_binary_names(MSVCR_NAME)
+    package_create_release_binary_names(MSVCR_NAME)
+endif()
 
 
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed(RedistMSVC_PREFIX_PATH
-    RedistMSVC_MSVCP_DEBUG
-    RedistMSVC_MSVCP_RELEASE
-    RedistMSVC_MSVCR_DEBUG
-    RedistMSVC_MSVCR_RELEASE
-)
+if(NOT MSVC14)
+    package_clear_if_changed(RedistMSVC_PREFIX_PATH
+        RedistMSVC_MSVCP_DEBUG
+        RedistMSVC_MSVCP_RELEASE
+        RedistMSVC_MSVCR_DEBUG
+        RedistMSVC_MSVCR_RELEASE
+    )
+else()
+    package_clear_if_changed(RedistMSVC_PREFIX_PATH
+        RedistMSVC_MSVCP_DEBUG
+        RedistMSVC_MSVCP_RELEASE
+    )
+endif()
 
 
 
@@ -73,15 +82,29 @@ package_clear_if_changed(RedistMSVC_PREFIX_PATH
 # Find paths
 package_find_file(RedistMSVC_MSVCP_DEBUG "${MSVCP_NAME_DEBUG}" "${RedistMSVC_HOME}" "debug")
 package_find_file(RedistMSVC_MSVCP_RELEASE "${MSVCP_NAME_RELEASE}" "${RedistMSVC_HOME}" "release")
-package_find_file(RedistMSVC_MSVCR_DEBUG "${MSVCR_NAME_DEBUG}" "${RedistMSVC_HOME}" "debug")
-package_find_file(RedistMSVC_MSVCR_RELEASE "${MSVCR_NAME_RELEASE}" "${RedistMSVC_HOME}" "release")
 
-if(RedistMSVC_MSVCP_DEBUG AND RedistMSVC_MSVCR_DEBUG)
-    set(RedistMSVC_BINARY_DEBUG "${RedistMSVC_MSVCP_DEBUG}" "${RedistMSVC_MSVCR_DEBUG}")
+if(NOT MSVC14)
+    package_find_file(RedistMSVC_MSVCR_DEBUG "${MSVCR_NAME_DEBUG}" "${RedistMSVC_HOME}" "debug")
+    package_find_file(RedistMSVC_MSVCR_RELEASE "${MSVCR_NAME_RELEASE}" "${RedistMSVC_HOME}" "release")
 endif()
 
-if(RedistMSVC_MSVCP_RELEASE AND RedistMSVC_MSVCR_RELEASE)
-    set(RedistMSVC_BINARY_RELEASE "${RedistMSVC_MSVCP_RELEASE}" "${RedistMSVC_MSVCR_RELEASE}")
+if(NOT MSVC14)
+    if(RedistMSVC_MSVCP_DEBUG AND RedistMSVC_MSVCR_DEBUG)
+        set(RedistMSVC_BINARY_DEBUG "${RedistMSVC_MSVCP_DEBUG}" "${RedistMSVC_MSVCR_DEBUG}")
+    endif()
+
+    if(RedistMSVC_MSVCP_RELEASE AND RedistMSVC_MSVCR_RELEASE)
+        set(RedistMSVC_BINARY_RELEASE "${RedistMSVC_MSVCP_RELEASE}" "${RedistMSVC_MSVCR_RELEASE}")
+    endif()
+else()
+    if(RedistMSVC_MSVCP_DEBUG)
+        set(RedistMSVC_BINARY_DEBUG "${RedistMSVC_MSVCP_DEBUG}")
+    endif()
+
+    if(RedistMSVC_MSVCP_RELEASE)
+        set(RedistMSVC_BINARY_RELEASE "${RedistMSVC_MSVCP_RELEASE}")
+    endif()
+
 endif()
 
 
