@@ -1,6 +1,6 @@
 # ************************************************************
 # Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the “Software”),
+# copy of this software and associated documentation files (the "Software"),
 # to deal in the Software without restriction, including without limitation
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
@@ -9,7 +9,7 @@
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
 # 
-# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 # NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
@@ -23,13 +23,13 @@
 
 # ************************************************************
 # Copy binaries from target.
-macro( PACKAGE_ADD_RUNTIME_TARGET SrcFile Path )
+macro(PACKAGE_ADD_RUNTIME_TARGET SrcFile Path)
     # TST 2014-09-19
     # We assume that the source file do exists.
     # This would increase the processing speed.
     
     # Find the existence of the source.
-    get_filename_component( FileName ${SrcFile} NAME )
+    get_filename_component(FileName ${SrcFile} NAME)
     #get_filename_component( FilePath ${SrcFile} PATH )
     #find_file( FileFound NAMES ${FileName} HINTS ${FilePath} )
     #if( FileFound )
@@ -40,13 +40,13 @@ macro( PACKAGE_ADD_RUNTIME_TARGET SrcFile Path )
             ${SrcFile}
             "${Path}/${FileName}"
         )
-        message_verbose( STATUS "Adding [${SrcFile}] to ALL_CopyRuntime target." )
+        message_verbose(STATUS "Adding [${SrcFile}] to [${Path}] in ALL_CopyRuntime target.")
     #else()
     #    message_status( "" "Failed to locate: ${SrcFile}" )
     #endif()
     
     #unset( FileFound CACHE )
-    unset( FileName )
+    unset(FileName)
     #unset( FilePath )
 endmacro()
 
@@ -268,18 +268,18 @@ endmacro()
 
 # ************************************************************
 # Create prefix as sub directory
-macro( PACKAGE_CREATE_PREFIX_SUBPATH Output Prefix )
+macro(PACKAGE_CREATE_PREFIX_SUBPATH Output Prefix)
 	# Example: c:/ogre/include
     # Assume that Prefix is Ogre.
     # This will generate the following lines:
     # c:/ogre/include/Ogre
     # c:/ogre/include/OGRE
     # c:/ogre/include/ogre
-    string( TOUPPER ${Prefix} Uppercase )
-	string( TOLOWER ${Prefix} Lowercase )
-	set( WorkVar ${${Output}} )
-	foreach( var ${${Output}} )
-		set( WorkVar
+    string(TOUPPER ${Prefix} Uppercase)
+	string(TOLOWER ${Prefix} Lowercase)
+	set(WorkVar ${${Output}})
+	foreach(var ${${Output}})
+		set(WorkVar
             ${WorkVar}
 			"${var}/${Prefix}"
 			"${var}/${Uppercase}"
@@ -288,12 +288,13 @@ macro( PACKAGE_CREATE_PREFIX_SUBPATH Output Prefix )
 	endforeach()
     
     # Set to output.
-	set( ${Output} ${WorkVar} )
+	set(${Output} ${WorkVar})
 	
     # Clean up.
-    unset( Uppercase )
-	unset( Lowercase )
-	unset( WorkVar )
+    unset(Uppercase)
+	unset(Lowercase)
+	unset(WorkVar)
+    unset(var)
 endmacro()
 
 
@@ -335,12 +336,12 @@ endmacro()
 
 # ************************************************************
 # Create search include path
-macro( PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix )
-    message_verbose( STATUS "Creating ${Prefix} include search path." )
+macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
+    message_verbose(STATUS "Creating ${Prefix} include search path.")
     
     # Create search for "default" directories.
-    foreach( dir ${${Prefix}_PREFIX_PATH} )
-        set( ${Prefix}_SEARCH_PATH_INCLUDE
+    foreach(dir ${${Prefix}_PREFIX_PATH})
+        set(${Prefix}_SEARCH_PATH_INCLUDE
 			"${${Prefix}_SEARCH_PATH_INCLUDE}"
 			"${dir}/inc"
             "${dir}/Inc"
@@ -350,18 +351,21 @@ macro( PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix )
     endforeach()
     
     # Add for UNIX system.
-    if( UNIX )
-        set( ${Prefix}_SEARCH_PATH_INCLUDE
-			"${${Prefix}_SEARCH_PATH_INCLUDE}"
+    if(UNIX)
+        set(${Prefix}_SEARCH_PATH_INCLUDE
+            "${${Prefix}_SEARCH_PATH_INCLUDE}"
 			"/usr/include"
 			"/usr/local/include"
 	    )
     endif()
     
-     # Create specific directories.
-	package_create_prefix_subpath( ${Prefix}_SEARCH_PATH_INCLUDE ${Prefix} )
+    # Clear temp vars.
+    unset(dir)
     
-    message_debug( STATUS "Include search path: ${${Prefix}_SEARCH_PATH_INCLUDE}" )
+    # Create specific directories.
+	package_create_prefix_subpath(${Prefix}_SEARCH_PATH_INCLUDE ${Prefix})
+    
+    message_debug(STATUS "Include search path: ${${Prefix}_SEARCH_PATH_INCLUDE}")
 endmacro()
 
 
@@ -369,13 +373,13 @@ endmacro()
 
 # ************************************************************
 # Create search library path
-macro( PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix )
-    message_verbose( STATUS "Creating ${Prefix} library search path." )
+macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
+    message_verbose(STATUS "Creating ${Prefix} library search path.")
     
     # Create search for "default" directories.
-    foreach( dir ${${Prefix}_PREFIX_PATH} )
-        set( ${Prefix}_SEARCH_PATH_LIBRARY
-			"${${Prefix}_SEARCH_PATH_LIBRARY}"
+    foreach(dir ${${Prefix}_PREFIX_PATH})
+        list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
+            "${dir}"
             "${dir}/lib"
             "${dir}/Lib"
             "${dir}/library"
@@ -384,21 +388,26 @@ macro( PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix )
     endforeach()
     
     # Add for UNIX system.
-    if( UNIX )
-        set( ${Prefix}_SEARCH_PATH_LIBRARY
-			"${${Prefix}_SEARCH_PATH_LIBRARY}"
+    if(UNIX)
+        list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
 			"/usr/lib"
 			"/usr/lib/x86_64-linux-gnu"
 			"/usr/local/lib"
+            "/usr/lib/i386-linux-gnu"
+            "/usr/lib/arm-linux-gnueabihf"
 	    )
     endif()
     
-    # Also create "default platform" specific directories.
-    package_create_search_platform( ${Prefix}_SEARCH_PATH_LIBRARY           )
-	package_create_prefix_subpath(  ${Prefix}_SEARCH_PATH_LIBRARY ${Prefix} )
+    # Clear temp vars.
+    unset(dir)
     
-    message_debug( STATUS "Library search path: ${${Prefix}_SEARCH_PATH_LIBRARY}" )
+    # Also create "default platform" specific directories.
+    package_create_search_platform(${Prefix}_SEARCH_PATH_LIBRARY)
+	package_create_prefix_subpath(${Prefix}_SEARCH_PATH_LIBRARY ${Prefix})
+    
+    message_debug(STATUS "Library search path: ${${Prefix}_SEARCH_PATH_LIBRARY}")
 endmacro()
+
 
 
 
@@ -681,15 +690,33 @@ endmacro()
 
 
 
+
+# ************************************************************
+# Display library
+macro(PACKAGE_DISPLAY_LIBRARY Libraries)
+    foreach(lib ${Libraries})
+        if(NOT ${lib} STREQUAL "optimized" AND NOT ${lib} STREQUAL "debug")
+            message_verbose(STATUS "  * ${lib}")
+        else()
+            message_verbose(STATUS "[${lib}]")
+        endif()
+    endforeach()
+    unset(lib)
+endmacro()
+
+
+
+
 # ************************************************************
 # End the package
-macro( PACKAGE_END Prefix )
-	if( ${Prefix}_FOUND )
-        message_verbose( STATUS "${Prefix} libraries: ${${Prefix}_LIBRARIES}" )
-        message_verbose( STATUS "${Prefix} includes:  ${${Prefix}_INCLUDE_DIR}" )
-        message_status( STATUS "The ${Prefix} library is located." )
+macro(PACKAGE_END Prefix)
+	if(${Prefix}_FOUND)
+        message_verbose(STATUS "${Prefix} libraries:")
+        package_display_library("${${Prefix}_LIBRARIES}")
+        message_verbose(STATUS "${Prefix} includes:  ${${Prefix}_INCLUDE_DIR}")
+        message_status(STATUS "The ${Prefix} library is located." )
     else()
-        message_status( "" "Failed to locate the ${Prefix} library." )
+        message_status("" "Failed to locate the ${Prefix} library.")
     endif()
 endmacro()
 
@@ -698,22 +725,24 @@ endmacro()
 
 # ************************************************************
 # Find file
-macro( PACKAGE_FIND_FILE Prefix SearchName SearchPath Suffixes )
-	message_sub_header( "Package Find File (${Prefix})" )
-    message_verbose( STATUS "Searching files: ${SearchName}"    )
-    message_debug( STATUS "Names:           ${SearchName}"      )
-    message_debug( STATUS "Search path:     ${SearchPath}"      )
-    message_debug( STATUS "Suffixes:        ${Suffixes}"        )
+macro(PACKAGE_FIND_FILE Prefix SearchName SearchPath Suffixes)
+    message_sub_header("Package Find File (${Prefix})")
+    message_verbose(STATUS "Searching files: ${SearchName}")
+    message_debug(STATUS "Names:           ${SearchName}")
+    message_debug(STATUS "Search path:     ${SearchPath}")
+    message_debug(STATUS "Suffixes:        ${Suffixes}")
     
-    find_file( ${Prefix} NAMES ${SearchName} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH )
-    if( ${Prefix} )
-        message_debug( STATUS "Found file:      ${${Prefix}}" )
+    find_file(${Prefix} NAMES ${SearchName} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
+    if(${Prefix})
+        message_debug(STATUS "Found file:      ${${Prefix}}")
     else()
-        message_verbose( "" "Failed to locate one of these files: ${SearchName}" )
+        message_verbose("" "Failed to locate one of these files: ${SearchName}")
     endif()
     
-    message_sub_footer( "Package Find File (${Prefix})" )
+    message_sub_footer("Package Find File (${Prefix})")
 endmacro()
+
+
 
 
 
@@ -739,23 +768,22 @@ endmacro()
 
 
 
-
 # ************************************************************
-# Find include directory
-macro( PACKAGE_FIND_PATH Prefix Files SearchPath Suffixes )
-	message_sub_header( "Package Find Path (${Prefix})" )
-    message_debug( STATUS "Files:           ${Files}"       )
-    message_debug( STATUS "Search path:     ${SearchPath}"  )
-    message_debug( STATUS "Suffixes:        ${Suffixes}"    )
+# Find directory
+macro(PACKAGE_FIND_PATH Prefix Files SearchPath Suffixes)
+	message_sub_header("Package Find Path (${Prefix})")
+    message_debug(STATUS "Files:           ${Files}")
+    message_debug(STATUS "Search path:     ${SearchPath}")
+    message_debug(STATUS "Suffixes:        ${Suffixes}")
     
-    find_path( ${Prefix} NAMES ${Files} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH )
-    if( ${Prefix} )
-        message_debug( STATUS "Found path:      ${${Prefix}}" )
+    find_path(${Prefix} NAMES ${Files} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
+    if(${Prefix})
+        message_debug(STATUS "Found path:      ${${Prefix}}")
     else()
-        message_verbose( "" "Failed to locate one of these paths: ${SearchPath}" )
+        message_verbose("" "Failed to locate one of these paths: ${SearchPath}")
     endif()
     
-    message_sub_footer( "Package Find Path (${Prefix})" )
+    message_sub_footer("Package Find Path (${Prefix})")
 endmacro()
 
 
