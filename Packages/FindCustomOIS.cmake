@@ -22,30 +22,30 @@
 
 # ************************************************************
 # Start package
-message_header( OIS )
-package_begin( OIS )
-package_create_home_path( OIS OIS_ROOT )
+message_header(OIS)
+package_begin(OIS)
+package_create_home_path(OIS OIS_ROOT)
 
 
-if( OIS_USE_CUSTOM_PACKAGE )
+if(OIS_USE_CUSTOM_PACKAGE)
 	# ************************************************************
 	# Create search path
-	set( OIS_PREFIX_PATH ${OIS_HOME} )
-	package_create_search_path_include( OIS )
-	package_create_search_path_library( OIS )
-	package_create_search_path_plugin( OIS )
+	set(OIS_PREFIX_PATH ${OIS_HOME})
+	package_create_search_path_include(OIS)
+	package_create_search_path_library(OIS)
+	package_create_search_path_plugin(OIS)
 
 
 	# ************************************************************
 	# Create search name
-	set( OIS_LIBRARY_NAMES "OIS" )
-	package_create_debug_names( OIS_LIBRARY_NAMES )
+	set(OIS_LIBRARY_NAMES "OIS")
+	package_create_debug_names(OIS_LIBRARY_NAMES)
 
 
 	# ************************************************************
 	# Clear
-	if( WIN32 )
-		package_clear_if_changed( OIS_PREFIX_PATH
+	if(WIN32)
+		package_clear_if_changed(OIS_PREFIX_PATH
 			OIS_BINARY_RELEASE
 			OIS_BINARY_DEBUG
 			OIS_LIBRARY_RELEASE
@@ -53,7 +53,7 @@ if( OIS_USE_CUSTOM_PACKAGE )
 			OIS_PATH_INCLUDE
 		)
 	else()
-		package_clear_if_changed( OIS_PREFIX_PATH
+		package_clear_if_changed(OIS_PREFIX_PATH
 			OIS_LIBRARY_RELEASE
 			OIS_LIBRARY_DEBUG
 			OIS_PATH_INCLUDE
@@ -63,15 +63,15 @@ if( OIS_USE_CUSTOM_PACKAGE )
 
 	# ************************************************************
 	# Find paths
-	package_find_path( OIS_PATH_INCLUDE "OIS.h" "${OIS_SEARCH_PATH_INCLUDE}" "OIS;Ois;ois" )
-	package_find_library( OIS_LIBRARY_DEBUG "${OIS_LIBRARY_NAMES_DEBUG}" "${OIS_SEARCH_PATH_LIBRARY}" "debug" )
-	package_find_library( OIS_LIBRARY_RELEASE "${OIS_LIBRARY_NAMES}" "${OIS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel" )
-	package_make_library( OIS_LIBRARY OIS_LIBRARY_DEBUG OIS_LIBRARY_RELEASE )
+	package_find_path(OIS_PATH_INCLUDE "OIS.h" "${OIS_SEARCH_PATH_INCLUDE}" "OIS;Ois;ois")
+	package_find_library(OIS_LIBRARY_DEBUG "${OIS_LIBRARY_NAMES_DEBUG}" "${OIS_SEARCH_PATH_LIBRARY}" "debug")
+	package_find_library(OIS_LIBRARY_RELEASE "${OIS_LIBRARY_NAMES}" "${OIS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+	package_make_library(OIS_LIBRARY OIS_LIBRARY_DEBUG OIS_LIBRARY_RELEASE)
 else()
 	# ************************************************************
 	# Clear
-	if( WIN32 )
-		package_clear_if_changed( OIS_INCLUDE_DIR
+	if(WIN32)
+		package_clear_if_changed(OIS_INCLUDE_DIR
 			OIS_BINARY_DBG
 			OIS_BINARY_REL
 		)
@@ -80,50 +80,50 @@ else()
 		
 	# ************************************************************
 	# Use official package
-	find_package( OIS )
+	find_package(OIS)
     
-    set( OIS_PATH_INCLUDE ${OIS_INCLUDE_DIR} )
+    set(OIS_PATH_INCLUDE ${OIS_INCLUDE_DIR})
 endif()
 
 
 # ************************************************************
 # Find binaries on Windows
-if( WIN32 )
-	set( OIS_BINARY_NAMES "OIS" )
-	package_create_release_binary_names( OIS_BINARY_NAMES )
-	package_create_debug_binary_names( OIS_BINARY_NAMES )
-	package_create_search_path_binary( OIS )
+if(WIN32)
+	set(OIS_BINARY_NAMES "OIS")
+	package_create_release_binary_names(OIS_BINARY_NAMES)
+	package_create_debug_binary_names(OIS_BINARY_NAMES)
+	package_create_search_path_binary(OIS)
 	
-	set( OIS_SEARCH_BINARIES 
+	set(OIS_SEARCH_BINARIES 
 		${OIS_SEARCH_PATH_BINARY}
 		${OIS_SEARCH_PATH_LIBRARY}
 	)
 	
-	if( OIS_USE_CUSTOM_PACKAGE )
-		package_find_file( OIS_BINARY_DEBUG "${OIS_BINARY_NAMES_DEBUG}" "${OIS_SEARCH_BINARIES}" "debug" )
-		package_find_file( OIS_BINARY_RELEASE "${OIS_BINARY_NAMES_RELEASE}" "${OIS_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
+	if(OIS_USE_CUSTOM_PACKAGE)
+		package_find_file(OIS_BINARY_DEBUG "${OIS_BINARY_NAMES_DEBUG}" "${OIS_SEARCH_BINARIES}" "debug")
+		package_find_file(OIS_BINARY_RELEASE "${OIS_BINARY_NAMES_RELEASE}" "${OIS_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 	else()
-		if( NOT ${OIS_BINARY_DBG}  )
-			package_find_file( OIS_BINARY_DBG "${OIS_BINARY_NAMES_DEBUG}" "${OIS_SEARCH_BINARIES}" "debug" )
+		if(NOT ${OIS_BINARY_DBG})
+			package_find_file(OIS_BINARY_DBG "${OIS_BINARY_NAMES_DEBUG}" "${OIS_SEARCH_BINARIES}" "debug")
 		endif()
 		
-		if( NOT ${OIS_BINARY_REL} )
-			package_find_file( OIS_BINARY_REL "${OIS_BINARY_NAMES_RELEASE}" "${OIS_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
+		if(NOT ${OIS_BINARY_REL})
+			package_find_file(OIS_BINARY_REL "${OIS_BINARY_NAMES_RELEASE}" "${OIS_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 		endif()
 		
-		set( OIS_BINARY_DEBUG ${OIS_BINARY_DBG} )
-		set( OIS_BINARY_RELEASE ${OIS_BINARY_REL} )
+		set(OIS_BINARY_DEBUG ${OIS_BINARY_DBG})
+		set(OIS_BINARY_RELEASE ${OIS_BINARY_REL})
 	endif()
     
-    package_copy_binary_from_target( OIS )
+    package_copy_binary_from_target(OIS)
 endif()
 
 
 # ************************************************************
 # Finalize package
-package_add_parent_dir( OIS )
-if( OIS_USE_OFFICIAL_PACKAGE )
-	package_validate( OIS )
+package_add_parent_dir(OIS ADD_PARENT)
+if(OIS_USE_OFFICIAL_PACKAGE)
+	package_validate(OIS)
 endif()
-package_end( OIS )
-message_footer( OIS )
+package_end(OIS)
+message_footer(OIS)
