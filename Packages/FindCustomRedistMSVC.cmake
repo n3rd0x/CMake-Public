@@ -36,6 +36,13 @@ set(RedistMSVC_PREFIX_PATH ${RedistMSVC_HOME})
 
 
 # ************************************************************
+# Options
+option(RedistMSVC_DIRECTX11 "Search for DirectX 11.0." OFF)
+
+
+
+
+# ************************************************************
 # Create search name
 set(VERSION_VALUE "")
 if(MSVC14)
@@ -61,19 +68,33 @@ endif()
 
 # ************************************************************
 # Clear
+set(ClearIfChanged 
+    RedistMSVC_HOME
+)
+set(Modules
+    RedistMSVC_MSVCP_DEBUG
+    RedistMSVC_MSVCP_RELEASE
+)
 if(NOT MSVC14)
-    package_clear_if_changed(RedistMSVC_PREFIX_PATH
-        RedistMSVC_MSVCP_DEBUG
-        RedistMSVC_MSVCP_RELEASE
-        RedistMSVC_MSVCR_DEBUG
-        RedistMSVC_MSVCR_RELEASE
-    )
-else()
-    package_clear_if_changed(RedistMSVC_PREFIX_PATH
+    list(APPEND Modules
         RedistMSVC_MSVCP_DEBUG
         RedistMSVC_MSVCP_RELEASE
     )
 endif()
+
+if(RedistMSVC_DIRECTX11)
+    list(APPEND Modules
+        RedistMSVC_DX11
+    )
+endif()
+foreach(VAR ${ClearIfChanged})
+    package_clear_if_changed(${VAR}
+        ${Modules}
+    )
+endforeach()
+unset(VAR)
+unset(ClearIfChanged)
+unset(Modules)
 
 
 
@@ -88,23 +109,51 @@ if(NOT MSVC14)
     package_find_file(RedistMSVC_MSVCR_RELEASE "${MSVCR_NAME_RELEASE}" "${RedistMSVC_HOME}" "release")
 endif()
 
+if(RedistMSVC_DIRECTX11)
+    package_find_file(RedistMSVC_DX11 "D3Dcompiler_47.dll" "${RedistMSVC_HOME}" "debug;release")
+endif()
+
+# Add into final variable.
+set(RedistFoundDebug TRUE)
+set(RedistFoundRelease TRUE)
+set(RedistMSVC_BINARY_DEBUG "")
+set(RedistMSVC_BINARY_RELEASE "")
 if(NOT MSVC14)
     if(RedistMSVC_MSVCP_DEBUG AND RedistMSVC_MSVCR_DEBUG)
         set(RedistMSVC_BINARY_DEBUG "${RedistMSVC_MSVCP_DEBUG}" "${RedistMSVC_MSVCR_DEBUG}")
+    else()
+        set(RedistFoundDebug FALSE)
     endif()
-
+    
     if(RedistMSVC_MSVCP_RELEASE AND RedistMSVC_MSVCR_RELEASE)
         set(RedistMSVC_BINARY_RELEASE "${RedistMSVC_MSVCP_RELEASE}" "${RedistMSVC_MSVCR_RELEASE}")
+    else()
+        set(RedistFoundRelease FALSE)
     endif()
 else()
     if(RedistMSVC_MSVCP_DEBUG)
         set(RedistMSVC_BINARY_DEBUG "${RedistMSVC_MSVCP_DEBUG}")
+    else()
+        set(RedistFoundDebug FALSE)
     endif()
-
+    
     if(RedistMSVC_MSVCP_RELEASE)
         set(RedistMSVC_BINARY_RELEASE "${RedistMSVC_MSVCP_RELEASE}")
+     else()
+        
     endif()
+endif()
 
+if(RedistFoundDebug OR RedistFoundRelease)
+    if(RedistMSVC_DIRECTX11)
+        if(RedistMSVC_DX11)
+            list(APPEND RedistMSVC_BINARY_DEBUG "${RedistMSVC_DX11}")
+            list(APPEND RedistMSVC_BINARY_RELEASE "${RedistMSVC_DX11}")
+        else()
+            set(RedistFoundDebug FALSE)
+            set(RedistFoundRelease FALSE)
+        endif()
+    endif()
 endif()
 
 
@@ -112,9 +161,13 @@ endif()
 
 # ************************************************************
 # Finalize package
-if(RedistMSVC_BINARY_DEBUG OR RedistMSVC_BINARY_RELEASE)
+if(RedistFoundDebug OR RedistFoundRelease)
     message_status(STATUS "The RedistMSVC library is located.")
 else()
     message_status("" "Failed to locate the RedistMSVC library.")
 endif()
+
+unset(RedistFoundDebug)
+unset(RedistFoundRelease)
 message_footer(RedistMSVC)
+
