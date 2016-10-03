@@ -417,6 +417,22 @@ endmacro()
 
 
 # ************************************************************
+# Copy QT configuration file.
+macro(QT_DEPLOY_RUNTIME_FILES)
+    if(QT_FOUND)
+        if(QT_DEPLOY_LIBRARY)
+            package_copy_binary_from_target(QT)
+            qt_copy_necessary_binary_from_target()
+        else()
+            add_data_target("${PROJECT_PATH_CMAKE_TEMPLATE}/qt_in.conf" Name "qt.conf" GENERATE)
+        endif()
+    endif()
+endmacro()
+
+
+
+
+# ************************************************************
 # Install necessary binaries.
 macro(QT_INSTALL_NECESSARY_BINARIES)
     # Help information.
