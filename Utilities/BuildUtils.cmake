@@ -819,24 +819,30 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
     # ----------------------------------------
     # Setting default target mode.
     if(MINGW OR UNIX)
-        option(PROJECT_BUILD_AS_RELEASE "Build project as release" OFF)
+        # option(PROJECT_BUILD_AS_RELEASE "Build project as release" OFF)
         
-        if(PROJECT_BUILD_AS_RELEASE)
-            set(PROJECT_BUILD_TARGET_DEBUG FALSE)
-            set(PROJECT_BUILD_TARGET_RELEASE TRUE)
-            set(SelectTarget "Release")
-            message_status(STATUS "Build as RELEASE.")
-        else()
-            set(PROJECT_BUILD_TARGET_DEBUG TRUE)
-            set(PROJECT_BUILD_TARGET_RELEASE FALSE)
-            set(SelectTarget "Debug")
-            add_definitions(-DDEBUG_VERSION)
-            message_status( STATUS "Build as DEBUG.")
+        # if(PROJECT_BUILD_AS_RELEASE)
+            # set(PROJECT_BUILD_TARGET_DEBUG FALSE)
+            # set(PROJECT_BUILD_TARGET_RELEASE TRUE)
+            # set(SelectTarget "Release")
+            # message_status(STATUS "Build as RELEASE.")
+        # else()
+            # set(PROJECT_BUILD_TARGET_DEBUG TRUE)
+            # set(PROJECT_BUILD_TARGET_RELEASE FALSE)
+            # set(SelectTarget "Debug")
+            # add_definitions(-DDEBUG_VERSION)
+            # message_status( STATUS "Build as DEBUG.")
+        # endif()
+        
+        # # Set target mode.
+        # set(CMAKE_BUILD_TYPE "${SelectTarget}" CACHE STRING "Target mode of this project." FORCE)
+		# unset(SelectTarget)
+        
+        
+        if(CMAKE_BUILD_TYPE STREQUAL "" OR NOT CMAKE_BUILD_TYPE)
+            set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Target mode of this project.")
+            message_verbose(STATUS "Set to Release mode due to the build target is not set.")
         endif()
-        
-        # Set target mode.
-        set(CMAKE_BUILD_TYPE "${SelectTarget}" CACHE STRING "Target mode of this project." FORCE)
-		unset(SelectTarget)
     endif()
     
     
@@ -1075,14 +1081,14 @@ macro(INITIALISE_PROJECT_PATH)
 	# Install directory.
     set(PROJECT_PATH_INSTALL "${CMAKE_CURRENT_BINARY_DIR}/Install" CACHE PATH "Installation directory.")
     
-    set(BuildTarget "")
+    set(BuildTarget "${CMAKE_BUILD_TYPE}")
     set(BuildTargetDebug "")
     set(BuildTargetRelease "")
-    if(PROJECT_BUILD_TARGET_DEBUG)
-        set(BuildTarget "Debug")
-    elseif(PROJECT_BUILD_TARGET_RELEASE)
-        set(BuildTarget "Release")
-    endif()
+    # if(PROJECT_BUILD_TARGET_DEBUG)
+        # set(BuildTarget "Debug")
+    # elseif(PROJECT_BUILD_TARGET_RELEASE)
+        # set(BuildTarget "Release")
+    # endif()
 
     if(MSVC)
         set(BuildTargetDebug "Debug")
