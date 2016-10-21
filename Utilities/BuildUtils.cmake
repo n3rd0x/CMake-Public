@@ -931,13 +931,15 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
             add_definitions(-D_WIN32_WINNT=0x0501)
         endif()
         
-        if(ToolSet NOT STREQUAL "")
+        if(NOT Toolset STREQUAL "")
             # This apply only for Visual Studio 2012 and greater.
             if(MSVC_VERSION GREATER 1600)
                 set(CMAKE_GENERATOR_TOOLSET ${Toolset} CACHE STRING "Platform toolset." FORCE)
-                unset(Toolset)
             endif()
+        else()
+            unset(CMAKE_GENERATOR_TOOLSET CACHE)
         endif()
+        unset(Toolset)
     endif()
 
     
