@@ -560,14 +560,29 @@ endmacro()
 
 # ************************************************************
 # Create MSVC toolset
-macro( CREATE_MSVC_TOOLSET OUTPUT )
-    set( ${OUTPUT} "" )
-    if( WIN32 )
+macro(CREATE_MSVC_TOOLSET OUTPUT)
+    set(${OUTPUT} "")
+    if(WIN32)
         # This apply for Visual Studio version greater than 2012.
-        if( MSVC11 )
+        if(MSVC11)
             set( ${OUTPUT} "v110" )
-        elseif( MSVC12 )
+        elseif(MSVC12)
             set( ${OUTPUT} "v120" )
+        endif()
+    endif()
+endmacro()
+
+
+
+
+# ************************************************************
+# Create MSVC toolset with Clang
+macro(CREATE_MSVC_TOOLSET_CLANG OUTPUT)
+    set(${OUTPUT} "")
+    if(WIN32)
+        # This apply for Visual Studio version greater than 2012.
+        if(MSVC12)
+            set(${OUTPUT} "LLVM-vs2013")
         endif()
     endif()
 endmacro()
@@ -840,8 +855,8 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
         
         
         if(CMAKE_BUILD_TYPE STREQUAL "" OR NOT CMAKE_BUILD_TYPE)
-            set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Target mode of this project.")
-            message_verbose(STATUS "Set to Release mode due to the build target is not set.")
+            set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Target mode of this project." FORCE)
+            message_verbose(STATUS "Set to Debug mode due to the build target is not set.")
         endif()
     endif()
     
@@ -864,6 +879,13 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
 
     # Set state for displaying verbose message.
     option(PROJECT_CMAKE_ENABLE_VERBOSE_MESSAGE "Enable verbose message" OFF)
+    
+    # Enable Clang.
+    option(PROJECT_ENABLE_LLVM_CLANG "Enable LLVM Clang." OFF)
+    
+    if(PROJECT_ENABLE_LLVM_CLANG)
+        message_status(STATUS "Enable LLVM Clang compiler.")
+    endif()
 
     
     # ----------------------------------------
@@ -889,21 +911,32 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
     # Toolset & OS
     # ----------------------------------------
     # Set option for build for targeting XP.
-    if(WIN32)
+    if(MSVC)
         option(PROJECT_BUILD_FOR_WIN_XP "Build for Windows XP SP3." OFF)
         
+        set(Toolset "")
+        if(PROJECT_ENABLE_LLVM_CLANG)
+            if(MSVC_VERSION GREATER 1600)
+                create_msvc_toolset_clang(Toolset)
+            else()
+                message_status("" "Current version of MSVC don't support LLVM Clang.")
+            endif()
+        endif()
+        
         if(PROJECT_BUILD_FOR_WIN_XP)
+            if(NOT PROJECT_ENABLE_LLVM_CLANG)
+                create_msvc_toolset(Toolset)
+            endif()
+            set(Toolset "${Toolset}_xp")
+            add_definitions(-D_WIN32_WINNT=0x0501)
+        endif()
+        
+        if(ToolSet NOT STREQUAL "")
             # This apply only for Visual Studio 2012 and greater.
             if(MSVC_VERSION GREATER 1600)
-                set(Toolset "")
-                create_msvc_toolset(Toolset)
-                set(Toolset "${Toolset}_xp")
                 set(CMAKE_GENERATOR_TOOLSET ${Toolset} CACHE STRING "Platform toolset." FORCE)
                 unset(Toolset)
             endif()
-            
-            # Add definitions.
-            add_definitions(-D_WIN32_WINNT=0x0501)
         endif()
     endif()
 
@@ -1074,12 +1107,31 @@ macro(INITIALISE_PROJECT_PATH)
  
     # Root path where the root CMakeList is located.
     set(PROJECT_PATH_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
-	
+    
     # Output path.
     set(PROJECT_PATH_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/Output")
 
 	# Install directory.
     set(PROJECT_PATH_INSTALL "${CMAKE_CURRENT_BINARY_DIR}/Install" CACHE PATH "Installation directory.")
+    
+    if(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "${CMAKE_BUILD_TYPE_INT_CHECK}")
+		message_verbose(STATUS "Build type changed to ${CMAKE_BUILD_TYPE}")
+
+		# Reset variables.
+        set(ClearVars
+            PROJECT_PATH_OUTPUT_EXECUTABLE
+            PROJECT_PATH_OUTPUT_INCLUDE
+            PROJECT_PATH_OUTPUT_LIBRARY
+        )
+        if(MSVC)
+            list(APPEND ClearVars PROJECT_PATH_OUTPUT_PDB)
+        endif()
+		foreach(var ${ClearVars})
+			#set( ${var} "${var}-NOTFOUND" CACHE STRING "" FORCE )
+			unset(${var} CACHE)
+		endforeach()
+    endif()
+    set(CMAKE_BUILD_TYPE_INT_CHECK ${CMAKE_BUILD_TYPE} CACHE INTERNAL "Internal check." FORCE)
     
     set(BuildTarget "${CMAKE_BUILD_TYPE}")
     set(BuildTargetDebug "")
