@@ -187,6 +187,26 @@ else()
         OGRE_INCLUDE_DIR
         OGRE_BINARY_DBG
         OGRE_BINARY_REL
+        OGRE_HlmsPbs_BINARY_DBG
+        OGRE_HlmsPbs_BINARY_REL
+        OGRE_HlmsPbs_INCLUDE_DIR
+        OGRE_HlmsPbs_LIBRARY_DBG
+        OGRE_HlmsPbs_LIBRARY_REL
+        OGRE_HlmsPbsMobile_BINARY_DBG
+        OGRE_HlmsPbsMobile_BINARY_REL
+        OGRE_HlmsPbsMobile_INCLUDE_DIR
+        OGRE_HlmsPbsMobile_LIBRARY_DBG
+        OGRE_HlmsPbsMobile_LIBRARY_REL 
+        OGRE_HlmsUnlit_BINARY_DBG
+        OGRE_HlmsUnlit_BINARY_REL
+        OGRE_HlmsUnlit_INCLUDE_DIR
+        OGRE_HlmsUnlit_LIBRARY_DBG
+        OGRE_HlmsUnlit_LIBRARY_REL
+        OGRE_HlmsUnlitMobile_BINARY_DBG
+        OGRE_HlmsUnlitMobile_BINARY_REL
+        OGRE_HlmsUnlitMobile_INCLUDE_DIR
+        OGRE_HlmsUnlitMobile_LIBRARY_DBG
+        OGRE_HlmsUnlitMobile_LIBRARY_REL
         OGRE_Overlay_BINARY_DBG
         OGRE_Overlay_BINARY_REL
         OGRE_Paging_BINARY_DBG
@@ -237,6 +257,14 @@ else()
 	# Find binaries
     set( OGRE_BINARY_DEBUG              "${OGRE_BINARY_DBG}"          )
     set( OGRE_BINARY_RELEASE            "${OGRE_BINARY_REL}"          )
+    set(OGRE_HlmsPbs_BINARY_DEBUG       "${OGRE_HlmsPbs_BINARY_DBG}"  )
+    set(OGRE_HlmsPbs_BINARY_RELEASE     "${OGRE_HlmsPbs_BINARY_REL}"  )
+    set(OGRE_HlmsPbsMobile_BINARY_DEBUG       "${OGRE_HlmsPbsMobile_BINARY_DBG}"  )
+    set(OGRE_HlmsPbsMobile_BINARY_RELEASE     "${OGRE_HlmsPbsMobile_BINARY_REL}"  )
+    set(OGRE_HlmsUnlit_BINARY_DEBUG       "${OGRE_HlmsUnlit_BINARY_DBG}"  )
+    set(OGRE_HlmsUnlit_BINARY_RELEASE     "${OGRE_HlmsUnlit_BINARY_REL}"  )
+    set(OGRE_HlmsUnlitMobile_BINARY_DEBUG       "${OGRE_HlmsUnlitMobile_BINARY_DBG}"  )
+    set(OGRE_HlmsUnlitMobile_BINARY_RELEASE     "${OGRE_HlmsUnlitMobile_BINARY_REL}"  )
     set( OGRE_Overlay_BINARY_DEBUG      "${OGRE_Overlay_BINARY_DBG}"  )
     set( OGRE_Overlay_BINARY_RELEASE    "${OGRE_Overlay_BINARY_REL}"  )
     set( OGRE_Paging_BINARY_DEBUG       "${OGRE_Paging_BINARY_DBG}"   )

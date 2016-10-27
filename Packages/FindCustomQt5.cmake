@@ -93,7 +93,6 @@ endforeach()
 
 
 
-
 # ************************************************************
 # Continue when the Qt directory is located.
 if(QT_HOME)
@@ -242,7 +241,7 @@ if(QT_HOME)
             endif()
 		endif()
 	else()
-		message_status( "" "At least one of the Qt5 modules must be specified." )
+		message_status("" "At least one of the Qt5 modules must be specified.")
 	endif()
 endif()
 
@@ -302,7 +301,7 @@ macro(QT_COPY_NECESSARY_BINARY_FROM_TARGET)
     
     
     if(QT_FOUND AND QT_DEPLOY_LIBRARY)
-        #create_dynamic_extension(DynamicSuffix)
+        create_dynamic_extension(DynamicSuffix)
         #foreach(Var ${QtNecessaryBinaries})
         #    # Find whether the file is a debug.
         #    string(REGEX MATCH "d.${DynamicSuffix}" DebugFound ${Var})
@@ -359,7 +358,7 @@ macro(QT_COPY_NECESSARY_BINARY_FROM_TARGET)
                     endif()
                 endif()
             else()
-                message_status("Missing Qt necessary binary: ${Var}")
+                message_status(STATUS "Missing Qt necessary binary: ${Var}")
             endif()
             unset(QtDebugFile CACHE)
             unset(QtReleaseFile CACHE)
@@ -396,7 +395,7 @@ macro(QT_COPY_NECESSARY_BINARY_FROM_TARGET)
                 endif()
                 unset(Path)
             else()
-                message_status("Missing Qt necessary binary: ${Var}")
+                message_status(STATUS "Missing Qt necessary binary: ${Var}")
             endif()
             unset(QtDebugFile CACHE)
             unset(QtReleaseFile CACHE)
