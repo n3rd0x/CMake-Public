@@ -109,6 +109,6 @@ endif()
 # ************************************************************
 # Finalize package
 package_validate(RAKNET)
-package_add_parent_dir(RAKNET)
+package_add_parent_dir(RAKNET ADD_PARENT)
 package_end(RAKNET)
 message_footer(RAKNET)
