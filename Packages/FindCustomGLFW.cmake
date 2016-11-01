@@ -22,9 +22,9 @@
 
 # ************************************************************
 # Start package
-message_header( GLFW )
-package_begin( GLFW )
-package_create_home_path( GLFW GLFW_ROOT )
+message_header(GLFW)
+package_begin(GLFW)
+package_create_home_path(GLFW GLFW_ROOT)
 
 
 # ************************************************************
@@ -55,33 +55,41 @@ package_create_home_path( GLFW GLFW_ROOT )
 # endif()
 
 
+
+
 # ************************************************************
 # Options
-set( GLFW_VERSION "3" CACHE STRING "Select ther version of GLFW to search." )
-option( GLFW_ENABLE_STATICAL "Flag for using static library." OFF )
+set(GLFW_VERSION "3" CACHE STRING "Select ther version of GLFW to search.")
+option(GLFW_ENABLE_STATICAL "Flag for using static library." OFF)
+
+
 
 
 # ************************************************************
 # Create search path
-set( GLFW_PREFIX_PATH ${GLFW_HOME} )
-package_create_search_path_include( GLFW )
-package_create_search_path_library( GLFW )
+set(GLFW_PREFIX_PATH ${GLFW_HOME})
+package_create_search_path_include(GLFW)
+package_create_search_path_library(GLFW)
 #set( GLFW_SEARCH_PATH_LIBRARY "{$GLFW_SEARCH_PATH_LIBRARY}" "${GLFW_HOME}/${GLEW_PATH_SUFFIX}" )
+
+
 
 
 # ************************************************************
 # Create search name
-if( GLFW_ENABLE_STATICAL )
-    set( GLFW_LIBRARY_NAMES "glfw${GLFW_VERSION}" )
+if(GLFW_ENABLE_STATICAL )
+    set(GLFW_LIBRARY_NAMES "glfw${GLFW_VERSION}")
 else()
-    set( GLFW_LIBRARY_NAMES "glfw${GLFW_VERSION}dll" )
+    set(GLFW_LIBRARY_NAMES "glfw${GLFW_VERSION}dll")
 endif()
-package_create_debug_names( GLFW_LIBRARY_NAMES )
+package_create_debug_names(GLFW_LIBRARY_NAMES)
+
+
 
 
 # ************************************************************
 # Clear
-set( GLFW_CLEAR_IF_CHANGED 
+set(GLFW_CLEAR_IF_CHANGED 
     GLFW_PREFIX_PATH
     GLFW_ENABLE_STATICAL
     GLFW_VERSION
@@ -90,9 +98,9 @@ set( GLFW_CLEAR_IF_CHANGED
     #GLFW_COMPILER_VC_90
     #GLFW_COMPILER_MINGW
 )
-foreach( VAR ${GLFW_CLEAR_IF_CHANGED} )
-    if( WIN32 )
-        package_clear_if_changed( ${VAR}
+foreach(VAR ${GLFW_CLEAR_IF_CHANGED})
+    if(WIN32)
+        package_clear_if_changed(${VAR}
             GLFW_LIBRARY_DEBUG
             GLFW_LIBRARY_RELEASE
             GLFW_PATH_INCLUDE
@@ -100,7 +108,7 @@ foreach( VAR ${GLFW_CLEAR_IF_CHANGED} )
             GLFW_BINARY_DEBUG
         )
     else()
-        package_clear_if_changed( ${VAR}
+        package_clear_if_changed(${VAR}
             GLFW_LIBRARY_DEBUG
             GLFW_LIBRARY_RELEASE
             GLFW_PATH_INCLUDE
@@ -110,37 +118,42 @@ endforeach()
 
 
 
+
 # ************************************************************
 # Find paths
-package_find_path( GLFW_PATH_INCLUDE "glfw${GLFW_VERSION}.h" "${GLFW_SEARCH_PATH_INCLUDE}" "GL" )
-package_find_library( GLFW_LIBRARY_DEBUG "${GLFW_LIBRARY_NAMES_DEBUG}" "${GLFW_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( GLFW_LIBRARY_RELEASE "${GLFW_LIBRARY_NAMES}" "${GLFW_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
-package_make_library( GLFW_LIBRARY GLFW_LIBRARY_DEBUG GLFW_LIBRARY_RELEASE )
+package_find_path(GLFW_PATH_INCLUDE "glfw${GLFW_VERSION}.h" "${GLFW_SEARCH_PATH_INCLUDE}" "GL")
+package_find_library(GLFW_LIBRARY_DEBUG "${GLFW_LIBRARY_NAMES_DEBUG}" "${GLFW_SEARCH_PATH_LIBRARY}" "debug")
+package_find_library(GLFW_LIBRARY_RELEASE "${GLFW_LIBRARY_NAMES}" "${GLFW_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+package_make_library(GLFW_LIBRARY GLFW_LIBRARY_DEBUG GLFW_LIBRARY_RELEASE)
+
+
 
 
 # ************************************************************
 # Find binaries on Windows
-if( WIN32 )
-    set( GLFW_BINARY_NAMES "glfw${GLFW_VERSION}" )
-	package_create_release_binary_names( GLFW_BINARY_NAMES )
-	package_create_debug_binary_names( GLFW_BINARY_NAMES )
-	package_create_search_path_binary( GLFW )
+if(WIN32)
+    set(GLFW_BINARY_NAMES "glfw${GLFW_VERSION}")
+	package_create_release_binary_names(GLFW_BINARY_NAMES)
+	package_create_debug_binary_names(GLFW_BINARY_NAMES)
+	package_create_search_path_binary(GLFW)
 	
-	set( GLFW_SEARCH_BINARIES 
+	set(GLFW_SEARCH_BINARIES 
 		${GLFW_SEARCH_PATH_BINARY}
 		${GLFW_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file( GLFW_BINARY_DEBUG "${GLFW_BINARY_NAMES_DEBUG}" "${GLFW_SEARCH_BINARIES}" "debug" )
-	package_find_file( GLFW_BINARY_RELEASE "${GLFW_BINARY_NAMES_RELEASE}" "${GLFW_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
+	package_find_file(GLFW_BINARY_DEBUG "${GLFW_BINARY_NAMES_DEBUG}" "${GLFW_SEARCH_BINARIES}" "debug")
+	package_find_file(GLFW_BINARY_RELEASE "${GLFW_BINARY_NAMES_RELEASE}" "${GLFW_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
+
+
 
 
 # ************************************************************
 # Finalize package
-package_validate( GLFW )
-package_add_parent_dir( GLFW )
-package_end( GLFW )
-message_footer( GLFW )
+package_validate(GLFW)
+package_add_parent_dir(GLFW ADD_PARENT)
+package_end(GLFW)
+message_footer(GLFW)
 
 
