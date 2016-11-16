@@ -27,15 +27,29 @@ package_begin(GLM)
 package_create_home_path(GLM GLM_ROOT)
 
 
+
+
 # ************************************************************
 # Options
 option(GLM_VERSION_0_9_5_0 "Greater than version 0.9.5.0" ON)
+if(NOT GLM_VERSION_0_9_5_0)
+    option(GLM_FORCE_RADIANS "Use radians by default." ON)
+endif()
+
+# Use radians by default.
+if(GLM_FORCE_RADIANS)
+    add_definitions(-DGLM_FORCE_RADIANS)
+endif()
+
+
 
 
 # ************************************************************
 # Create search path
 set(GLM_PREFIX_PATH ${GLM_HOME})
 package_create_search_path_include(GLM)
+
+
 
 
 # ************************************************************
@@ -45,9 +59,12 @@ package_clear_if_changed(GLM_PREFIX_PATH
 )
 
 
+
+
 # ************************************************************
 # Find paths
 package_find_path(GLM_PATH_INCLUDE "glm.hpp" "${GLM_SEARCH_PATH_INCLUDE}" "GLM")
+
 
 
 
@@ -62,6 +79,8 @@ else()
     message_status("" "Failed to locate the GLM library.")
     set(GLM_FOUND FALSE)
 endif()
+
+
 
 
 # ************************************************************
@@ -130,6 +149,8 @@ set(GLM_HEADER_FILES
     "${GLM_VIRTREV_INLINE}"
     "${GLM_VIRTREV_HEADER}"
 )
+
+
 
 
 # ************************************************************
