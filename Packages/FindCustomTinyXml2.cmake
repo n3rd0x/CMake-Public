@@ -154,6 +154,6 @@ endif()
 # ************************************************************
 # Finalize package
 package_validate( TINYXML2 )
-package_add_parent_dir( TINYXML2 )
+package_add_parent_dir( TINYXML2 ADD_PARENT )
 package_end( TINYXML2 )
 message_footer( TINYXML2 )

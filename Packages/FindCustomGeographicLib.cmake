@@ -85,7 +85,7 @@ endif()
 # ************************************************************
 # Finalize package
 package_validate( GEOGRAPHICLIB )
-package_add_parent_dir( GEOGRAPHICLIB )
+package_add_parent_dir( GEOGRAPHICLIB ADD_PARENT )
 package_end( GEOGRAPHICLIB )
 message_footer( GEOGRAPHICLIB )
 
