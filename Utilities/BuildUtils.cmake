@@ -196,43 +196,52 @@ endmacro()
 
 # ************************************************************
 # Generate group files, create a common variable for all grouped files.
-macro( BUILD_GENERATE_GROUP_FILES Prefix )
-    message_header( BUILD_GENERATE_GROUP_FILES )
+macro(BUILD_GENERATE_GROUP_FILES Prefix)
+    message_header(BUILD_GENERATE_GROUP_FILES)
+    message_debug(STATUS "Prefix: ${Prefix}")
      
     # Just verify that the Prefix has at least one header or source file.
-    if( ${Prefix}_GROUP_HEADER_FILES )
-        message_debug( STATUS "Header files: ${${Prefix}_GROUP_HEADER_FILES}" )
-        set( LOCAL_GROUP_HEADER_FILES ${LOCAL_GROUP_HEADER_FILES} ${${Prefix}_GROUP_HEADER_FILES} )
-        set( Continue TRUE )
+    if(${Prefix}_GROUP_HEADER_FILES)
+        message_debug(STATUS "Header files: ${${Prefix}_GROUP_HEADER_FILES}")
+        set(LOCAL_GROUP_HEADER_FILES ${LOCAL_GROUP_HEADER_FILES} ${${Prefix}_GROUP_HEADER_FILES})
+        set(Continue TRUE)
     endif()
 
-    if( ${Prefix}_GROUP_SOURCE_FILES )
-        message_debug( STATUS "Source files: ${${Prefix}_GROUP_SOURCE_FILES}" )
-        set( LOCAL_GROUP_SOURCE_FILES ${LOCAL_GROUP_SOURCE_FILES} ${${Prefix}_GROUP_SOURCE_FILES} )
-        set( Continue TRUE )
+    if(${Prefix}_GROUP_SOURCE_FILES)
+        message_debug(STATUS "Source files: ${${Prefix}_GROUP_SOURCE_FILES}")
+        set(LOCAL_GROUP_SOURCE_FILES ${LOCAL_GROUP_SOURCE_FILES} ${${Prefix}_GROUP_SOURCE_FILES})
     endif()
 
     
-    if( Continue )
+    if(Continue)
         # Add if not existed.
         # Check if LOCAL_PATH_GROUP_HEADER do exists, if not then just add the path into the variable.
         # Otherwise add into the variable, only then the Prefix (hence the path to the respective
         # include path) doesn't exists.
-        if( NOT LOCAL_PATH_GROUP_HEADER )
-            set( Located FALSE )
+        if(NOT LOCAL_PATH_GROUP_HEADER)
+            message_debug(STATUS "LOCAL_PATH_GROUP_HEADER doesn't exists. Add directly into the variable.")
+            set(LOCAL_PATH_GROUP_HEADER ${LOCAL_PATH_GROUP_HEADER} ${${Prefix}_PATH_GROUP_HEADER})
         else()
-            string( REGEX MATCHALL ${${Prefix}_PATH_GROUP_HEADER} Located ${LOCAL_PATH_GROUP_HEADER} )
+            message_debug(STATUS "Full list: ${${Prefix}_PATH_GROUP_HEADER}")
+            foreach(LocalPath ${${Prefix}_PATH_GROUP_HEADER})
+                message_debug(STATUS "Search: ${LocalPath}")
+                string(REGEX MATCHALL ${LocalPath} PathExists ${LOCAL_PATH_GROUP_HEADER})
+                
+                if(NOT PathExists)
+                    message_debug(STATUS "Path doesn't exists, add into variable.")
+                    list(APPEND LOCAL_PATH_GROUP_HEADER ${LocalPath})
+                else()
+                    message_debug(STATUS "Path already exists, skip adding process.")
+                endif()
+                unset(PathExists)
+            endforeach()
         endif()
-        
-        if( NOT Located )
-            set( LOCAL_PATH_GROUP_HEADER ${LOCAL_PATH_GROUP_HEADER} ${${Prefix}_PATH_GROUP_HEADER} )
-        endif()
-        message_debug( STATUS "Paths: ${LOCAL_PATH_GROUP_HEADER}" )
-        unset( Located )
+
+        message_debug(STATUS "Paths: ${LOCAL_PATH_GROUP_HEADER}")
     endif()
-    unset( Continue )
+    unset(Continue)
     
-    message_footer( BUILD_GENERATE_GROUP_FILES )
+    message_footer(BUILD_GENERATE_GROUP_FILES)
 endmacro()
 
 
@@ -313,7 +322,7 @@ macro( BUILD_GROUP_FILES )
             
             # Group files.
             source_group( "Source Files${GroupName}" FILES ${BUILD_GROUP_FILES_Sources} )
-            message_debug( STATUS "Local headers: ${${BUILD_GROUP_FILES_Prefix}_GROUP_SOURCE_FILES}" )
+            message_debug( STATUS "Local sources: ${${BUILD_GROUP_FILES_Prefix}_GROUP_SOURCE_FILES}" )
         endif()
         
         
