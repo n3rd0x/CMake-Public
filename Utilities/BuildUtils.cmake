@@ -352,29 +352,29 @@ endmacro()
 
 # ************************************************************
 # Copy build file to the output directory
-macro( COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY )
+macro(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY)
     # Help information.
-    message_header( COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY )
-    message_help( "Available options:" )
-    message_help( "[Path]       -> Output directory. Default: ${PROJECT_PATH_OUTPUT_EXECUTABLE}." )
-    message_help( "[SubPath]    -> Sub directory of the output directory." )
+    message_header(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY)
+    message_help("Available options:")
+    message_help("[Path]       -> Output directory. Default: ${PROJECT_PATH_OUTPUT_EXECUTABLE}.")
+    message_help("[SubPath]    -> Sub directory of the output directory.")
     
     # Parse options.
-    set( oneValueArgs Path SubPath )
-    cmake_parse_arguments(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY "" "${oneValueArgs}" "" ${ARGN} )
+    set(oneValueArgs Path SubPath)
+    cmake_parse_arguments(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY "" "${oneValueArgs}" "" ${ARGN})
     
     # Set sub path based on OS platform.
-    set( Path "${PROJECT_PATH_OUTPUT_EXECUTABLE}" )
-    if( COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_Path )
-        set( Path "${COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_Path}" )
-    endif()
-    
-    if( NOT COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_Path AND MSVC )
-        set( Path "${Path}/$<CONFIGURATION>${COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_SubPath}" )
-    else()
-        set( Path "${Path}${COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_SubPath}" )
+    set(Path "${PROJECT_PATH_OUTPUT_EXECUTABLE}")
+    if(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_Path)
+        set(Path "${COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_Path}")
     endif()
         
+    if(NOT COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_Path AND MSVC)
+        set(Path "${Path}/$<CONFIGURATION>${COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_SubPath}")
+    else()
+        set(Path "${Path}${COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_SubPath}")
+    endif()
+    
     add_custom_command(
         TARGET ${PROJECT_NAME}
         POST_BUILD
@@ -382,13 +382,15 @@ macro( COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY )
         COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${PROJECT_NAME}>" "${Path}"
     )
     
-    # Clean up.
-    unset( oneValueArgs )
-    unset( COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_Path )
-    unset( COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_SubPath )
-    unset( Path )
+    message_verbose(STATUS "Copy [${PROJECT_NAME}] into [${Path}].")
     
-    message_footer( COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY )
+    # Clean up.
+    unset(oneValueArgs)
+    unset(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_Path)
+    unset(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_SubPath)
+    unset(Path )
+    
+    message_footer(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY)
 endmacro()
 
 
