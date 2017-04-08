@@ -107,6 +107,6 @@ endif()
 # ************************************************************
 # Finalize package
 package_validate( PROJ )
-package_add_parent_dir( PROJ )
+package_add_parent_dir( PROJ ADD_PARENT )
 package_end( PROJ )
 message_footer( PROJ )
