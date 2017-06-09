@@ -11,13 +11,15 @@ syntax: glob
 *.o
 *.obj
 *.orig
+*.pdb
 *.pro
 *.pro.user*
 *.save
 *.so
 *.suo
 *.swp
-*.pdb
+*.tmp
+*.user
 *.vscode
 
 

@@ -37,7 +37,8 @@ set(CMAKE_MODULE_PATH
     "${PROJECT_PATH_CMAKE_PUBLIC}/Utilities"
 )
 
-# Include necessary modules. 
+# Include necessary modules.
+include(CheckCXXCompilerFlag)
 include(CMakeParseArguments)
 include(DebugUtils)
 include(BuildUtils)
