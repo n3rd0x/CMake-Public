@@ -27,6 +27,7 @@ package_create_home_path(QT QT5_ROOT)
 
 # Options.
 option(QT_DEPLOY_LIBRARY "Flag to deploy QT libraries." OFF)
+option(QT_PLUGIN_ENABLE_IMAGE_FORMAT "Enable image formats (Ex. jpg, svg, tiff)." OFF)
 option(QT_PLUGIN_ENABLE_SQL_DRIVER_SQLITE "Enable SQLite plug-in driver." OFF)
 
 
@@ -229,6 +230,22 @@ if(QT_HOME)
                 if(MSVC)
                     list(APPEND QtNecessaryPlugins
                         "platforms/qwindows"
+                    )
+                endif()
+                
+                # Image format plugins.
+                if(QT_PLUGIN_ENABLE_IMAGE_FORMAT)
+                    list(APPEND QtNecessaryPlugins
+                        "imageformats/qdds"
+                        "imageformats/qgif"
+                        "imageformats/qicns"
+                        "imageformats/qico"
+                        "imageformats/qjpeg"
+                        "imageformats/qsvg"
+                        "imageformats/qtga"
+                        "imageformats/qtiff"
+                        "imageformats/qwbmp"
+                        "imageformats/qwebp"
                     )
                 endif()
                 
