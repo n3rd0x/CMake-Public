@@ -392,9 +392,10 @@ macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
         list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
 			"/usr/lib"
 			"/usr/lib/x86_64-linux-gnu"
-			"/usr/local/lib"
             "/usr/lib/i386-linux-gnu"
             "/usr/lib/arm-linux-gnueabihf"
+            "/usr/lib/aarch64-linux-gnu"
+            "/usr/local/lib"
 	    )
     endif()
     
