@@ -1139,7 +1139,13 @@ macro(INITIALISE_PROJECT_PATH)
     set(PROJECT_PATH_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/Output")
 
 	# Install directory.
-    set(PROJECT_PATH_INSTALL "${CMAKE_CURRENT_BINARY_DIR}/Install" CACHE PATH "Installation directory.")
+	package_get_environment_path(PROJECT_INSTALL INSTALL_ROOT)
+    if(PROJECT_INSTALL_ENV_INSTALL_ROOT)
+        message_verbose( STATUS "Set install to ${PROJECT_INSTALL_ENV_INSTALL_ROOT}.")
+        set(PROJECT_PATH_INSTALL "${PROJECT_INSTALL_ENV_INSTALL_ROOT}" CACHE PATH "Installation directory.")
+    else()
+        set(PROJECT_PATH_INSTALL "${CMAKE_CURRENT_BINARY_DIR}/install" CACHE PATH "Installation directory.")
+    endif()
     
     if(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "${CMAKE_BUILD_TYPE_INT_CHECK}")
 		message_verbose(STATUS "Build type changed to ${CMAKE_BUILD_TYPE}")
