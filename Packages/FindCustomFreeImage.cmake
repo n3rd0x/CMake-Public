@@ -37,7 +37,7 @@ package_create_search_path_plugin( FREEIMAGE )
 
 # ************************************************************
 # Create search name
-set( FREEIMAGE_LIBRARY_NAMES "FreeImage" )
+set( FREEIMAGE_LIBRARY_NAMES "FreeImage" "freeimage" )
 package_create_debug_names( FREEIMAGE_LIBRARY_NAMES )
 
 

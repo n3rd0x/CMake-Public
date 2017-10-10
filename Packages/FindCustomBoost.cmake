@@ -22,39 +22,45 @@
 
 # ************************************************************
 # Start package
-message_header( Boost )
-package_begin( Boost )
+message_header(Boost)
+package_begin(Boost)
 
 # Find the Boost path.
-package_get_environment_path( Boost BOOST_ROOT )
-if( Boost_ENV_BOOST_ROOT )
-    set( BOOST_ROOT "${Boost_ENV_BOOST_ROOT}" CACHE PATH "Path to Boost directory." )
+package_get_environment_path(Boost BOOST_ROOT)
+if(Boost_ENV_BOOST_ROOT)
+    set(BOOST_ROOT "${Boost_ENV_BOOST_ROOT}" CACHE PATH "Path to Boost directory.")
 else()
-	set( BOOST_ROOT "" CACHE PATH "Path to Boost directory." )
+	set(BOOST_ROOT "" CACHE PATH "Path to Boost directory.")
 endif()
 
 # Flag to either use static or dynamic linking.
-option( Boost_USE_STATIC_LIBS OFF "Flag to static linking with Boost." )
+option(Boost_USE_STATIC_LIBS OFF "Flag to static linking with Boost.")
 
 # Set Boost components.
-set( Boost_COMPONENTS "${CustomBoost_FIND_COMPONENTS}" CACHE STRING "Boost components." )
+set(Boost_COMPONENTS "${CustomBoost_FIND_COMPONENTS}" CACHE STRING "Boost components.")
+
+message_debug(STATUS "Selected components:")
+foreach(comp ${Boost_COMPONENTS})
+    message_debug(STATUS " * ${comp}")
+endforeach()
+
 
 # Reset if necessary.
-package_clear_if_changed( BOOST_ROOT
+package_clear_if_changed(BOOST_ROOT
     Boost_INCLUDE_DIR
 )
-package_clear_if_changed( Boost_USE_STATIC_LIBS
+package_clear_if_changed(Boost_USE_STATIC_LIBS
     Boost_INCLUDE_DIR
 )
-package_clear_if_changed( Boost_COMPONENTS
+package_clear_if_changed(Boost_COMPONENTS
     Boost_INCLUDE_DIR
 )
 
 # Locate official Boost package.
-find_package( Boost COMPONENTS ${Boost_COMPONENTS} )
+find_package(Boost COMPONENTS ${Boost_COMPONENTS})
 
 # Include the library path in order to locate the files.
-link_directories( ${Boost_LIBRARY_DIRS} )
+link_directories(${Boost_LIBRARY_DIRS})
 
 
 # ************************************************************
@@ -121,6 +127,6 @@ endif()
 
 # ************************************************************
 # Finalize package
-package_validate( Boost )
-package_end( Boost )
-message_footer( Boost )
+package_validate(Boost)
+package_end(Boost)
+message_footer(Boost)

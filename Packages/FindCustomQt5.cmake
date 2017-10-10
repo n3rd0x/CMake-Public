@@ -97,26 +97,32 @@ endforeach()
 # ************************************************************
 # Continue when the Qt directory is located.
 if(QT_HOME)
-    # Create search path
+    # Create search paths.
     set(QT_PREFIX_PATH ${QT_HOME})
     package_create_search_path_include(QT)
     package_create_search_path_library(QT)
 
 	# Find paths.
-    if(WIN32)
-        package_find_path(QT_PATH_BINARY "qmake.exe" "${QT_SEARCH_PATH_LIBRARY}" "bin")
-    else()
-        package_find_path(QT_PATH_BINARY "qmake" "${QT_SEARCH_PATH_LIBRARY}" "bin;qt5/bin")
-    endif()
-    package_find_path(QT_PATH_CMAKE "Qt5" "${QT_SEARCH_PATH_LIBRARY}" "cmake")
-    package_find_path(QT_PATH_LIBRARY "libQt5Core.so;Qt5Core.lib" "${QT_SEARCH_PATH_LIBRARY}" "lib")
-    package_find_path(QT_PATH_PLUGIN "platforms" "${QT_SEARCH_PATH_LIBRARY}" "plugins;qt5/plugins")
+    #if(WIN32)
+    #    package_find_path(QT_PATH_BINARY "qmake.exe" "${QT_SEARCH_PATH_LIBRARY}" "bin")
+    #else()
+    #    package_find_path(QT_PATH_BINARY "qmake" "${QT_SEARCH_PATH_LIBRARY}" "bin;qt5/bin")
+    #endif()
+    #package_find_path(QT_PATH_CMAKE "Qt5" "${QT_SEARCH_PATH_LIBRARY}" "cmake")
+    #package_find_path(QT_PATH_LIBRARY "libQt5Core.so;Qt5Core.lib" "${QT_SEARCH_PATH_LIBRARY}" "lib")
+    #package_find_path(QT_PATH_PLUGIN "platforms" "${QT_SEARCH_PATH_LIBRARY}" "plugins;qt5/plugins")
     
+	package_find_path(QT_PATH_BINARY "qmake;qmake.exe" "${QT_SEARCH_PATH_LIBRARY}" "bin;qt5/bin")
+  	package_find_path(QT_PATH_CMAKE "Qt5" "${QT_SEARCH_PATH_LIBRARY}" "cmake")
+  	package_find_path(QT_PATH_LIBRARY "libQt5Core.so;Qt5Core.lib;QtCore.framework" "${QT_SEARCH_PATH_LIBRARY}" "lib")
+  	package_find_path(QT_PATH_PLUGIN "platforms" "${QT_SEARCH_PATH_LIBRARY}" "plugins;qt5/plugins")
+
     # Add the directory to the CMake search path.
 	set(CMAKE_PREFIX_PATH ${QT_PATH_CMAKE})
 	
 	# Tell CMake to run MOC when necessary.
-	#set(CMAKE_AUTOMOC ON)
+    # TST 2017-09-29
+    #set(CMAKE_AUTOMOC ON)
 	
 	# As MOC files are generated in the binary directory,
 	# tell CMake to always look for includes there.
@@ -134,43 +140,52 @@ if(QT_HOME)
 		foreach(Component ${QT_COMPONENTS})
 			find_package("${Component}")
 			
-			# Find out whether we will skip adding the binary component.
-            set(AddComponent TRUE)
-            foreach(SkipComponent ${QT_SKIP_BINARY_COMPONENT})
-                if(${SkipComponent} STREQUAL ${Component})
-                    set(AddComponent FALSE)
-                endif()
-            endforeach()
-            
-            # Update binaries.
-            if(AddComponent)
-                # Find files.
-                if(MSVC)
-                    # TODO: Why it fails when using DebugFile or ReleaseFile, because it been used in foreach??
-                    package_find_file(QtDebugFile "${Component}d.dll" "${QT_PATH_BINARY}" "")
-                    package_find_file(QtReleaseFile "${Component}.dll" "${QT_PATH_BINARY}" "")
-                else()
-                    package_find_file(QtDebugFile "lib${Component}d.so" "${QT_PATH_LIBRARY}" "")
-                    package_find_file(QtReleaseFile "lib${Component}.so" "${QT_PATH_LIBRARY}" "")
-                endif()
-
-                # Set name.
-                if(QtReleaseFile)
-                    list(APPEND QT_BINARY_RELEASE ${QtReleaseFile})
-                endif()
-
-                if(QtDebugFile)
-                    list(APPEND QT_BINARY_DEBUG ${QtDebugFile})
-                else()
-                    if(QtReleaseFile)
-                        list(APPEND QT_BINARY_DEBUG ${QtReleaseFile})
+			if(NOT APPLE)
+    			# Find out whether we will skip adding the binary component.
+                set(AddComponent TRUE)
+                foreach(SkipComponent ${QT_SKIP_BINARY_COMPONENT})
+                    if(${SkipComponent} STREQUAL ${Component})
+                        set(AddComponent FALSE)
                     endif()
+                endforeach()
+                
+                # Update binaries.
+                if(AddComponent)
+                    # Find files.
+                    if(MSVC)
+                        # TODO: Why it fails when using DebugFile or ReleaseFile, because it been used in foreach??
+                        package_find_file(QtDebugFile "${Component}d.dll" "${QT_PATH_BINARY}" "")
+                        package_find_file(QtReleaseFile "${Component}.dll" "${QT_PATH_BINARY}" "")
+                    else()
+                        package_find_file(QtDebugFile "lib${Component}d.so" "${QT_PATH_LIBRARY}" "")
+                        package_find_file(QtReleaseFile "lib${Component}.so" "${QT_PATH_LIBRARY}" "")
+                    endif()
+    
+                    # Set name.
+                    if(QtReleaseFile)
+                        list(APPEND QT_BINARY_RELEASE ${QtReleaseFile})
+                    endif()
+    
+                    if(QtDebugFile)
+                        list(APPEND QT_BINARY_DEBUG ${QtDebugFile})
+                    else()
+                        if(QtReleaseFile)
+                            list(APPEND QT_BINARY_DEBUG ${QtReleaseFile})
+                        endif()
+                    endif()
+                
+                    unset(QtDebugFile CACHE)
+                    unset(QtReleaseFile CACHE)
                 endif()
-            
-                unset(QtDebugFile CACHE)
-                unset(QtReleaseFile CACHE)
+                unset(AddComponent)
             endif()
-            unset(AddComponent)
+            
+            # Temporary fix for MacOSX.
+            if(APPLE)
+                if(${Component}_LIBRARIES)
+                    list(APPEND QT_BINARY_RELEASE "${${Component}_LIBRARIES}")
+                endif()
+            endif()      
 		endforeach()
 
 		if(QT_BINARY_DEBUG OR QT_BINARY_RELEASE)
