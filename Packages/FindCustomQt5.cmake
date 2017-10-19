@@ -103,19 +103,14 @@ if(QT_HOME)
     package_create_search_path_library(QT)
 
 	# Find paths.
-    #if(WIN32)
-    #    package_find_path(QT_PATH_BINARY "qmake.exe" "${QT_SEARCH_PATH_LIBRARY}" "bin")
-    #else()
-    #    package_find_path(QT_PATH_BINARY "qmake" "${QT_SEARCH_PATH_LIBRARY}" "bin;qt5/bin")
-    #endif()
-    #package_find_path(QT_PATH_CMAKE "Qt5" "${QT_SEARCH_PATH_LIBRARY}" "cmake")
-    #package_find_path(QT_PATH_LIBRARY "libQt5Core.so;Qt5Core.lib" "${QT_SEARCH_PATH_LIBRARY}" "lib")
-    #package_find_path(QT_PATH_PLUGIN "platforms" "${QT_SEARCH_PATH_LIBRARY}" "plugins;qt5/plugins")
-    
-	package_find_path(QT_PATH_BINARY "qmake;qmake.exe" "${QT_SEARCH_PATH_LIBRARY}" "bin;qt5/bin")
-  	package_find_path(QT_PATH_CMAKE "Qt5" "${QT_SEARCH_PATH_LIBRARY}" "cmake")
-  	package_find_path(QT_PATH_LIBRARY "libQt5Core.so;Qt5Core.lib;QtCore.framework" "${QT_SEARCH_PATH_LIBRARY}" "lib")
-  	package_find_path(QT_PATH_PLUGIN "platforms" "${QT_SEARCH_PATH_LIBRARY}" "plugins;qt5/plugins")
+    if(WIN32)
+        package_find_path(QT_PATH_BINARY "qmake.exe" "${QT_SEARCH_PATH_LIBRARY}" "bin")
+    else()
+        package_find_path(QT_PATH_BINARY "qmake" "${QT_SEARCH_PATH_LIBRARY}" "bin;qt5/bin")
+    endif()
+    package_find_path(QT_PATH_CMAKE "Qt5" "${QT_SEARCH_PATH_LIBRARY}" "cmake")
+    package_find_path(QT_PATH_LIBRARY "libQt5Core.so;Qt5Core.lib" "${QT_SEARCH_PATH_LIBRARY}" "lib")
+    package_find_path(QT_PATH_PLUGIN "platforms" "${QT_SEARCH_PATH_LIBRARY}" "plugins;qt5/plugins")
 
     # Add the directory to the CMake search path.
 	set(CMAKE_PREFIX_PATH ${QT_PATH_CMAKE})
