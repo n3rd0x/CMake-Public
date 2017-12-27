@@ -41,7 +41,11 @@ package_create_search_path_binary(Vulkan)
 
 # ************************************************************
 # Define library name
-set(Vulkan_LIBRARY_NAMES "vulkan-1")
+if(WIN32)
+    set(Vulkan_LIBRARY_NAMES "vulkan-1")
+else()
+    set(Vulkan_LIBRARY_NAMES "vulkan")
+endif()
 package_create_debug_names(Vulkan_LIBRARY_NAMES)
 
 
