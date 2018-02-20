@@ -26,17 +26,11 @@ message_header(SDL)
 package_begin(SDL)
 package_create_home_path(SDL SDL_ROOT)
 
-# Set newest as default.
-option(SDL_TIP_VERSION "Flag to use the newest version." ON)
+# Select version.
+set(SDL_VERSION "2" CACHE STRING "Select SDL version.")
+set_property(CACHE SDL_VERSION PROPERTY STRINGS 2 1) 
 
-# Current newest version.
-set(SDL_VERSION "")
-if(SDL_TIP_VERSION)
-    set(SDL_VERSION "2")
-    message_status(STATUS "Current SDL version: 2")
-else()
-    message_status(STATUS "Current SDL version: 1")
-endif()
+message_status(STATUS "Current SDL version: ${SDL_VERSION}")
 
 
 # ************************************************************
@@ -139,18 +133,18 @@ endif()
 # ************************************************************
 # Find binaries on Windows
 if( WIN32 )
-	set(SDL_BINARY_NAMES "SDL${SDL_VERSION}")
-	package_create_release_binary_names(SDL_BINARY_NAMES)
-	package_create_debug_binary_names(SDL_BINARY_NAMES)
-	package_create_search_path_binary(SDL)
-	
-	set(SDL_SEARCH_BINARIES 
-		${SDL_SEARCH_PATH_BINARY}
-		${SDL_SEARCH_PATH_LIBRARY}
-	)
+    set(SDL_BINARY_NAMES "SDL${SDL_VERSION}")
+    package_create_release_binary_names(SDL_BINARY_NAMES)
+    package_create_debug_binary_names(SDL_BINARY_NAMES)
+    package_create_search_path_binary(SDL)
+    
+    set(SDL_SEARCH_BINARIES 
+        ${SDL_SEARCH_PATH_BINARY}
+        ${SDL_SEARCH_PATH_LIBRARY}
+    )
 
-	package_find_file(SDL_BINARY_DEBUG "${SDL_BINARY_NAMES_DEBUG}" "${SDL_SEARCH_BINARIES}" "debug")
-	package_find_file(SDL_BINARY_RELEASE "${SDL_BINARY_NAMES_RELEASE}" "${SDL_SEARCH_BINARIES}" "release")
+    package_find_file(SDL_BINARY_DEBUG "${SDL_BINARY_NAMES_DEBUG}" "${SDL_SEARCH_BINARIES}" "debug")
+    package_find_file(SDL_BINARY_RELEASE "${SDL_BINARY_NAMES_RELEASE}" "${SDL_SEARCH_BINARIES}" "release")
     
     # Extensions.
     if(SDL_LIBRARY_IMAGE)
@@ -189,7 +183,7 @@ endif()
 
 # ************************************************************
 # Finalize package
-package_validate( SDL )
-package_add_parent_dir( SDL )
-package_end( SDL )
-message_footer( SDL )
+package_validate(SDL)
+package_add_parent_dir(SDL)
+package_end(SDL)
+message_footer(SDL)

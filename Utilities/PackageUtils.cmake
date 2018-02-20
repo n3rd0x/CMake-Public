@@ -118,7 +118,7 @@ macro(PACKAGE_APPEND_NAMES Prefix Name)
     
     set(${Prefix} "${NewNames}")
     unset(NewNames)
-	message_debug(STATUS "Append names: ${${Prefix}}")
+    message_debug(STATUS "Append names: ${${Prefix}}")
 endmacro()
 
 
@@ -144,7 +144,7 @@ macro( PACKAGE_CREATE_BINARY_NAMES Prefix )
     endforeach()
     
     unset( DynamicSuffix )
-	message_debug( STATUS "Binary names: ${${Prefix}}" )
+    message_debug( STATUS "Binary names: ${${Prefix}}" )
 endmacro()
 
 
@@ -155,31 +155,31 @@ endmacro()
 macro( PACKAGE_COPY_BINARY Prefix )
     # Copy debug runtime files.
     if( ${Prefix}_BINARY_DEBUG )
-		foreach( DebugFile ${${Prefix}_BINARY_DEBUG} )
-			# Get the file name.
-			get_filename_component( FileName ${DebugFile} NAME )
-			
+        foreach( DebugFile ${${Prefix}_BINARY_DEBUG} )
+            # Get the file name.
+            get_filename_component( FileName ${DebugFile} NAME )
+            
             # Copy into output directory.
-			copy_single_file( ${DebugFile} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${FileName}" "COPYONLY" )
-			
-			# Clean up.
-			unset( FileName )
-		endforeach()
-	endif()
+            copy_single_file( ${DebugFile} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${FileName}" "COPYONLY" )
+            
+            # Clean up.
+            unset( FileName )
+        endforeach()
+    endif()
     
     # Copy release runtime files.
-	if( ${Prefix}_BINARY_RELEASE )
-		foreach( ReleaseFile ${${Prefix}_BINARY_RELEASE} )
-			# Get the file name.
-			get_filename_component( FileName ${ReleaseFile} NAME )
-			
+    if( ${Prefix}_BINARY_RELEASE )
+        foreach( ReleaseFile ${${Prefix}_BINARY_RELEASE} )
+            # Get the file name.
+            get_filename_component( FileName ${ReleaseFile} NAME )
+            
             # Copy into output directory.
-			copy_single_file( ${ReleaseFile} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/${FileName}" "COPYONLY" )
-			
-			# Clean up.
-			unset( FileName )
-		endforeach()
-	endif()
+            copy_single_file( ${ReleaseFile} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/${FileName}" "COPYONLY" )
+            
+            # Clean up.
+            unset( FileName )
+        endforeach()
+    endif()
 endmacro()
 
 
@@ -190,18 +190,18 @@ endmacro()
 macro( PACKAGE_COPY_BINARY_FROM_TARGET Prefix )
     # Set debug runtime files.
     if( ${Prefix}_BINARY_DEBUG )
-		foreach( DebugFile ${${Prefix}_BINARY_DEBUG} )
-			package_add_runtime_target( ${DebugFile} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}" )
-		endforeach()
-	endif()
+        foreach( DebugFile ${${Prefix}_BINARY_DEBUG} )
+            package_add_runtime_target( ${DebugFile} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}" )
+        endforeach()
+    endif()
     
     
     # Set release runtime files.
-	if( ${Prefix}_BINARY_RELEASE )
-		foreach( ReleaseFile ${${Prefix}_BINARY_RELEASE} )
+    if( ${Prefix}_BINARY_RELEASE )
+        foreach( ReleaseFile ${${Prefix}_BINARY_RELEASE} )
             package_add_runtime_target( ${ReleaseFile} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}" )
-		endforeach()
-	endif()
+        endforeach()
+    endif()
 endmacro()
 
 
@@ -211,13 +211,13 @@ endmacro()
 # Clear if changed
 macro( PACKAGE_CLEAR_IF_CHANGED TestVar )
     if( NOT "${${TestVar}}" STREQUAL "${${TestVar}_INT_CHECK}" )
-		message_verbose( STATUS "${TestVar} changed." )
+        message_verbose( STATUS "${TestVar} changed." )
 
-		# Reset variables.
-		foreach( var ${ARGN} )
-			#set( ${var} "${var}-NOTFOUND" CACHE STRING "" FORCE )
-			unset( ${var} CACHE )
-		endforeach()
+        # Reset variables.
+        foreach( var ${ARGN} )
+            #set( ${var} "${var}-NOTFOUND" CACHE STRING "" FORCE )
+            unset( ${var} CACHE )
+        endforeach()
     endif()
     set( ${TestVar}_INT_CHECK ${${TestVar}} CACHE INTERNAL ${TestVar} FORCE )
 endmacro()
@@ -269,31 +269,31 @@ endmacro()
 # ************************************************************
 # Create prefix as sub directory
 macro(PACKAGE_CREATE_PREFIX_SUBPATH Output Prefix)
-	# Example: c:/ogre/include
+    # Example: c:/ogre/include
     # Assume that Prefix is Ogre.
     # This will generate the following lines:
     # c:/ogre/include/Ogre
     # c:/ogre/include/OGRE
     # c:/ogre/include/ogre
     string(TOUPPER ${Prefix} Uppercase)
-	string(TOLOWER ${Prefix} Lowercase)
-	set(WorkVar ${${Output}})
-	foreach(var ${${Output}})
-		set(WorkVar
+    string(TOLOWER ${Prefix} Lowercase)
+    set(WorkVar ${${Output}})
+    foreach(var ${${Output}})
+        set(WorkVar
             ${WorkVar}
-			"${var}/${Prefix}"
-			"${var}/${Uppercase}"
-			"${var}/${Lowercase}"
-		)
-	endforeach()
+            "${var}/${Prefix}"
+            "${var}/${Uppercase}"
+            "${var}/${Lowercase}"
+        )
+    endforeach()
     
     # Set to output.
-	set(${Output} ${WorkVar})
-	
+    set(${Output} ${WorkVar})
+    
     # Clean up.
     unset(Uppercase)
-	unset(Lowercase)
-	unset(WorkVar)
+    unset(Lowercase)
+    unset(WorkVar)
     unset(var)
 endmacro()
 
@@ -312,7 +312,7 @@ macro( PACKAGE_CREATE_SEARCH_PATH_BINARY Prefix )
     # Create search for "default" directories.
     foreach( dir ${${Prefix}_PREFIX_PATH} )
         set( ${Prefix}_SEARCH_PATH_BINARY
-			"${${Prefix}_SEARCH_PATH_BINARY}"
+            "${${Prefix}_SEARCH_PATH_BINARY}"
             "${dir}/bin"
             "${dir}/Bin"
             "${dir}/binary"
@@ -326,7 +326,7 @@ macro( PACKAGE_CREATE_SEARCH_PATH_BINARY Prefix )
     
     # Also create "default platform" specific directories.
     package_create_search_platform( ${Prefix}_SEARCH_PATH_BINARY            )
-	package_create_prefix_subpath(  ${Prefix}_SEARCH_PATH_BINARY ${Prefix}  )
+    package_create_prefix_subpath(  ${Prefix}_SEARCH_PATH_BINARY ${Prefix}  )
     
     message_debug( STATUS "Binary search path: ${${Prefix}_SEARCH_PATH_BINARY}" )
 endmacro()
@@ -341,29 +341,34 @@ macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
     
     # Create search for "default" directories.
     foreach(dir ${${Prefix}_PREFIX_PATH})
-        set(${Prefix}_SEARCH_PATH_INCLUDE
-			"${${Prefix}_SEARCH_PATH_INCLUDE}"
-			"${dir}/inc"
+        list(APPEND ${Prefix}_SEARCH_PATH_INCLUDE
+            "${dir}/inc"
             "${dir}/Inc"
             "${dir}/include"
             "${dir}/Include"
         )
     endforeach()
     
-    # Add for UNIX system.
+    # Add system directories.
+    if(APPLE)
+        list(APPEND ${Prefix}_SEARCH_PATH_INCLUDE
+            "/Developer/${${Prefix}_PREFIX_NAME}/include"
+        )
+    endif()
+    
     if(UNIX)
-        set(${Prefix}_SEARCH_PATH_INCLUDE
-            "${${Prefix}_SEARCH_PATH_INCLUDE}"
-			"/usr/include"
-			"/usr/local/include"
-	    )
+        list(APPEND ${Prefix}_SEARCH_PATH_INCLUDE
+            "/usr/include"
+            "/usr/local/include"
+            "/opt/local/include"
+        )
     endif()
     
     # Clear temp vars.
     unset(dir)
     
     # Create specific directories.
-	package_create_prefix_subpath(${Prefix}_SEARCH_PATH_INCLUDE ${Prefix})
+    package_create_prefix_subpath(${Prefix}_SEARCH_PATH_INCLUDE ${Prefix})
     
     message_debug(STATUS "Include search path: ${${Prefix}_SEARCH_PATH_INCLUDE}")
 endmacro()
@@ -387,16 +392,30 @@ macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
         )
     endforeach()
     
-    # Add for UNIX system.
+    # Add system directories.
+    if(APPLE)
+        if(${Prefix}_PREFIX_NAME})
+            list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
+                "/Developer/${${Prefix}_PREFIX_NAME}/lib"
+            )
+        endif()
+    endif()
+    
     if(UNIX)
         list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
-			"/usr/lib"
-			"/usr/lib/x86_64-linux-gnu"
+            "/usr/lib"
+            "/usr/local/lib"
+            "/opt/local/lib"
+        )
+    endif()
+    
+    if(UNIX AND NOT APPLE)
+        list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
+            "/usr/lib/x86_64-linux-gnu"
             "/usr/lib/i386-linux-gnu"
             "/usr/lib/arm-linux-gnueabihf"
             "/usr/lib/aarch64-linux-gnu"
-            "/usr/local/lib"
-	    )
+        )
     endif()
     
     # Clear temp vars.
@@ -404,7 +423,7 @@ macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
     
     # Also create "default platform" specific directories.
     package_create_search_platform(${Prefix}_SEARCH_PATH_LIBRARY)
-	package_create_prefix_subpath(${Prefix}_SEARCH_PATH_LIBRARY ${Prefix})
+    package_create_prefix_subpath(${Prefix}_SEARCH_PATH_LIBRARY ${Prefix})
     
     message_debug(STATUS "Library search path: ${${Prefix}_SEARCH_PATH_LIBRARY}")
 endmacro()
@@ -420,13 +439,13 @@ macro( PACKAGE_CREATE_SEARCH_PATH_MEDIA Prefix )
     
     foreach( dir ${${Prefix}_PREFIX_PATH} )
         set( ${Prefix}_SEARCH_PATH_MEDIA
-			"${${Prefix}_SEARCH_PATH_MEDIA}"
+            "${${Prefix}_SEARCH_PATH_MEDIA}"
             "${dir}/media"
             "${dir}/Media"
         )
     endforeach()
     
-	package_create_prefix_subpath( ${Prefix}_SEARCH_PATH_MEDIA ${Prefix} )
+    package_create_prefix_subpath( ${Prefix}_SEARCH_PATH_MEDIA ${Prefix} )
     
     message_debug( STATUS "Media search path: ${${Prefix}_SEARCH_PATH_MEDIA}" )
 endmacro()
@@ -442,7 +461,7 @@ macro( PACKAGE_CREATE_SEARCH_PATH_PLUGIN Prefix )
     # Create search for "default" directories.
     foreach( dir ${${Prefix}_PREFIX_PATH} )
         set( ${Prefix}_SEARCH_PATH_PLUGIN
-			"${${Prefix}_SEARCH_PATH_PLUGIN}"
+            "${${Prefix}_SEARCH_PATH_PLUGIN}"
             "${dir}/bin"
             "${dir}/Bin"
             "${dir}/binary"
@@ -450,7 +469,7 @@ macro( PACKAGE_CREATE_SEARCH_PATH_PLUGIN Prefix )
             "${dir}/dll"
             "${dir}/Dll"
             "${dir}/plugin"
-			"${dir}/Plugin"
+            "${dir}/Plugin"
             "${dir}/plugins"
             "${dir}/Plugins"
         )
@@ -458,7 +477,7 @@ macro( PACKAGE_CREATE_SEARCH_PATH_PLUGIN Prefix )
     
     # Also create "default platform" specific directories.
     package_create_search_platform( ${Prefix}_SEARCH_PATH_PLUGIN            )
-	package_create_prefix_subpath(  ${Prefix}_SEARCH_PATH_PLUGIN ${Prefix}  )
+    package_create_prefix_subpath(  ${Prefix}_SEARCH_PATH_PLUGIN ${Prefix}  )
     
     message_debug( STATUS "Plugin search path: ${${Prefix}_SEARCH_PATH_PLUGIN}" )
 endmacro()
@@ -470,7 +489,7 @@ endmacro()
 # Create search platform path
 macro( PACKAGE_CREATE_SEARCH_PLATFORM Var )
     # Check whether we are going to compile for x64-bit systems.
-	string( REGEX MATCH "Win64" x64Found ${CMAKE_GENERATOR} )
+    string( REGEX MATCH "Win64" x64Found ${CMAKE_GENERATOR} )
     if( x64Found )
         set( OsSystem
             "64"
@@ -531,7 +550,7 @@ macro( PACKAGE_CREATE_DEBUG_NAMES Prefix )
         )
     endforeach()
     
-	message_debug( STATUS "Debug names: ${${Prefix}_DEBUG}" )
+    message_debug( STATUS "Debug names: ${${Prefix}_DEBUG}" )
 endmacro()
 
 
@@ -557,7 +576,7 @@ macro( PACKAGE_CREATE_DEBUG_BINARY_NAMES Prefix )
     endforeach()
     
     unset( DynamicSuffix )
-	message_debug( STATUS "Debug binary names: ${${Prefix}_DEBUG}" )
+    message_debug( STATUS "Debug binary names: ${${Prefix}_DEBUG}" )
 endmacro()
 
 
@@ -577,7 +596,7 @@ macro( PACKAGE_CREATE_RELEASE_BINARY_NAMES Prefix )
     endforeach()
     
     unset( DynamicSuffix )
-	message_debug( STATUS "Release binary names: ${${Prefix}_RELEASE}" )
+    message_debug( STATUS "Release binary names: ${${Prefix}_RELEASE}" )
 endmacro()
 
 
@@ -590,20 +609,20 @@ macro( PACKAGE_CREATE_STATICAL_NAMES Var )
     
     foreach( name ${${Var}} )
         set( ${Var}
-			"${name}s"
-			"${name}S"
-			"${name}-s"
-			"${name}_static"
-			"${name}_Static"
-			"${name}_s"
-			"${name}_S"
-			"${name}LibStatic"
-			"${name}libstatic"
+            "${name}s"
+            "${name}S"
+            "${name}-s"
+            "${name}_static"
+            "${name}_Static"
+            "${name}_s"
+            "${name}_S"
+            "${name}LibStatic"
+            "${name}libstatic"
             ${${Var}}
         )
     endforeach()
     
-	message_debug( STATUS "Statical names: ${${Var}}" )
+    message_debug( STATUS "Statical names: ${${Var}}" )
 endmacro()
 
 
@@ -711,7 +730,7 @@ endmacro()
 # ************************************************************
 # End the package
 macro(PACKAGE_END Prefix)
-	if(${Prefix}_FOUND)
+    if(${Prefix}_FOUND)
         message_verbose(STATUS "${Prefix} libraries:")
         package_display_library("${${Prefix}_LIBRARIES}")
         message_verbose(STATUS "${Prefix} includes:  ${${Prefix}_INCLUDE_DIR}")
@@ -751,8 +770,8 @@ endmacro()
 # ************************************************************
 # Find library
 macro( PACKAGE_FIND_LIBRARY Prefix SearchName SearchPath Suffixes )
-	message_sub_header( "Package Find Library (${Prefix})" )
-	message_verbose( STATUS "Searching files: ${SearchName}"    )
+    message_sub_header( "Package Find Library (${Prefix})" )
+    message_verbose( STATUS "Searching files: ${SearchName}"    )
     message_debug( STATUS "Names:           ${SearchName}"      )
     message_debug( STATUS "Search path:     ${SearchPath}"      )
     message_debug( STATUS "Suffixes:        ${Suffixes}"        )
@@ -772,7 +791,7 @@ endmacro()
 # ************************************************************
 # Find directory
 macro(PACKAGE_FIND_PATH Prefix Files SearchPath Suffixes)
-	message_sub_header("Package Find Path (${Prefix})")
+    message_sub_header("Package Find Path (${Prefix})")
     message_debug(STATUS "Files:           ${Files}")
     message_debug(STATUS "Search path:     ${SearchPath}")
     message_debug(STATUS "Suffixes:        ${Suffixes}")
@@ -824,20 +843,20 @@ macro( PACKAGE_INSTALL_BINARY_FROM_TARGET Prefix )
     
     # Set debug runtime files.
     if( ${Prefix}_BINARY_DEBUG )
-		foreach( DebugFile ${${Prefix}_BINARY_DEBUG} )
+        foreach( DebugFile ${${Prefix}_BINARY_DEBUG} )
             install( FILES "${DebugFile}" DESTINATION "${Path}" CONFIGURATIONS "debug" )
             message_verbose( STATUS "Install [${DebugFile}] to ${Path}." )
-		endforeach()
-	endif()
+        endforeach()
+    endif()
     
     
     # Set release runtime files.
-	if( ${Prefix}_BINARY_RELEASE )
-		foreach( ReleaseFile ${${Prefix}_BINARY_RELEASE} )
+    if( ${Prefix}_BINARY_RELEASE )
+        foreach( ReleaseFile ${${Prefix}_BINARY_RELEASE} )
             install( FILES "${ReleaseFile}" DESTINATION "${Path}" CONFIGURATIONS "release" )
             message_verbose( STATUS "Install [${ReleaseFile}] to ${Path}." )
-		endforeach()
-	endif()
+        endforeach()
+    endif()
     
     # Clean up.
     unset( Path )
@@ -888,7 +907,7 @@ macro( PACKAGE_GET_ENVIRONMENT_PATH Prefix Var )
         # We must also remove the double quote if exists.
         # As we don't want the quotes to in the cache.
         string( REGEX REPLACE "\"" "" TmpEnv ${TmpEnv} )
-		
+        
         set( ${Prefix}_ENV_${Var} ${TmpEnv} )
         message_debug( STATUS "Set ${Prefix}_ENV_${Var} to ${TmpEnv}." )
     endif ()
@@ -903,11 +922,11 @@ endmacro()
 # Validate the package
 macro( PACKAGE_VALIDATE Prefix )
     if( NOT ${Prefix}_FOUND )
-		if( ${Prefix}_PATH_INCLUDE AND ${Prefix}_LIBRARY )
-			set( ${Prefix}_FOUND TRUE )
-			set( ${Prefix}_LIBRARIES ${${Prefix}_LIBRARY} )
-			set( ${Prefix}_INCLUDE_DIR ${${Prefix}_PATH_INCLUDE} )
-		endif()
+        if( ${Prefix}_PATH_INCLUDE AND ${Prefix}_LIBRARY )
+            set( ${Prefix}_FOUND TRUE )
+            set( ${Prefix}_LIBRARIES ${${Prefix}_LIBRARY} )
+            set( ${Prefix}_INCLUDE_DIR ${${Prefix}_PATH_INCLUDE} )
+        endif()
     endif()
 endmacro()
 
