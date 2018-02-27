@@ -128,6 +128,6 @@ endif()
 # ************************************************************
 # Finalize package
 package_validate(OPENCV)
-package_add_parent_dir(OPENCV)
+package_add_parent_dir(OPENCV ADD_PARENT)
 package_end(OPENCV)
 message_footer(OPENCV)
