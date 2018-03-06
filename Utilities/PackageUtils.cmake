@@ -340,7 +340,7 @@ endmacro()
 
 
 # ************************************************************
-# Create search include path
+# Create Search Include Paths
 # ************************************************************
 macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
     message_verbose(STATUS "Creating ${Prefix} include search path.")
@@ -923,6 +923,22 @@ macro(PACKAGE_GET_ENVIRONMENT_PATH Prefix Var)
     endif ()
 
     unset(TmpEnv)
+endmacro()
+
+
+
+
+# ************************************************************
+# Set Statical Priority
+# ************************************************************
+macro(PACKAGE_STATICAL_DEFAULT)
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ${PROJECT_LIBRARY_SUFFIXES})
+endmacro()
+
+macro(PACKAGE_STATICAL_PRIORITY Prefix)
+    if(${Prefix}_PRIORITY_STATICAL)
+        set(CMAKE_FIND_LIBRARY_SUFFIXES .a ${CMAKE_FIND_LIBRARY_SUFFIXES})
+    endif()
 endmacro()
 
 

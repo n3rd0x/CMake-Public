@@ -45,7 +45,6 @@ package_create_debug_names(CAIRO_LIBRARY_NAMES)
 
 
 
-
 # ************************************************************
 # Clear
 if(WIN32)

@@ -906,6 +906,10 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
     # Set debug suffix.
     set(CMAKE_DEBUG_POSTFIX "_d")
 
+    # Internal backup cache for searching priority of libraries.
+    set(PROJECT_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES} CACHE INTERNAL "Backup of library suffixes.")
+    message_verbose(STATUS "Library suffix priority: ${PROJECT_LIBRARY_SUFFIXES}")
+
     # Set state for displaying debug message.
     option(PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE "Enable debug message" OFF)
 
