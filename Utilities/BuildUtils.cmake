@@ -1073,7 +1073,6 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
                 "-Wno-long-long"
                 "-Wno-missing-field-initializers"
                 "-Wno-unused-parameter"
-                "-Wno-unused-but-set-parameter"
                 "-Wno-overloaded-virtual"
                 "-Wshadow"
                 "-Wwrite-strings"

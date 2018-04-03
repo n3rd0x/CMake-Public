@@ -84,7 +84,7 @@ macro(PACKAGE_ADD_PARENT_DIR Prefix)
         #    endif()
         #endforeach()
         set(PathCpy ${${Prefix}_INCLUDE_DIR})
-        get_filename_component(Path ${PathCpy} PATH)
+        get_filename_component(Path "${PathCpy}" PATH)
         if(PACKAGE_ADD_PARENT_DIR_ADD_PARENT)
             set(${Prefix}_INCLUDE_DIR ${Path} ${${Prefix}_INCLUDE_DIR})
         else()
@@ -119,6 +119,25 @@ macro(PACKAGE_APPEND_NAMES Prefix Name)
     set(${Prefix} "${NewNames}")
     unset(NewNames)
     message_debug(STATUS "Append names: ${${Prefix}}")
+endmacro()
+
+
+
+
+# ************************************************************
+# Append SubPaths
+# ************************************************************
+macro(PACKAGE_APPEND_PATHS Prefix SubPaths)
+    # Append paths into current.
+    foreach(dir ${${Prefix}})
+        foreach(path ${SubPaths})
+            list(APPEND ${Prefix}
+                "${dir}/${path}"
+            )
+        endforeach()
+        unset(path)
+    endforeach()
+    unset(dir)
 endmacro()
 
 
@@ -340,9 +359,13 @@ endmacro()
 
 
 # ************************************************************
-# Create Search Include Paths
+# Create Search Include Path
 # ************************************************************
 macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
+    # Help information.
+    message_header(PACKAGE_CREATE_SEARCH_PATH_INCLUDE)
+    message_help("Required:")
+    message_help("[Prefix]      -> Prefix of the variable to process.")
     message_verbose(STATUS "Creating ${Prefix} include search path.")
 
     # Create search for "default" directories.
@@ -352,7 +375,8 @@ macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
             "${dir}/Inc"
             "${dir}/include"
             "${dir}/Include"
-      )
+        )
+
     endforeach()
     unset(dir)
 
@@ -372,8 +396,6 @@ macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
 
     # Create specific directories.
     package_create_prefix_subpath(${Prefix}_SEARCH_PATH_INCLUDE ${Prefix})
-
-    #message_debug(STATUS "Include search path: ${${Prefix}_SEARCH_PATH_INCLUDE}")
 endmacro()
 
 
