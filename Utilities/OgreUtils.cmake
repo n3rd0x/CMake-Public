@@ -1,15 +1,15 @@
 # ************************************************************
 # Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the “Software”),
+# copy of this software and associated documentation files (the "Software"),
 # to deal in the Software without restriction, including without limitation
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 # NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
@@ -22,14 +22,16 @@
 
 
 # ************************************************************
-# Configure plug-ins
+# Configure Plug-ins
+# ************************************************************
 macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
     # Help information.
     message_header(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG)
     message_help("HELP:")
+    message_help("This macro will generate a 'plugins.cfg' from the template 'plugins_in.cfg'.")
     message_help("Variables using in 'plugins_in.cfg':")
-    message_help("PROJECT_OGRE_SELECTED_PLUGINS : Selected plugins.")
-    message_help("PROJECT_OGRE_PATH_PLUGIN      : Path to the actual plugins.")
+    message_help("PROJECT_TEMPLATE_SELECTED_PLUGIN_OGRE  : Selected plugins.")
+    message_help("PROJECT_TEMPLATE_PLUGIN_PATH_OGRE      : Path to the actual plugins.")
     message_help_dash_line()
     message_help("Variables taken from 'FindCustomOgre.cmake':")
     message_help("OGRE_PATH_PLUGIN_DEBUG   : Path to the actual plugins of debug version.")
@@ -39,22 +41,33 @@ macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
     message_help("located in PROJECT_PATH_TEMPLATE, if [Path] is no specified.")
     message_help_dash_line()
     message_help("Required:")
-    message_help("[Plugins]    -> Selected plug-ins.")
+    message_help("[Plugins]")
+    message_help("      Selected plug-ins.")
     message_help("Optional:")
-    message_help("[Path]       -> Location of the templates.")
-    message_help("[SubPath]    -> Sub path of output directory.")
+    message_help("[Path]")
+    message_help("      Define the location of the template (plugins_in.cfg).")
+    message_help("      Otherwise default location is used, defined in PROJECT_PATH_TEMPLATE.")
+    message_help("[SubPath]")
+    message_help("      Sub path of output directory.")
+    message_help("[InstallPath]")
+    message_help("      Define the install path of the file.")
+    message_help("      Otherwise default location is used defined in PROJECT_PATH_INSTALL.")
+    message_help("[InstallLocation]")
+    message_help("      Define the install location in the template.")
+    message_help("      Otherwise default location is used (./plugins).")
+    message_help("[INSTALL]")
+    message_help("      Also adding into the INSTALL target.")
     
     # Default values.
     set(Path "${PROJECT_PATH_TEMPLATE}")
+    set(InstallLocation "./plugins")
+    set(InstallPath "${PROJECT_PATH_INSTALL}")
     
     # Parse options.
+    message_status(STATUS "Configure plugins.cfg.")
     set(options INSTALL)
-    set(oneValueArgs Path SubPath)
+    set(oneValueArgs Path SubPath InstallPath InstallLocation)
     cmake_parse_arguments(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG "${options}" "${oneValueArgs}" "" ${ARGN})
-    
-    if(NOT OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_INSTALL)
-        message_status(STATUS "Configure plugins.cfg.")
-    endif()
     
     if(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_Path)
         set(Path "${OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_Path}")
@@ -72,59 +85,102 @@ macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
 
     # Go through the list and add into correct variable.
     foreach(Var ${Plugins})
-        list(APPEND PluginDebug "\nPlugin=${Var}_d")
+        if(APPLE)
+            list(APPEND PluginDebug "\nPlugin=${Var}")
+        else()
+            list(APPEND PluginDebug "\nPlugin=${Var}_d")
+        endif()
         list(APPEND PluginRelease "\nPlugin=${Var}")
     endforeach()
     unset(Var)
-    
-    # Generate file for debug.
+
+
+    # ----------------------------------------
+    # Debug
+    # ----------------------------------------
     # Remove unwanted characters.
-    string(REPLACE ";" "" PROJECT_OGRE_SELECTED_PLUGINS ${PluginDebug})
-    set(PROJECT_OGRE_PATH_PLUGIN ${OGRE_PATH_PLUGIN_DEBUG})
+    string(REPLACE ";" "" PROJECT_TEMPLATE_SELECTED_PLUGIN_OGRE ${PluginDebug})
+    if(APPLE)
+        set(PROJECT_TEMPLATE_PLUGIN_PATH_OGRE "")
+    else()
+        set(PROJECT_TEMPLATE_PLUGIN_PATH_OGRE ${OGRE_PATH_PLUGIN_DEBUG})
+    endif()
     configure_file("${Path}/plugins_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/plugins_d.cfg")
     
-    # Generate file for release.
+    
+    # ----------------------------------------
+    # Release
+    # ----------------------------------------
     # Remove unwanted characters.
-    string(REPLACE ";" "" PROJECT_OGRE_SELECTED_PLUGINS ${PluginRelease})
-    set(PROJECT_OGRE_PATH_PLUGIN ${OGRE_PATH_PLUGIN_RELEASE})
+    string(REPLACE ";" "" PROJECT_TEMPLATE_SELECTED_PLUGIN_OGRE ${PluginRelease})
+    if(APPLE)
+        set(PROJECT_TEMPLATE_PLUGIN_PATH_OGRE "")
+    else()
+        set(PROJECT_TEMPLATE_PLUGIN_PATH_OGRE ${OGRE_PATH_PLUGIN_RELEASE})
+    endif()
     configure_file("${Path}/plugins_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/plugins.cfg")
-    
-    
-    # Generate file for install.
-    set(PROJECT_OGRE_PATH_PLUGIN "./plugins")
-    string(REPLACE ";" "" PROJECT_OGRE_SELECTED_PLUGINS ${PluginDebug})
-    configure_file("${Path}/plugins_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/plugins_install_d.cfg")
-    
-    string(REPLACE ";" "" PROJECT_OGRE_SELECTED_PLUGINS ${PluginRelease})
-    configure_file("${Path}/plugins_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/plugins_install.cfg")
-    
-    
-    # Copy correct file based on the configuration.
-    if(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_INSTALL)
-        message_status(STATUS "Install plugin.cfg to ${PROJECT_PATH_INSTALL}${OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_SubPath}")
-        install(
-            FILES
-            "${CMAKE_CURRENT_BINARY_DIR}/$<$<CONFIG:debug>:plugins_install_d.cfg>$<$<NOT:$<CONFIG:debug>>:plugins_install.cfg>"
-            DESTINATION "${PROJECT_PATH_INSTALL}${OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_SubPath}"
-            RENAME "plugins.cfg"
+
+
+    # Add to copy target.
+    if(MSVC)
+        add_custom_command(
+            TARGET ALL_CopyData
+            COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_CURRENT_BINARY_DIR}/$<$<CONFIG:debug>:plugins_d.cfg>$<$<NOT:$<CONFIG:debug>>:plugins.cfg>"
+            "${PROJECT_PATH_OUTPUT_EXECUTABLE}/$<CONFIGURATION>${OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_SubPath}/plugins.cfg"
         )
     else()
-        if(MSVC)
-            add_custom_command(
-                TARGET ALL_CopyData
-                COMMAND ${CMAKE_COMMAND} -E copy
-                "${CMAKE_CURRENT_BINARY_DIR}/$<$<CONFIG:debug>:plugins_d.cfg>$<$<NOT:$<CONFIG:debug>>:plugins.cfg>"
-                "${PROJECT_PATH_OUTPUT_EXECUTABLE}/$<CONFIGURATION>${OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_SubPath}/plugins.cfg"
-            )
-        else()
-            add_custom_command(
-                TARGET ALL_CopyData
-                COMMAND ${CMAKE_COMMAND} -E copy
-                "${CMAKE_CURRENT_BINARY_DIR}/$<$<CONFIG:debug>:plugins_d.cfg>$<$<NOT:$<CONFIG:debug>>:plugins.cfg>"
-                "${PROJECT_PATH_OUTPUT_EXECUTABLE}/${OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_SubPath}/plugins.cfg"
-            )
-        endif()
+        add_custom_command(
+            TARGET ALL_CopyData
+            COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_CURRENT_BINARY_DIR}/$<$<CONFIG:debug>:plugins_d.cfg>$<$<NOT:$<CONFIG:debug>>:plugins.cfg>"
+            "${PROJECT_PATH_OUTPUT_EXECUTABLE}/${OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_SubPath}/plugins.cfg"
+        )
     endif()
+    
+    
+    # ----------------------------------------
+    # Install
+    # ----------------------------------------
+    if(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_INSTALL)
+        if(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_InstallLocation)
+            set(InstallLocation ${OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_InstallLocation})
+        endif()
+
+        if(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_InstallPath)
+            set(InstallPath ${OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_InstallPath})
+        endif()
+
+        if(APPLE)
+            set(PROJECT_TEMPLATE_PLUGIN_PATH_OGRE "")
+        else()
+            set(PROJECT_TEMPLATE_PLUGIN_PATH_OGRE ${InstallLocation})
+        endif()
+        string(REPLACE ";" "" PROJECT_TEMPLATE_SELECTED_PLUGIN_OGRE ${PluginDebug})
+        configure_file("${Path}/plugins_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/plugins_install_d.cfg")
+        
+        string(REPLACE ";" "" PROJECT_TEMPLATE_SELECTED_PLUGIN_OGRE ${PluginRelease})
+        configure_file("${Path}/plugins_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/plugins_install.cfg")
+        
+        # Copy correct file based on the configuration.
+        message_status(STATUS "Adding 'plugins.cfg' into the INSTALL target at destination ${InstallPath}")
+
+        install(
+            FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/plugins_install_d.cfg"
+            DESTINATION "${InstallPath}"
+            CONFIGURATIONS "debug"
+            RENAME "plugins.cfg"
+        )
+        install(
+            FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/plugins_install.cfg"
+            DESTINATION "${InstallPath}"
+            CONFIGURATIONS "release"
+            RENAME "plugins.cfg"
+        )
+    endif()
+
 
     # Clean up.
     unset(oneValueArgs )
@@ -141,54 +197,91 @@ endmacro()
 
 
 
-
 # ************************************************************
-# Configure plugins
-macro( OGRE_CONFIGURE_PLUGIN_CONFIG_FILE PLUGINS PATH SUB_PATH)
-    message_status( STATUS "Configure plugins.cfg ..." )
-    message_status( STATUS "Selected plugins: ${PLUGINS}" )
-    set( PLUGIN_DEBUG "" )
-    set( PLUGIN_RELEASE "" )
+# Configure Resources
+# ************************************************************
+macro(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
+    # Help information.
+    message_header(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
+    message_help("HELP:")
+    message_help("This macro will generate a 'resources.cfg' from the template 'resources_in.cfg'.")
+    message_help("Variables using in 'resources_in.cfg':")
+    message_help("PROJECT_TEMPLATE_MEDIA_OGRE: Path to the actual media.")
+    message_help_dash_line()
+    message_help("Optional:")
+    message_help("[Path]")
+    message_help("      Define the location of the template (resources_in.cfg).")
+    message_help("      Otherwise default location is used, defined in PROJECT_PATH_TEMPLATE.")
+    message_help("[SubPath]")
+    message_help("      Sub path of output directory.")
+    message_help("[InstallPath]")
+    message_help("      Define the install path of the file.")
+    message_help("      Otherwise default location is used defined in PROJECT_PATH_INSTALL.")
+    message_help("[MediaLocation]")
+    message_help("      Define actual media location in the template.")
+    message_help("      Otherwise default location is used, defined in PROJECT_PATH_MEDIA_OGRE.")
+    message_help("[InstallLocation]")
+    message_help("      Define the install location in the template.")
+    message_help("      Otherwise default location is used (./data/media/ogre).")
+    message_help("[INSTALL]")
+    message_help("      Also adding into the INSTALL target.")
+    
+    # Default values.
+    set(Path "${PROJECT_PATH_TEMPLATE}")
+    set(MediaLocation "${PROJECT_PATH_MEDIA_OGRE}")
+    set(InstallLocation "./data/media/ogre")
+    set(InstallPath "${PROJECT_PATH_INSTALL}")
+    
+    # Parse options.
+    message_status(STATUS "Configure resources.cfg.")
+    set(options INSTALL)
+    set(oneValueArgs Path SubPath InstallPath MediaLocation InstallLocation)
+    cmake_parse_arguments(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG "${options}" "${oneValueArgs}" "" ${ARGN})
 
-    # Go through the list and add into correct variable.
-    foreach( VAR ${PLUGINS} )
-        list( APPEND PLUGIN_DEBUG "\nPlugin=${VAR}_d" )
-        list( APPEND PLUGIN_RELEASE "\nPlugin=${VAR}" )
-    endforeach()
+    if(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_Path)
+        set(Path "${OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_Path}")
+    endif()
 
+    if(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_MediaLocation)
+        set(MediaLocation "${OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_MediaLocation}")
+    endif()
 
-    # Set correct directory and plugins depend on platform and target mode.
-    if( MSVC )
-        set( PLUGIN_SELECTED_DEBUG ${PLUGIN_DEBUG} )
-        set( PLUGIN_SELECTED_RELEASE ${PLUGIN_RELEASE} )
+    
+    # Add to ALL_CopyData target.
+    set(PROJECT_TEMPLATE_MEDIA_OGRE "${MediaLocation}")
+    configure_file("${Path}/resources_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/resources.cfg")
+    if(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_SubPath)
+        add_data_target("${CMAKE_CURRENT_BINARY_DIR}/resources.cfg" SubPath "${OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_SubPath}")
     else()
-        if( PROJECT_TARGET_DEBUG )
-            set( PLUGIN_SELECTED_DEBUG ${PLUGIN_DEBUG} )
-        elseif( PROJECT_TARGET_RELEASE )
-            set( PLUGIN_SELECTED_RELEASE ${PLUGIN_RELEASE} )
-        else()
-            message_status( "" "Couldn't configure plugins.cfg due to invalid target mode." )
+        add_data_target("${CMAKE_CURRENT_BINARY_DIR}/resources.cfg")
+    endif()
+
+
+    # Add to INSTALL target.
+    if(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_INSTALL)
+        if(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_InstallLocation)
+            set(InstallLocation "${OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_InstallLocation}")
         endif()
+        set(PROJECT_TEMPLATE_MEDIA_OGRE "${InstallLocation}")
+        configure_file("${Path}/resources_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/resources_install.cfg")
+
+        if(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_InstallPath)
+            set(InstallPath "${OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_InstallPath}")
+        endif()
+        message_status(STATUS "Adding 'resources.cfg' into the INSTALL target at destination ${InstallPath}")
+        install(FILES "${CMAKE_CURRENT_BINARY_DIR}/resources_install.cfg" DESTINATION "${InstallPath}" RENAME "resources.cfg")
     endif()
 
-
-    # Copy files.
-    if( PLUGIN_SELECTED_DEBUG )
-        # Remove unwanted characters
-        string( REPLACE ";" "" PROJECT_OGRE_SELECTED_PLUGINS ${PLUGIN_SELECTED_DEBUG} )
-        set( PROJECT_OGRE_PATH_PLUGIN ${OGRE_PATH_PLUGIN_DEBUG} )
-        copy_single_file( "${PATH}/plugins_in.cfg" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}${SUB_PATH}/plugins.cfg" "" )
-    endif()
-
-    if( PLUGIN_SELECTED_RELEASE )
-        # Remove unwanted characters
-        string( REPLACE ";" "" PROJECT_OGRE_SELECTED_PLUGINS ${PLUGIN_SELECTED_RELEASE} )
-        set( PROJECT_OGRE_PATH_PLUGIN ${OGRE_PATH_PLUGIN_RELEASE} )
-        copy_single_file( "${PATH}/plugins_in.cfg" "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}${SUB_PATH}/plugins.cfg" "" )
-    endif()
-
-    unset( PLUGIN_SELECTED_DEBUG CACHE )
-    unset( PLUGIN_SELECTED_RELEASE CACHE )
-    unset( PLUGIN_DEBUG CACHE )
-    unset( PLUGIN_RELEASE CACHE )
+    
+    # Clean up.
+    unset(oneValueArgs)
+    unset(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_INSTALL)
+    unset(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_Path)
+    unset(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_SubPath)
+    unset(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_InstallPath)
+    unset(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_MediaLocation)
+    unset(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_InstallLocation)
+    
+    message_footer(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
 endmacro()
+
