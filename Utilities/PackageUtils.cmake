@@ -382,9 +382,9 @@ macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
 
     # Add system directories.
     if(APPLE)
-        list(APPEND ${Prefix}_SEARCH_PATH_INCLUDE
-            "/Developer/${${Prefix}_PREFIX_NAME}/include"
-      )
+        if(${Prefix}_PREFIX_NAME})
+            list(APPEND ${Prefix}_SEARCH_PATH_INCLUDE "/Developer/${${Prefix}_PREFIX_NAME}/include")
+        endif()
     endif()
 
     if(UNIX)
@@ -421,17 +421,16 @@ macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
     # Add system directories.
     if(APPLE)
         if(${Prefix}_PREFIX_NAME})
-            list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
-                "/Developer/${${Prefix}_PREFIX_NAME}/lib"
-          )
+            list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY "/Developer/${${Prefix}_PREFIX_NAME}/lib")
         endif()
+        list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY "/Library/Frameworks")
     endif()
 
     if(UNIX)
         list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
             "/usr/lib"
             "/usr/local/lib"
-      )
+        )
     endif()
 
     if(UNIX AND NOT APPLE)

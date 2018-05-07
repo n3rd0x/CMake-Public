@@ -27,7 +27,9 @@ package_begin(QT)
 package_create_home_path(QT QT5_ROOT)
 
 # Options.
-option(QT_ENABLE_AUTOMOC "Enable automoc." OFF)
+option(QT_ENABLE_AUTOMOC "Enable auto MOC." OFF)
+option(QT_ENABLE_AUTORCC "Enable auto RCC." OFF)
+option(QT_ENABLE_AUTOUIC "Enable auto UIC." OFF)
 option(QT_DEPLOY_LIBRARY "Flag to deploy QT libraries." OFF)
 option(QT_PLUGIN_ENABLE_IMAGE_FORMAT "Enable image formats (Ex. jpg, svg, tiff)." OFF)
 option(QT_PLUGIN_ENABLE_SQL_DRIVER_SQLITE "Enable SQLite plug-in driver." OFF)
@@ -131,7 +133,19 @@ set(CMAKE_PREFIX_PATH ${QT_PATH_CMAKE})
 # Tell CMake to run MOC when necessary.
 if(QT_ENABLE_AUTOMOC)
     set(CMAKE_AUTOMOC ON)
-    message_verbose(STATIS "Enable AUTOMOC.")
+    message_verbose(STATIS "Enable AUTO MOC.")
+endif()
+
+# Tell CMake to run RCC when necessary.
+if(QT_ENABLE_AUTORCC)
+    set(CMAKE_AUTORCC ON)
+    message_verbose(STATIS "Enable AUTO RCC.")
+endif()
+
+# Tell CMake to run UIC when necessary.
+if(QT_ENABLE_AUTOUIC)
+    set(CMAKE_AUTOUIC ON)
+    message_verbose(STATIS "Enable AUTO UIC.")
 endif()
 
 # As MOC files are generated in the binary directory,
