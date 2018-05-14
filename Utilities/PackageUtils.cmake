@@ -411,7 +411,9 @@ macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
         list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
             "${dir}"
             "${dir}/lib"
+            "${dir}/lib64"
             "${dir}/Lib"
+            "${dir}/Lib64"
             "${dir}/library"
             "${dir}/Library"
       )

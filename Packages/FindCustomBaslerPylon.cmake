@@ -66,12 +66,36 @@ package_clear_if_changed(BASLER_PYLON_HOME
 # ************************************************************
 if(APPLE)
     package_find_path(BASLER_PYLON_PATH_INCLUDE "PylonBase.h" "${BASLER_PYLON_SEARCH_PATH_INCLUDE}" "")
+    package_find_library(BASLER_PYLON_LIBRARY_DEBUG "${BASLER_PYLON_LIBRARY_NAMES}" "${BASLER_PYLON_SEARCH_PATH_LIBRARY}" "")
+    package_find_library(BASLER_PYLON_LIBRARY_RELEASE "${BASLER_PYLON_LIBRARY_NAMES}" "${BASLER_PYLON_SEARCH_PATH_LIBRARY}" "")
+    package_make_library(BASLER_PYLON_LIBRARY BASLER_PYLON_LIBRARY_DEBUG BASLER_PYLON_LIBRARY_RELEASE)
 else()
-    package_find_path(BASLER_PYLON_PATH_INCLUDE "pylon" "${BASLER_PYLON_SEARCH_PATH_INCLUDE}" "")
+    set(Args "")
+    set(BASLER_PYLON_LIBRARY_DEBUG "")
+    set(BASLER_PYLON_LIBRARY_RELEASE "")
+    execute_process(
+        COMMAND ${BASLER_PYLON_HOME}/bin/pylon-config --libs
+        OUTPUT_VARIABLE Args
+        RESULT_VARIABLE ReturnValue
+    )
+    separate_arguments(ListArgs UNIX_COMMAND "${Args}")
+    foreach(Var ${ListArgs})
+        string(REGEX MATCH "-l" LibraryFound ${Var})
+        if(LibraryFound)
+            string(REGEX REPLACE "-l" "" LibraryName "${Var}")
+            package_find_library(BASLER_PYLON_LIBRARY_${LibraryName} "${LibraryName}" "${BASLER_PYLON_SEARCH_PATH_LIBRARY}" "")
+            if(BASLER_PYLON_LIBRARY_${LibraryName})
+                list(APPEND BASLER_PYLON_LIBRARY_RELEASE ${BASLER_PYLON_LIBRARY_${LibraryName}})
+            endif()
+            unset(BASLER_PYLON_LIBRARY_${LibraryName} CACHE)
+            unset(LibraryName)
+        endif()
+    endforeach()
+    unset(Args)
+    unset(LibraryFound)
+    unset(ListArgs)
+    package_make_library(BASLER_PYLON_LIBRARY BASLER_PYLON_LIBRARY_DEBUG BASLER_PYLON_LIBRARY_RELEASE)
 endif()
-package_find_library(BASLER_PYLON_LIBRARY_DEBUG "${BASLER_PYLON_LIBRARY_NAMES}" "${BASLER_PYLON_SEARCH_PATH_LIBRARY}" "")
-package_find_library(BASLER_PYLON_LIBRARY_RELEASE "${BASLER_PYLON_LIBRARY_NAMES}" "${BASLER_PYLON_SEARCH_PATH_LIBRARY}" "")
-package_make_library(BASLER_PYLON_LIBRARY BASLER_PYLON_LIBRARY_DEBUG BASLER_PYLON_LIBRARY_RELEASE)
 
 
 
