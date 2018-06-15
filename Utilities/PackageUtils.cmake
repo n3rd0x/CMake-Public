@@ -412,8 +412,14 @@ macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
             "${dir}"
             "${dir}/lib"
             "${dir}/Lib"
+            "${dir}/lib/frameworks"
+            "${dir}/lib/Frameworks"
+            "${dir}/Lib/frameworks"
+            "${dir}/Lib/Frameworks"
             "${dir}/library"
             "${dir}/Library"
+            "${dir}/frameworks"
+            "${dir}/Frameworks"
       )
     endforeach()
     unset(dir)
@@ -795,14 +801,18 @@ endmacro()
 # Find library
 macro(PACKAGE_FIND_LIBRARY Prefix SearchName SearchPath Suffixes)
     message_sub_header("Package Find Library (${Prefix})")
-    message_verbose(STATUS "Searching files: ${SearchName}"  )
-    message_debug(STATUS "Names:           ${SearchName}"    )
-    message_debug(STATUS "Search path:     ${SearchPath}"    )
-    message_debug(STATUS "Suffixes:        ${Suffixes}"      )
+    message_verbose(STATUS "Searching files:")
+    message_debug_output(STATUS "${Files}")
+    message_debug(STATUS "Names:")
+    message_debug_output(STATUS "${SearchName}")
+    message_debug(STATUS "Search path:")
+    message_debug_output(STATUS "${SearchPath}")
+    message_debug(STATUS "Suffixes:")
+    message_debug_output(STATUS "${Suffixes}")
 
     find_library(${Prefix} NAMES ${SearchName} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
     if(${Prefix})
-        message_debug(STATUS "Found library:    ${${Prefix}}")
+        message_debug(STATUS "Found library: ${${Prefix}}")
     else()
         message_verbose("" "Failed to locate one of these files: ${SearchName}")
     endif()
