@@ -43,8 +43,6 @@ package_create_search_path_binary(VULKAN)
 # Define library name
 if(WIN32)
     set(VULKAN_LIBRARY_NAMES "vulkan-1")
-elseif(APPLE)
-    set(VULKAN_LIBRARY_NAMES "libMoltenVK.dylib")
 else()
     set(VULKAN_LIBRARY_NAMES "vulkan")
 endif()

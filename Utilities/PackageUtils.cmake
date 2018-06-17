@@ -412,14 +412,8 @@ macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
             "${dir}"
             "${dir}/lib"
             "${dir}/Lib"
-            "${dir}/lib/frameworks"
-            "${dir}/lib/Frameworks"
-            "${dir}/Lib/frameworks"
-            "${dir}/Lib/Frameworks"
             "${dir}/library"
             "${dir}/Library"
-            "${dir}/frameworks"
-            "${dir}/Frameworks"
       )
     endforeach()
     unset(dir)
@@ -429,7 +423,6 @@ macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
         if(${Prefix}_PREFIX_NAME})
             list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY "/Developer/${${Prefix}_PREFIX_NAME}/lib")
         endif()
-        list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY "/Library/Frameworks")
     endif()
 
     if(UNIX)
