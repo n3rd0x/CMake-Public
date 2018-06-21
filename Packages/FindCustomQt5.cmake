@@ -375,7 +375,7 @@ macro(QT_COPY_NECESSARY_BINARY_FROM_TARGET)
 
 
     if(QT_FOUND AND QT_DEPLOY_LIBRARY)
-        create_dynamic_extension(DynamicSuffix)
+        generate_dynamic_extension(DynamicSuffix)
         #foreach(Var ${QtNecessaryBinaries})
         #    # Find whether the file is a debug.
         #    string(REGEX MATCH "d.${DynamicSuffix}" DebugFound ${Var})
