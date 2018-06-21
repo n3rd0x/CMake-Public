@@ -22,19 +22,19 @@
 
 # ************************************************************
 # Start package
-message_header(Vulkan)
-package_begin(Vulkan)
-package_create_home_path(Vulkan VULKAN_SDK Vulkan_ROOT)
+message_header(VULKAN)
+package_begin(VULKAN)
+package_create_home_path(VULKAN VULKAN_SDK VULKAN_ROOT)
 
 
 
 
 # ************************************************************
 # Create search path
-set(Vulkan_PREFIX_PATH ${Vulkan_HOME})
-package_create_search_path_include(Vulkan)
-package_create_search_path_library(Vulkan)
-package_create_search_path_binary(Vulkan)
+set(VULKAN_PREFIX_PATH ${VULKAN_HOME})
+package_create_search_path_include(VULKAN)
+package_create_search_path_library(VULKAN)
+package_create_search_path_binary(VULKAN)
 
 
 
@@ -42,38 +42,38 @@ package_create_search_path_binary(Vulkan)
 # ************************************************************
 # Define library name
 if(WIN32)
-    set(Vulkan_LIBRARY_NAMES "vulkan-1")
+    set(VULKAN_LIBRARY_NAMES "vulkan-1")
 else()
-    set(Vulkan_LIBRARY_NAMES "vulkan")
+    set(VULKAN_LIBRARY_NAMES "vulkan")
 endif()
-package_create_debug_names(Vulkan_LIBRARY_NAMES)
+package_create_debug_names(VULKAN_LIBRARY_NAMES)
 
 
 
 
 # ************************************************************
 # Clear
-set(Vulkan_COMMON_VARIABLES
-    Vulkan_LIBRARY_DEBUG
-    Vulkan_LIBRARY_RELEASE
-    Vulkan_PATH_INCLUDE
+set(VULKAN_COMMON_VARIABLES
+    VULKAN_LIBRARY_DEBUG
+    VULKAN_LIBRARY_RELEASE
+    VULKAN_PATH_INCLUDE
 )
-set(Vulkan_CLEAR_IF_CHANGED 
-    Vulkan_PREFIX_PATH
+set(VULKAN_CLEAR_IF_CHANGED 
+    VULKAN_PREFIX_PATH
 )
-foreach(Var ${Vulkan_CLEAR_IF_CHANGED})
+foreach(Var ${VULKAN_CLEAR_IF_CHANGED})
     if(WIN32)
         package_clear_if_changed(${Var}
-            Vulkan_BINARY_DEBUG
-            Vulkan_BINARY_RELEASE
-            ${Vulkan_COMMON_VARIABLES}
+            VULKAN_BINARY_DEBUG
+            VULKAN_BINARY_RELEASE
+            ${VULKAN_COMMON_VARIABLES}
         )
     else()
         package_clear_if_changed(${Var}
-            ${Vulkan_COMMON_VARIABLES}
+            ${VULKAN_COMMON_VARIABLES}
         )
-        unset(Vulkan_BINARY_DEBUG CACHE)
-        unset(Vulkan_BINARY_RELEASE CACHE)
+        unset(VULKAN_BINARY_DEBUG CACHE)
+        unset(VULKAN_BINARY_RELEASE CACHE)
     endif()
     unset(Var)
 endforeach()
@@ -83,10 +83,10 @@ endforeach()
 
 # ************************************************************
 # Find path and header file
-package_find_path(Vulkan_PATH_INCLUDE "vulkan/vulkan.h" "${Vulkan_SEARCH_PATH_INCLUDE}" "")
-package_find_library(Vulkan_LIBRARY_DEBUG "${Vulkan_LIBRARY_NAMES_DEBUG}" "${Vulkan_SEARCH_PATH_LIBRARY};${Vulkan_SEARCH_PATH_BINARY}" "debug")
-package_find_library(Vulkan_LIBRARY_RELEASE "${Vulkan_LIBRARY_NAMES}" "${Vulkan_SEARCH_PATH_LIBRARY};${Vulkan_SEARCH_PATH_BINARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(Vulkan_LIBRARY Vulkan_LIBRARY_DEBUG Vulkan_LIBRARY_RELEASE)
+package_find_path(VULKAN_PATH_INCLUDE "vulkan/vulkan.h" "${VULKAN_SEARCH_PATH_INCLUDE}" "")
+package_find_library(VULKAN_LIBRARY_DEBUG "${VULKAN_LIBRARY_NAMES_DEBUG}" "${VULKAN_SEARCH_PATH_LIBRARY};${VULKAN_SEARCH_PATH_BINARY}" "debug")
+package_find_library(VULKAN_LIBRARY_RELEASE "${VULKAN_LIBRARY_NAMES}" "${VULKAN_SEARCH_PATH_LIBRARY};${VULKAN_SEARCH_PATH_BINARY}" "release;relwithdebinfo;minsizerel")
+package_make_library(VULKAN_LIBRARY VULKAN_LIBRARY_DEBUG VULKAN_LIBRARY_RELEASE)
 
 
 
@@ -95,13 +95,12 @@ package_make_library(Vulkan_LIBRARY Vulkan_LIBRARY_DEBUG Vulkan_LIBRARY_RELEASE)
 # ************************************************************
 # Find binaries
 if(WIN32)
-    set(Vulkan_DATA_BINARY_NAMES ${Vulkan_DATA_LIBRARY_NAMES})
-    package_create_debug_binary_names(Vulkan_ZIP_BINARY_NAMES) 
-	package_create_release_binary_names(Vulkan_DATA_BINARY_NAMES)
+    set(VULKAN_DATA_BINARY_NAMES ${VULKAN_DATA_LIBRARY_NAMES})
+    package_create_debug_binary_names(VULKAN_ZIP_BINARY_NAMES) 
+	package_create_release_binary_names(VULKAN_DATA_BINARY_NAMES)
 
-
-	package_find_file(Vulkan_BINARY_DEBUG "${Vulkan_DATA_BINARY_NAMES_DEBUG}" "${Vulkan_SEARCH_BINARIES}" "debug")
-	package_find_file(Vulkan_BINARY_RELEASE "${Vulkan_DATA_SQLITE_BINARY_NAMES_DEBUG}" "${Vulkan_SEARCH_BINARIES}" "debug")
+	package_find_file(VULKAN_BINARY_DEBUG "${VULKAN_DATA_BINARY_NAMES_DEBUG}" "${VULKAN_SEARCH_BINARIES}" "debug")
+	package_find_file(VULKAN_BINARY_RELEASE "${VULKAN_DATA_SQLITE_BINARY_NAMES_DEBUG}" "${VULKAN_SEARCH_BINARIES}" "debug")
 endif()
 
 
@@ -109,8 +108,8 @@ endif()
 
 # ************************************************************
 # Finalize package
-package_validate(Vulkan)
-package_add_parent_dir(Vulkan)
-package_end(Vulkan)
-message_footer(Vulkan)
+package_validate(VULKAN)
+package_add_parent_dir(VULKAN)
+package_end(VULKAN)
+message_footer(VULKAN)
 
