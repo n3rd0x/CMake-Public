@@ -157,7 +157,7 @@ endmacro()
 # Create binary names
 macro(PACKAGE_CREATE_BINARY_NAMES Prefix)
     message_verbose(STATUS "Creating binary names ${${Prefix}}.")
-    create_dynamic_extension(DynamicSuffix)
+    generate_dynamic_extension(DynamicSuffix)
 
     foreach(name ${${Prefix}})
         set(${Prefix} ${${Prefix}} "${name}.${DynamicSuffix}")
@@ -253,7 +253,7 @@ macro(PACKAGE_CREATE_BINARY_NAMES Input)
 
     set(Names ${${Input}})
     set(${Input} "")
-    create_dynamic_extension(DynamicSuffix)
+    generate_dynamic_extension(DynamicSuffix)
 
     foreach(name ${Names})
         set(${Input} ${${Input}} "${name}.${DynamicSuffix}")
@@ -585,7 +585,7 @@ endmacro()
 # Create debug binary names
 macro(PACKAGE_CREATE_DEBUG_BINARY_NAMES Prefix)
     message_verbose(STATUS "Creating debug binary names of ${${Prefix}}.")
-    create_dynamic_extension(DynamicSuffix)
+    generate_dynamic_extension(DynamicSuffix)
 
     foreach(name ${${Prefix}})
         set(${Prefix}_DEBUG
@@ -611,7 +611,7 @@ endmacro()
 # Create release binary names
 macro(PACKAGE_CREATE_RELEASE_BINARY_NAMES Prefix)
     message_verbose(STATUS "Creating release binary names ${${Prefix}}.")
-    create_dynamic_extension(DynamicSuffix)
+    generate_dynamic_extension(DynamicSuffix)
 
     foreach(name ${${Prefix}})
         set(${Prefix}_RELEASE
