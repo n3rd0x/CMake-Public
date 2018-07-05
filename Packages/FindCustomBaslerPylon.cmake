@@ -31,20 +31,20 @@ package_create_home_path(BASLER_PYLON BASLER_PYLON_ROOT)
 
 
 # ************************************************************
+# Create Search Name
+# ************************************************************
+set(BASLER_PYLON_PREFIX_NAMES "pylon")
+set(BASLER_PYLON_LIBRARY_NAMES "${BASLER_PYLON_PREFIX_NAMES}")
+
+
+
+
+# ************************************************************
 # Create Search Path
 # ************************************************************
 set(BASLER_PYLON_PREFIX_PATH ${BASLER_PYLON_HOME})
 package_create_search_path_include(BASLER_PYLON)
 package_create_search_path_library(BASLER_PYLON)
-
-
-
-
-# ************************************************************
-# Create Search Name
-# ************************************************************
-set(BASLER_PYLON_PREFIX_NAME "pylon")
-set(BASLER_PYLON_LIBRARY_NAMES "${BASLER_PYLON_PREFIX_NAME}")
 
 
 

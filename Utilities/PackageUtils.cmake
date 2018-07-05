@@ -375,22 +375,31 @@ macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
             "${dir}/Inc"
             "${dir}/include"
             "${dir}/Include"
+            "${dir}/Headers"
         )
-
     endforeach()
     unset(dir)
 
     # Add system directories.
     if(APPLE)
-        if(${Prefix}_PREFIX_NAME})
-            list(APPEND ${Prefix}_SEARCH_PATH_INCLUDE "/Developer/${${Prefix}_PREFIX_NAME}/include")
-        endif()
+        foreach(name ${${Prefix}_PREFIX_NAMES})
+            list(APPEND ${Prefix}_SEARCH_PATH_INCLUDE
+                "/Library/Frameworks/${name}.framework/Headers"
+            )
+            list(APPEND ${Prefix}_SEARCH_PATH_INCLUDE
+                "/Library/Frameworks/${name}.framework/Version/Current/Headers"
+            )
+            list(APPEND ${Prefix}_SEARCH_PATH_INCLUDE
+                "/Library/Frameworks/${name}.framework/Version/Current/include"
+            )
+        endforeach()
     endif()
 
     if(UNIX)
         list(APPEND ${Prefix}_SEARCH_PATH_INCLUDE
             "/usr/include"
             "/usr/local/include"
+            "/opt/local/include"
       )
     endif()
 
@@ -416,21 +425,36 @@ macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
             "${dir}/Lib64"
             "${dir}/library"
             "${dir}/Library"
+            "${dir}/Libraries"
       )
     endforeach()
     unset(dir)
 
     # Add system directories.
     if(APPLE)
-        if(${Prefix}_PREFIX_NAME})
-            list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY "/Developer/${${Prefix}_PREFIX_NAME}/lib")
-        endif()
+        list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
+            "/Library/Frameworks"
+            "/System/Library"
+        )
+        foreach(name ${${Prefix}_PREFIX_NAMES})
+            list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
+                "/Library/Frameworks/${name}.framework/Libraries"
+            )
+            list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
+                "/Library/Frameworks/${name}.framework/Version/Current/Libraries"
+            )
+            list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
+                "/Library/Frameworks/${name}.framework/Version/Current/lib"
+            )
+        endforeach()
+        unset(name)
     endif()
 
     if(UNIX)
         list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
             "/usr/lib"
             "/usr/local/lib"
+            "/opt/local/lib"
         )
     endif()
 
