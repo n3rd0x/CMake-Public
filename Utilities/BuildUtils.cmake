@@ -919,11 +919,12 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
     # Set state for displaying verbose message.
     option(PROJECT_CMAKE_ENABLE_VERBOSE_MESSAGE "Enable verbose message" OFF)
 
-    # Enable Clang.
-    option(PROJECT_ENABLE_LLVM_CLANG "Enable LLVM Clang." OFF)
-
-    if(PROJECT_ENABLE_LLVM_CLANG)
-        message_status(STATUS "Enable LLVM Clang compiler.")
+    # Load Pkgconfig modules.
+    if(NOT ANDROID)
+        find_package(PkgConfig)
+        if (PKG_CONFIG_FOUND)
+            message_status(STATUS "Enable PKGCONFIG module.")
+        endif ()
     endif()
 
 

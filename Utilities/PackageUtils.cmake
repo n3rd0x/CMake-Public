@@ -391,6 +391,7 @@ macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
         list(APPEND ${Prefix}_SEARCH_PATH_INCLUDE
             "/usr/include"
             "/usr/local/include"
+            "/opt/local/include"
       )
     endif()
 
@@ -431,6 +432,7 @@ macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
         list(APPEND ${Prefix}_SEARCH_PATH_LIBRARY
             "/usr/lib"
             "/usr/local/lib"
+            "/opt/local/lib"
         )
     endif()
 
@@ -575,7 +577,8 @@ macro(PACKAGE_CREATE_DEBUG_NAMES Prefix)
       )
     endforeach()
 
-    message_debug(STATUS "Debug names: ${${Prefix}_DEBUG}")
+    message_debug(STATUS "Debug names:")
+    message_debug_output(STATUS "${${Prefix}_DEBUG}")
 endmacro()
 
 
@@ -583,6 +586,7 @@ endmacro()
 
 # ************************************************************
 # Create debug binary names
+# ************************************************************
 macro(PACKAGE_CREATE_DEBUG_BINARY_NAMES Prefix)
     message_verbose(STATUS "Creating debug binary names of ${${Prefix}}.")
     generate_dynamic_extension(DynamicSuffix)
@@ -601,7 +605,33 @@ macro(PACKAGE_CREATE_DEBUG_BINARY_NAMES Prefix)
     endforeach()
 
     unset(DynamicSuffix)
-    message_debug(STATUS "Debug binary names: ${${Prefix}_DEBUG}")
+    message_debug(STATUS "Debug binary names:")
+    message_debug_output(STATUS "${${Prefix}_DEBUG}")
+endmacro()
+
+
+
+
+# ************************************************************
+# Create debug framework names
+# ************************************************************
+macro(PACKAGE_CREATE_DEBUG_FRAMEWORK_NAMES Prefix)
+    message_verbose(STATUS "Creating debug framework names of ${${Prefix}}.")
+    foreach(name ${${Prefix}})
+        set(${Prefix}_DEBUG
+             ${${Prefix}_DEBUG}
+             "${name}d.framework"
+             "${name}D.framework"
+             "${name}-d.framework"
+             "${name}_d.framework"
+             "${name}_D.framework"
+             "${name}_debug.framework"
+             "${name}.framework"
+      )
+    endforeach()
+
+    message_debug(STATUS "Debug framework names:")
+    message_debug_output(STATUS "${${Prefix}_DEBUG}")
 endmacro()
 
 
@@ -609,6 +639,7 @@ endmacro()
 
 # ************************************************************
 # Create release binary names
+# ************************************************************
 macro(PACKAGE_CREATE_RELEASE_BINARY_NAMES Prefix)
     message_verbose(STATUS "Creating release binary names ${${Prefix}}.")
     generate_dynamic_extension(DynamicSuffix)
@@ -622,6 +653,25 @@ macro(PACKAGE_CREATE_RELEASE_BINARY_NAMES Prefix)
 
     unset(DynamicSuffix)
     message_debug(STATUS "Release binary names: ${${Prefix}_RELEASE}")
+endmacro()
+
+
+
+
+# ************************************************************
+# Create release framework names
+# ************************************************************
+macro(PACKAGE_CREATE_RELEASE_FRAMEWORK_NAMES Prefix)
+    message_verbose(STATUS "Creating release framework names of ${${Prefix}}.")
+    foreach(name ${${Prefix}})
+        set(${Prefix}_RELEASE
+             ${${Prefix}_RELEASE}
+             "${name}.framework"
+        )
+    endforeach()
+
+    message_debug(STATUS "Release framework names:")
+    message_debug_output(STATUS "${${Prefix}_RELEASE}")
 endmacro()
 
 
@@ -924,6 +974,23 @@ macro(PACKAGE_MAKE_LIBRARY Prefix Debug Release)
 
     message_debug(STATUS "Library: ${${Prefix}}")
     message_sub_footer("Package Make Library (${Prefix})")
+endmacro()
+
+
+
+# ************************************************************
+# Pkgconfig usage
+# ************************************************************
+macro(PACKAGE_PKGCONFIG Prefix Name)
+    if(PKG_CONFIG_FOUND)
+        if(NOT ${Prefix}_HOME)
+            pkg_check_modules(${Prefix} ${Name})
+            if(${Prefix}_FOUND)
+                set(${Prefix}_PATH_INCLUDE {${Prefix}_INCLUDE_DIRS})
+                set(${Prefix}_LIBRARY_RELEASE {${Prefix}_LDFLAGS})
+            endif()
+        endif()
+    endif()
 endmacro()
 
 
