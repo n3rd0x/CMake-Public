@@ -90,7 +90,7 @@ macro(ADD_DATA_TARGET SrcFile)
         endif()
 
         # Default output path.
-        if(MSVC)
+        if(MSVC OR XCODE)
             set(OutputPath "${PROJECT_PATH_OUTPUT_EXECUTABLE}/$<CONFIGURATION>")
         else()
             set(OutputPath "${PROJECT_PATH_OUTPUT_EXECUTABLE}")
@@ -413,7 +413,7 @@ macro(COPY_FILE_TO_OUTPUT_DIRECTORY SrcFile DstFileName)
     cmake_parse_arguments(COPY_FILE_TO_OUTPUT_DIRECTORY "" "${oneValueArgs}" "" ${ARGN})
 
     # With Visual Studio we will copy the file into the debug and release directory.
-	if(MSVC)
+	if(MSVC OR XCODE)
 		copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Debug${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${DstFileName}" "${COPY_SINGLE_FILE_Params}")
 		copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Release${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${DstFileName}" "${COPY_SINGLE_FILE_Params}")
 	else()
@@ -558,7 +558,7 @@ endmacro()
 # ************************************************************
 # Create a directory in the output directory
 macro(CREATE_DIRECTORY_IN_OUTPUT_DIRECTORY DIST_DIR)
-    if(MSVC)
+    if(MSVC OR XCODE)
 		create_directory("${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${DIST_DIR}")
 		create_directory("${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/${DIST_DIR}")
 	else()
@@ -890,8 +890,10 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
 
 
         if(CMAKE_BUILD_TYPE STREQUAL "" OR NOT CMAKE_BUILD_TYPE)
-            set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Target mode of this project." FORCE)
-            message_verbose(STATUS "Set to Debug mode due to the build target is not set.")
+            if(NOT MSVC AND NOT XCODE)
+                set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Target mode of this project." FORCE)
+                message_verbose(STATUS "Set to Debug mode due to the build target is not set.")
+            endif()
         endif()
     endif()
 
@@ -1175,26 +1177,30 @@ macro(INITIALISE_PROJECT_PATH)
         set(PROJECT_PATH_INSTALL "${CMAKE_CURRENT_BINARY_DIR}/install" CACHE PATH "Installation directory.")
     endif()
 
-    if(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "${CMAKE_BUILD_TYPE_INT_CHECK}")
-		message_verbose(STATUS "Build type changed to ${CMAKE_BUILD_TYPE}")
+    if(NOT MSVC AND NOT XCODE)
+        if(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "${CMAKE_BUILD_TYPE_INT_CHECK}")
+            message_verbose(STATUS "Build type changed to ${CMAKE_BUILD_TYPE}")
 
-		# Reset variables.
-        set(ClearVars
-            PROJECT_PATH_OUTPUT_EXECUTABLE
-            PROJECT_PATH_OUTPUT_INCLUDE
-            PROJECT_PATH_OUTPUT_LIBRARY
-       )
-        if(MSVC)
-            list(APPEND ClearVars PROJECT_PATH_OUTPUT_PDB)
+            # Reset variables.
+            set(ClearVars
+                PROJECT_PATH_OUTPUT_EXECUTABLE
+                PROJECT_PATH_OUTPUT_INCLUDE
+                PROJECT_PATH_OUTPUT_LIBRARY
+        )
+            if(MSVC)
+                list(APPEND ClearVars PROJECT_PATH_OUTPUT_PDB)
+            endif()
+            foreach(var ${ClearVars})
+                #set(${var} "${var}-NOTFOUND" CACHE STRING "" FORCE)
+                unset(${var} CACHE)
+            endforeach()
         endif()
-		foreach(var ${ClearVars})
-			#set(${var} "${var}-NOTFOUND" CACHE STRING "" FORCE)
-			unset(${var} CACHE)
-		endforeach()
+        set(CMAKE_BUILD_TYPE_INT_CHECK ${CMAKE_BUILD_TYPE} CACHE INTERNAL "Internal check." FORCE)
+        set(BuildTarget "${CMAKE_BUILD_TYPE}")
+    else()
+        set(BuildTarget "")
     endif()
-    set(CMAKE_BUILD_TYPE_INT_CHECK ${CMAKE_BUILD_TYPE} CACHE INTERNAL "Internal check." FORCE)
 
-    set(BuildTarget "${CMAKE_BUILD_TYPE}")
     set(BuildTargetDebug "")
     set(BuildTargetRelease "")
     # if(PROJECT_BUILD_TARGET_DEBUG)
@@ -1203,7 +1209,7 @@ macro(INITIALISE_PROJECT_PATH)
         # set(BuildTarget "Release")
     # endif()
 
-    if(MSVC)
+    if(MSVC OR XCODE)
         set(BuildTargetDebug "Debug")
         set(BuildTargetRelease "Release")
     else()
