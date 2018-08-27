@@ -59,8 +59,32 @@ macro(OGRE_FIND_COMPONENT_LIBRARY COMPONENT NAME HEADER SUFFIX)
     package_create_debug_names(OGRE_${COMPONENT}_LIBRARY_NAMES)
 
     package_find_path(OGRE_${COMPONENT}_PATH_INCLUDE "${HEADER}" "${OGRE_SEARCH_PATH_INCLUDE}" "${SUFFIX}")
-    package_find_library(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "debug" )
+    package_find_library(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "debug")
     package_find_library(OGRE_${COMPONENT}_LIBRARY_RELEASE "${OGRE_${COMPONENT}_LIBRARY_NAMES}" "${OGRE_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+    package_make_library(OGRE_${COMPONENT}_LIBRARY OGRE_${COMPONENT}_LIBRARY_DEBUG OGRE_${COMPONENT}_LIBRARY_RELEASE)
+    
+    package_validate(OGRE_${COMPONENT})
+    package_end(OGRE_${COMPONENT})
+    
+    unset(OGRE_${COMPONENT}_LIBRARY_NAMES)
+    unset(OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG)
+endmacro()
+
+
+
+
+# ************************************************************
+# Find plugins / rendersystems
+# ************************************************************
+macro(OGRE_FIND_EXTRA_COMPONENT_LIBRARY COMPONENT NAME HEADER SUFFIX)
+    package_begin(OGRE_${COMPONENT})
+    set(OGRE_${COMPONENT}_LIBRARY_NAMES "${NAME}")
+    package_create_debug_binary_names(OGRE_${COMPONENT}_LIBRARY_NAMES)
+    package_create_release_binary_names(OGRE_${COMPONENT}_LIBRARY_NAMES)
+
+    package_find_path(OGRE_${COMPONENT}_PATH_INCLUDE "${HEADER}" "${OGRE_SEARCH_PATH_INCLUDE}" "${SUFFIX}")
+    package_find_file(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "debug")
+    package_find_file(OGRE_${COMPONENT}_LIBRARY_RELEASE "${OGRE_${COMPONENT}_LIBRARY_NAMES_RELEASE}" "${OGRE_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
     package_make_library(OGRE_${COMPONENT}_LIBRARY OGRE_${COMPONENT}_LIBRARY_DEBUG OGRE_${COMPONENT}_LIBRARY_RELEASE)
     
     package_validate(OGRE_${COMPONENT})
@@ -303,19 +327,19 @@ set(OGRE_SEARCH_PLUGINS
     ${OGRE_SEARCH_PATH_BINARY}
     ${OGRE_SEARCH_PATH_PLUGIN}
 )
-ogre_find_component_library(Plugin_BSPSceneManager "Plugin_BSPSceneManager" "OgreBspSceneManagerPlugin.h" "Plugins/BSPSceneManager")
-ogre_find_component_library(Plugin_CgProgramManager "Plugin_CgProgramManager" "OgreCgProgramManager.h" "Plugins/CgProgramManager")
-ogre_find_component_library(Plugin_OctreeSceneManager "Plugin_OctreeSceneManager" "OgreOctreePlugin.h" "Plugins/OctreeSceneManager")
-ogre_find_component_library(Plugin_OctreeZone "Plugin_OctreeZone" "OgreOctreeZonePlugin.h" "Plugins/OctreeZone")
-ogre_find_component_library(Plugin_PCZSceneManager "Plugin_PCZSceneManager" "OgrePCZPlugin.h" "Plugins/PCZSceneManager")
-ogre_find_component_library(Plugin_ParticleFX "Plugin_ParticleFX" "OgreParticleFXPlugin.h" "Plugins/ParticleFX")
-ogre_find_component_library(Codec_EXR "Codec_EXR" "OgreEXRCodec.h" "Plugins/EXRCodec")
-ogre_find_component_library(Codec_FreeImage "Codec_FreeImage" "OgreFreeImageCodec.h" "Plugins/FreeImageCodec")
-ogre_find_component_library(Codec_STBI "Codec_STBI" "OgreSTBICodec.h" "Plugins/STBICodec")
-ogre_find_component_library(RenderSystem_GL "RenderSystem_GL" "OgreGLPlugin.h" "RenderSystems/GL")
-ogre_find_component_library(RenderSystem_GL3Plus "RenderSystem_GL3Plus" "OgreGL3PlusPlugin.h" "RenderSystems/GL3Plus")
-ogre_find_component_library(RenderSystem_Direct3D9 "RenderSystem_Direct3D9" "OgreD3D9Plugin.h" "RenderSystems/Direct3D9")
-ogre_find_component_library(RenderSystem_Direct3D11 "RenderSystem_Direct3D11" "OgreD3D11Plugin.h" "RenderSystems/Direct3D11")
+ogre_find_extra_component_library(Plugin_BSPSceneManager "Plugin_BSPSceneManager" "OgreBspSceneManagerPlugin.h" "Plugins/BSPSceneManager;OGRE/BSPSceneManager")
+ogre_find_extra_component_library(Plugin_CgProgramManager "Plugin_CgProgramManager" "OgreCgProgramManager.h" "Plugins/CgProgramManager;OGRE/CgProgramManager")
+ogre_find_extra_component_library(Plugin_OctreeSceneManager "Plugin_OctreeSceneManager" "OgreOctreePlugin.h" "Plugins/OctreeSceneManager;OGRE/OctreeSceneManager")
+ogre_find_extra_component_library(Plugin_OctreeZone "Plugin_OctreeZone" "OgreOctreeZonePlugin.h" "Plugins/OctreeZone;OGRE/OctreeZone")
+ogre_find_extra_component_library(Plugin_PCZSceneManager "Plugin_PCZSceneManager" "OgrePCZPlugin.h" "Plugins/PCZSceneManager;OGRE/PCZSceneManager")
+ogre_find_extra_component_library(Plugin_ParticleFX "Plugin_ParticleFX" "OgreParticleFXPlugin.h" "Plugins/ParticleFX;OGRE/ParticleFX")
+ogre_find_extra_component_library(Codec_EXR "Codec_EXR" "OgreEXRCodec.h" "Plugins/EXRCodec;OGRE/EXRCodec")
+ogre_find_extra_component_library(Codec_FreeImage "Codec_FreeImage" "OgreFreeImageCodec.h" "Plugins/FreeImageCodec;OGRE/FreeImageCodec")
+ogre_find_extra_component_library(Codec_STBI "Codec_STBI" "OgreSTBICodec.h" "Plugins/STBICodec;OGRE/STBICodec")
+ogre_find_extra_component_library(RenderSystem_GL "RenderSystem_GL" "OgreGLPlugin.h" "RenderSystems/GL;OGRE/GL")
+ogre_find_extra_component_library(RenderSystem_GL3Plus "RenderSystem_GL3Plus" "OgreGL3PlusPlugin.h" "RenderSystems/GL3Plus;OGRE/GL3Plus")
+ogre_find_extra_component_library(RenderSystem_Direct3D9 "RenderSystem_Direct3D9" "OgreD3D9Plugin.h" "RenderSystems/Direct3D9")
+ogre_find_extra_component_library(RenderSystem_Direct3D11 "RenderSystem_Direct3D11" "OgreD3D11Plugin.h" "RenderSystems/Direct3D11")
 
 
 # Set plugin paths.
