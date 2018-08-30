@@ -122,7 +122,7 @@ macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
 
 
     # Add to copy target.
-    if(MSVC)
+    if(MSVC OR XCODE)
         add_custom_command(
             TARGET ALL_CopyData
             COMMAND ${CMAKE_COMMAND} -E copy

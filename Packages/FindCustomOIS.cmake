@@ -22,72 +22,61 @@
 
 # ************************************************************
 # Start package
+# ************************************************************
 message_header(OIS)
 package_begin(OIS)
 package_create_home_path(OIS OIS_ROOT)
 
 
-if(OIS_USE_CUSTOM_PACKAGE)
-	# ************************************************************
-	# Create search path
-	set(OIS_PREFIX_PATH ${OIS_HOME})
-	package_create_search_path_include(OIS)
-	package_create_search_path_library(OIS)
-	package_create_search_path_plugin(OIS)
+# ************************************************************
+# Create search path
+# ************************************************************
+set(OIS_PREFIX_PATH ${OIS_HOME})
+package_create_search_path_include(OIS)
+package_create_search_path_library(OIS)
 
 
-	# ************************************************************
-	# Create search name
-	set(OIS_LIBRARY_NAMES "OIS")
-	package_create_debug_names(OIS_LIBRARY_NAMES)
+# ************************************************************
+# Create search name
+# ************************************************************
+set(OIS_LIBRARY_NAMES "OIS")
+package_create_debug_names(OIS_LIBRARY_NAMES)
 
 
-	# ************************************************************
-	# Clear
-	if(WIN32)
-		package_clear_if_changed(OIS_PREFIX_PATH
-			OIS_BINARY_RELEASE
-			OIS_BINARY_DEBUG
-			OIS_LIBRARY_RELEASE
-			OIS_LIBRARY_DEBUG
-			OIS_PATH_INCLUDE
-		)
-	else()
-		package_clear_if_changed(OIS_PREFIX_PATH
-			OIS_LIBRARY_RELEASE
-			OIS_LIBRARY_DEBUG
-			OIS_PATH_INCLUDE
-		)
-	endif()
-
-
-	# ************************************************************
-	# Find paths
-	package_find_path(OIS_PATH_INCLUDE "OIS.h" "${OIS_SEARCH_PATH_INCLUDE}" "OIS;Ois;ois")
-	package_find_library(OIS_LIBRARY_DEBUG "${OIS_LIBRARY_NAMES_DEBUG}" "${OIS_SEARCH_PATH_LIBRARY}" "debug")
-	package_find_library(OIS_LIBRARY_RELEASE "${OIS_LIBRARY_NAMES}" "${OIS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-	package_make_library(OIS_LIBRARY OIS_LIBRARY_DEBUG OIS_LIBRARY_RELEASE)
+# ************************************************************
+# Clear
+# ************************************************************
+if(WIN32)
+    package_clear_if_changed(OIS_PREFIX_PATH
+        OIS_BINARY_RELEASE
+        OIS_BINARY_DEBUG
+        OIS_LIBRARY_RELEASE
+        OIS_LIBRARY_DEBUG
+        OIS_PATH_INCLUDE
+        OIS_FOUND
+    )
 else()
-	# ************************************************************
-	# Clear
-	if(WIN32)
-		package_clear_if_changed(OIS_INCLUDE_DIR
-			OIS_BINARY_DBG
-			OIS_BINARY_REL
-		)
-	endif()
-		
-		
-	# ************************************************************
-	# Use official package
-	find_package(OIS)
-    
-    set(OIS_PATH_INCLUDE ${OIS_INCLUDE_DIR})
+    package_clear_if_changed(OIS_PREFIX_PATH
+        OIS_LIBRARY_RELEASE
+        OIS_LIBRARY_DEBUG
+        OIS_PATH_INCLUDE
+        OIS_FOUND
+    )
 endif()
 
 
 # ************************************************************
+# Find paths
+# ************************************************************
+package_find_path(OIS_PATH_INCLUDE "OIS.h" "${OIS_SEARCH_PATH_INCLUDE}" "OIS;Ois;ois")
+package_find_library(OIS_LIBRARY_DEBUG "${OIS_LIBRARY_NAMES_DEBUG}" "${OIS_SEARCH_PATH_LIBRARY}" "debug")
+package_find_library(OIS_LIBRARY_RELEASE "${OIS_LIBRARY_NAMES}" "${OIS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+package_make_library(OIS_LIBRARY OIS_LIBRARY_DEBUG OIS_LIBRARY_RELEASE)
+
+
+# ************************************************************
 # Find binaries on Windows
+# ************************************************************
 if(WIN32)
 	set(OIS_BINARY_NAMES "OIS")
 	package_create_release_binary_names(OIS_BINARY_NAMES)
@@ -121,9 +110,9 @@ endif()
 
 # ************************************************************
 # Finalize package
+# ************************************************************
+package_validate(OIS)
 package_add_parent_dir(OIS ADD_PARENT)
-if(OIS_USE_OFFICIAL_PACKAGE)
-	package_validate(OIS)
-endif()
 package_end(OIS)
 message_footer(OIS)
+

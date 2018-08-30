@@ -599,7 +599,8 @@ macro(PACKAGE_CREATE_DEBUG_NAMES Prefix)
       )
     endforeach()
 
-    message_debug(STATUS "Debug names: ${${Prefix}_DEBUG}")
+    message_debug(STATUS "Debug names:")
+    message_debug_output(STATUS "${${Prefix}_DEBUG}")
 endmacro()
 
 
@@ -607,6 +608,7 @@ endmacro()
 
 # ************************************************************
 # Create debug binary names
+# ************************************************************
 macro(PACKAGE_CREATE_DEBUG_BINARY_NAMES Prefix)
     message_verbose(STATUS "Creating debug binary names of ${${Prefix}}.")
     generate_dynamic_extension(DynamicSuffix)
@@ -625,7 +627,33 @@ macro(PACKAGE_CREATE_DEBUG_BINARY_NAMES Prefix)
     endforeach()
 
     unset(DynamicSuffix)
-    message_debug(STATUS "Debug binary names: ${${Prefix}_DEBUG}")
+    message_debug(STATUS "Debug binary names:")
+    message_debug_output(STATUS "${${Prefix}_DEBUG}")
+endmacro()
+
+
+
+
+# ************************************************************
+# Create debug framework names
+# ************************************************************
+macro(PACKAGE_CREATE_DEBUG_FRAMEWORK_NAMES Prefix)
+    message_verbose(STATUS "Creating debug framework names of ${${Prefix}}.")
+    foreach(name ${${Prefix}})
+        set(${Prefix}_DEBUG
+             ${${Prefix}_DEBUG}
+             "${name}d.framework"
+             "${name}D.framework"
+             "${name}-d.framework"
+             "${name}_d.framework"
+             "${name}_D.framework"
+             "${name}_debug.framework"
+             "${name}.framework"
+      )
+    endforeach()
+
+    message_debug(STATUS "Debug framework names:")
+    message_debug_output(STATUS "${${Prefix}_DEBUG}")
 endmacro()
 
 
@@ -633,6 +661,7 @@ endmacro()
 
 # ************************************************************
 # Create release binary names
+# ************************************************************
 macro(PACKAGE_CREATE_RELEASE_BINARY_NAMES Prefix)
     message_verbose(STATUS "Creating release binary names ${${Prefix}}.")
     generate_dynamic_extension(DynamicSuffix)
@@ -646,6 +675,25 @@ macro(PACKAGE_CREATE_RELEASE_BINARY_NAMES Prefix)
 
     unset(DynamicSuffix)
     message_debug(STATUS "Release binary names: ${${Prefix}_RELEASE}")
+endmacro()
+
+
+
+
+# ************************************************************
+# Create release framework names
+# ************************************************************
+macro(PACKAGE_CREATE_RELEASE_FRAMEWORK_NAMES Prefix)
+    message_verbose(STATUS "Creating release framework names of ${${Prefix}}.")
+    foreach(name ${${Prefix}})
+        set(${Prefix}_RELEASE
+             ${${Prefix}_RELEASE}
+             "${name}.framework"
+        )
+    endforeach()
+
+    message_debug(STATUS "Release framework names:")
+    message_debug_output(STATUS "${${Prefix}_RELEASE}")
 endmacro()
 
 
@@ -796,14 +844,16 @@ endmacro()
 # Find file
 macro(PACKAGE_FIND_FILE Prefix SearchName SearchPath Suffixes)
     message_sub_header("Package Find File (${Prefix})")
-    message_verbose(STATUS "Searching files: ${SearchName}")
-    message_debug(STATUS "Names:           ${SearchName}")
-    message_debug(STATUS "Search path:     ${SearchPath}")
-    message_debug(STATUS "Suffixes:        ${Suffixes}")
+    message_debug(STATUS "Search names:")
+    message_debug_output(STATUS "${SearchName}")
+    message_debug(STATUS "Search path:")
+    message_debug_output(STATUS "${SearchPath}")
+    message_debug(STATUS "Suffixes:")
+    message_debug_output(STATUS "${Suffixes}")
 
     find_file(${Prefix} NAMES ${SearchName} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
     if(${Prefix})
-        message_debug(STATUS "Found file:      ${${Prefix}}")
+        message_verbose(STATUS "Found file:      ${${Prefix}}")
     else()
         message_verbose("" "Failed to locate one of these files: ${SearchName}")
     endif()
@@ -820,7 +870,7 @@ endmacro()
 # Find library
 macro(PACKAGE_FIND_LIBRARY Prefix SearchName SearchPath Suffixes)
     message_sub_header("Package Find Library (${Prefix})")
-    message_verbose(STATUS "Searching files:")
+    message_debug(STATUS "Searching files:")
     message_debug_output(STATUS "${Files}")
     message_debug(STATUS "Names:")
     message_debug_output(STATUS "${SearchName}")
@@ -831,7 +881,7 @@ macro(PACKAGE_FIND_LIBRARY Prefix SearchName SearchPath Suffixes)
 
     find_library(${Prefix} NAMES ${SearchName} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
     if(${Prefix})
-        message_debug(STATUS "Found library: ${${Prefix}}")
+        message_verbose(STATUS "Found library: ${${Prefix}}")
     else()
         message_verbose("" "Failed to locate one of these files: ${SearchName}")
     endif()
@@ -852,13 +902,11 @@ macro(PACKAGE_FIND_PATH Prefix Files SearchPath Suffixes)
     message_debug(STATUS "Suffixes:")
     message_debug_output(STATUS "${Suffixes}")
 
-    find_path(${Prefix} NAMES ${Files} HINTS ${SearchPath}
-        PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH
-    )
+    find_path(${Prefix} NAMES ${Files} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
     if(${Prefix})
-        message_debug(STATUS "Found path: ${${Prefix}}")
+        message_verbose(STATUS "Found path: ${${Prefix}}")
     else()
-        message_verbose("" "Failed to locate path of the search files.")
+        message_verbose("" "Failed to locate path of the search files: ${Files}")
     endif()
 
     message_sub_footer("Package Find Path (${Prefix})")
@@ -948,6 +996,23 @@ macro(PACKAGE_MAKE_LIBRARY Prefix Debug Release)
 
     message_debug(STATUS "Library: ${${Prefix}}")
     message_sub_footer("Package Make Library (${Prefix})")
+endmacro()
+
+
+
+# ************************************************************
+# Pkgconfig usage
+# ************************************************************
+macro(PACKAGE_PKGCONFIG Prefix Name)
+    if(PKG_CONFIG_FOUND)
+        if(NOT ${Prefix}_HOME)
+            pkg_check_modules(${Prefix} ${Name})
+            if(${Prefix}_FOUND)
+                set(${Prefix}_PATH_INCLUDE {${Prefix}_INCLUDE_DIRS})
+                set(${Prefix}_LIBRARY_RELEASE {${Prefix}_LDFLAGS})
+            endif()
+        endif()
+    endif()
 endmacro()
 
 
