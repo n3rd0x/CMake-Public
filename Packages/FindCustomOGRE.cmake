@@ -78,25 +78,42 @@ endmacro()
 # ************************************************************
 macro(OGRE_FIND_EXTRA_COMPONENT_LIBRARY COMPONENT NAME HEADER SUFFIX)
     package_begin(OGRE_${COMPONENT})
-    set(OGRE_${COMPONENT}_LIBRARY_NAMES "${NAME}")
     if(APPLE)
-        package_create_debug_framework_names(OGRE_${COMPONENT}_LIBRARY_NAMES)
-        package_create_release_framework_names(OGRE_${COMPONENT}_LIBRARY_NAMES)
+        set(LibSuffix "framework")
+    elseif(MSVC)
+        set(LibSuffix "lib")
     else()
-        package_create_debug_binary_names(OGRE_${COMPONENT}_LIBRARY_NAMES)
-        package_create_release_binary_names(OGRE_${COMPONENT}_LIBRARY_NAMES)
+        set(LibSuffix "so")
+    endif()
+    set(OGRE_${COMPONENT}_NAMES_DEBUG
+        "${NAME}_d.${LibSuffix}"
+        "${NAME}.${LibSuffix}"
+    )
+    set(OGRE_${COMPONENT}_NAMES_RELEASE
+        "${NAME}.${LibSuffix}"
+    )
+    if(WIN32)
+        list(APPEND OGRE_${COMPONENT}_NAMES_DEBUG "${NAME}_d.dll" "${NAME}.dll")
+        list(APPEND OGRE_${COMPONENT}_NAMES_RELEASE "${NAME}.dll")
     endif()
 
     package_find_path(OGRE_${COMPONENT}_PATH_INCLUDE "${HEADER}" "${OGRE_SEARCH_PATH_INCLUDE}" "${SUFFIX}")
-    package_find_file(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "debug")
-    package_find_file(OGRE_${COMPONENT}_LIBRARY_RELEASE "${OGRE_${COMPONENT}_LIBRARY_NAMES_RELEASE}" "${OGRE_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+    
+    package_find_file(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "debug;debug/opt;opt")
+    package_find_file(OGRE_${COMPONENT}_LIBRARY_RELEASE "${OGRE_${COMPONENT}_NAMES_RELEASE}" "${OGRE_SEARCH_PATH_LIBRARY}" "release;release/opt;relwithdebinfo;relwithdebinfo/opt;minsizerel;minsizerel/opt;opt")
     package_make_library(OGRE_${COMPONENT}_LIBRARY OGRE_${COMPONENT}_LIBRARY_DEBUG OGRE_${COMPONENT}_LIBRARY_RELEASE)
+
+    if(WIN32)
+        package_find_file(OGRE_${COMPONENT}_BINARY_DEBUG "${OGRE_${COMPONENT}_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "debug")
+        package_find_file(OGRE_${COMPONENT}_BINARY_RELEASE "${OGRE_${COMPONENT}_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+    endif()
     
     package_validate(OGRE_${COMPONENT})
     package_end(OGRE_${COMPONENT})
     
-    unset(OGRE_${COMPONENT}_LIBRARY_NAMES)
+    unset(ExtSuffix)
     unset(OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG)
+    unset(OGRE_${COMPONENT}_LIBRARY_NAMES_RELEASE)
 endmacro()
 
 
@@ -333,7 +350,7 @@ set(OGRE_SEARCH_PLUGINS
     ${OGRE_SEARCH_PATH_PLUGIN}
 )
 ogre_find_extra_component_library(Plugin_BSPSceneManager "Plugin_BSPSceneManager" "OgreBspSceneManagerPlugin.h" "Plugins/BSPSceneManager;OGRE/BSPSceneManager")
-ogre_find_extra_component_library(Plugin_CgProgramManager "Plugin_CgProgramManager" "OgreCgProgramManager.h" "Plugins/CgProgramManager;OGRE/CgProgramManager")
+ogre_find_extra_component_library(Plugin_CgProgramManager "Plugin_CgProgramManager" "OgreCgProgram.h" "Plugins/CgProgramManager;OGRE/CgProgramManager")
 ogre_find_extra_component_library(Plugin_OctreeSceneManager "Plugin_OctreeSceneManager" "OgreOctreePlugin.h" "Plugins/OctreeSceneManager;OGRE/OctreeSceneManager")
 ogre_find_extra_component_library(Plugin_OctreeZone "Plugin_OctreeZone" "OgreOctreeZonePlugin.h" "Plugins/OctreeZone;OGRE/OctreeZone")
 ogre_find_extra_component_library(Plugin_PCZSceneManager "Plugin_PCZSceneManager" "OgrePCZPlugin.h" "Plugins/PCZSceneManager;OGRE/PCZSceneManager")
@@ -350,13 +367,13 @@ ogre_find_extra_component_library(RenderSystem_Direct3D11 "RenderSystem_Direct3D
 # Set plugin paths.
 if(OGRE_RenderSystem_GL_LIBRARY_DEBUG)
     get_filename_component(OGRE_RenderSystem_GL_FileName ${OGRE_RenderSystem_GL_LIBRARY_DEBUG} NAME)
-    package_find_path(OGRE_PATH_PLUGIN_DEBUG "${OGRE_RenderSystem_GL_FileName}" "${OGRE_SEARCH_PLUGINS}" "debug")
+    package_find_path(OGRE_PATH_PLUGIN_DEBUG "${OGRE_RenderSystem_GL_FileName}" "${OGRE_SEARCH_PLUGINS}" "debug;debug/opt;opt")
     unset(OGRE_RenderSystem_GL_FileName)
 endif()
 
 if(OGRE_RenderSystem_GL_LIBRARY_RELEASE)
     get_filename_component(OGRE_RenderSystem_GL_FileName ${OGRE_RenderSystem_GL_LIBRARY_RELEASE} NAME)
-    package_find_path(OGRE_PATH_PLUGIN_RELEASE "${OGRE_RenderSystem_GL_FileName}" "${OGRE_SEARCH_PLUGINS}" "release;relwithdebinfo;minsizerel")
+    package_find_path(OGRE_PATH_PLUGIN_RELEASE "${OGRE_RenderSystem_GL_FileName}" "${OGRE_SEARCH_PLUGINS}" "release;release/opt;relwithdebinfo;relwithdebinfo/opt;minsizerel;minsizerel/opt;opt")
     unset(OGRE_RenderSystem_GL_FileName)
 endif()
 
