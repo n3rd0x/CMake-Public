@@ -365,14 +365,21 @@ ogre_find_extra_component_library(RenderSystem_Direct3D11 "RenderSystem_Direct3D
 
 
 # Set plugin paths.
-if(OGRE_RenderSystem_GL_LIBRARY_DEBUG)
-    get_filename_component(OGRE_RenderSystem_GL_FileName ${OGRE_RenderSystem_GL_LIBRARY_DEBUG} NAME)
+if(WIN32)
+    set(PlugDebugPath OGRE_RenderSystem_GL_BINARY_DEBUG)
+    set(PlugReleasePath OGRE_RenderSystem_GL_BINARY_RELEASE)
+else()
+    set(PlugDebugPath OGRE_RenderSystem_GL_LIBRARY_DEBUG)
+    set(PlugReleasePath OGRE_RenderSystem_GL_LIBRARY_RELEASE)
+endif()
+if(PlugDebugPath)
+    get_filename_component(OGRE_RenderSystem_GL_FileName ${${PlugDebugPath}} NAME)
     package_find_path(OGRE_PATH_PLUGIN_DEBUG "${OGRE_RenderSystem_GL_FileName}" "${OGRE_SEARCH_PLUGINS}" "debug;debug/opt;opt")
     unset(OGRE_RenderSystem_GL_FileName)
 endif()
 
-if(OGRE_RenderSystem_GL_LIBRARY_RELEASE)
-    get_filename_component(OGRE_RenderSystem_GL_FileName ${OGRE_RenderSystem_GL_LIBRARY_RELEASE} NAME)
+if(PlugReleasePath)
+    get_filename_component(OGRE_RenderSystem_GL_FileName ${${PlugReleasePath}} NAME)
     package_find_path(OGRE_PATH_PLUGIN_RELEASE "${OGRE_RenderSystem_GL_FileName}" "${OGRE_SEARCH_PLUGINS}" "release;release/opt;relwithdebinfo;relwithdebinfo/opt;minsizerel;minsizerel/opt;opt")
     unset(OGRE_RenderSystem_GL_FileName)
 endif()
