@@ -34,18 +34,19 @@ package_create_home_path(BULLET BULLET_ROOT)
 # ************************************************************
 macro(BULLET_FIND_COMPONENT COMPONENT NAME)
     set(BULLET_${COMPONENT}_NAMES "${NAME}")
+    package_create_debug_names(BULLET_${COMPONENT}_NAMES)
     
     package_create_debug_binary_names(BULLET_${COMPONENT}_NAMES)
     package_create_release_binary_names(BULLET_${COMPONENT}_NAMES)
 
-    package_find_library(BULLET_${COMPONENT}_LIBRARY_DEBUG "${BULLET_${COMPONENT}_NAMES}" "${BULLET_SEARCH_PATH_LIBRARY}" "debug")
+    package_find_library(BULLET_${COMPONENT}_LIBRARY_DEBUG "${BULLET_${COMPONENT}_NAMES_DEBUG}" "${BULLET_SEARCH_PATH_LIBRARY}" "debug")
     package_find_library(BULLET_${COMPONENT}_LIBRARY_RELEASE "${BULLET_${COMPONENT}_NAMES}" "${BULLET_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
     package_make_library(BULLET_${COMPONENT}_LIBRARY BULLET_${COMPONENT}_LIBRARY_DEBUG BULLET_${COMPONENT}_LIBRARY_RELEASE)
     if(BULLET_${COMPONENT}_LIBRARY)
         set(BULLET_${COMPONENT}_LIBRARIES ${BULLET_${COMPONENT}_LIBRARY})
     endif()
 
-    package_find_file(BULLET_${COMPONENT}_BINARY_DEBUG "${BULLET_${COMPONENT}_BINARY_NAMES}" "${BULLET_SEARCH_BINARIES}" "debug")
+    package_find_file(BULLET_${COMPONENT}_BINARY_DEBUG "${BULLET_${COMPONENT}_BINARY_NAMES_DEBUG}" "${BULLET_SEARCH_BINARIES}" "debug")
     package_find_file(BULLET_${COMPONENT}_BINARY_RELEASE "${BULLET_${COMPONENT}_BINARY_NAMES}" "${BULLET_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 
     if(WIN32)
