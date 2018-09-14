@@ -32,34 +32,35 @@ package_create_home_path(BULLET BULLET_ROOT)
 # ************************************************************
 # Find binary
 # ************************************************************
-macro(BULLET_FIND_COMPONENT COMPONENT NAME)
-    set(BULLET_${COMPONENT}_NAMES "${NAME}")
-    package_create_debug_names(BULLET_${COMPONENT}_NAMES)
+macro(BULLET_FIND_COMPONENT Component Name Headers Suffix)
+    set(BULLET_${Component}_NAMES "${Name}")
+    package_create_debug_names(BULLET_${Component}_NAMES)
     
-    package_create_debug_binary_names(BULLET_${COMPONENT}_NAMES)
-    package_create_release_binary_names(BULLET_${COMPONENT}_NAMES)
-
-    package_find_library(BULLET_${COMPONENT}_LIBRARY_DEBUG "${BULLET_${COMPONENT}_NAMES_DEBUG}" "${BULLET_SEARCH_PATH_LIBRARY}" "debug")
-    package_find_library(BULLET_${COMPONENT}_LIBRARY_RELEASE "${BULLET_${COMPONENT}_NAMES}" "${BULLET_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-    package_make_library(BULLET_${COMPONENT}_LIBRARY BULLET_${COMPONENT}_LIBRARY_DEBUG BULLET_${COMPONENT}_LIBRARY_RELEASE)
-    if(BULLET_${COMPONENT}_LIBRARY)
-        set(BULLET_${COMPONENT}_LIBRARIES ${BULLET_${COMPONENT}_LIBRARY})
+    package_find_path(BULLET_${Component}_PATH_INCLUDE "${Headers}" "${BULLET_SEARCH_PATH_INCLUDE}" "${Suffix}")
+    package_find_library(BULLET_${Component}_LIBRARY_DEBUG "${BULLET_${Component}_NAMES_DEBUG}" "${BULLET_SEARCH_PATH_LIBRARY}" "debug")
+    package_find_library(BULLET_${Component}_LIBRARY_RELEASE "${BULLET_${Component}_NAMES}" "${BULLET_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+    package_make_library(BULLET_${Component}_LIBRARY BULLET_${Component}_LIBRARY_DEBUG BULLET_${Component}_LIBRARY_RELEASE)
+    if(BULLET_${Component}_LIBRARY)
+        set(BULLET_${Component}_LIBRARIES ${BULLET_${Component}_LIBRARY})
     endif()
-
-    package_find_file(BULLET_${COMPONENT}_BINARY_DEBUG "${BULLET_${COMPONENT}_BINARY_NAMES_DEBUG}" "${BULLET_SEARCH_BINARIES}" "debug")
-    package_find_file(BULLET_${COMPONENT}_BINARY_RELEASE "${BULLET_${COMPONENT}_BINARY_NAMES}" "${BULLET_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 
     if(WIN32)
-        if(BULLET_${COMPONENT}_BINARY_DEBUG)
-            list(APPEND BULLET_BINARY_DEBUG ${BULLET_${COMPONENT}_BINARY_DEBUG})
+        package_create_debug_binary_names(BULLET_${Component}_NAMES)
+        package_create_release_binary_names(BULLET_${Component}_NAMES)
+
+        package_find_file(BULLET_${Component}_BINARY_DEBUG "${BULLET_${Component}_BINARY_NAMES_DEBUG}" "${BULLET_SEARCH_BINARIES}" "debug")
+        package_find_file(BULLET_${Component}_BINARY_RELEASE "${BULLET_${Component}_BINARY_NAMES}" "${BULLET_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+
+        if(BULLET_${Component}_BINARY_DEBUG)
+            list(APPEND BULLET_BINARY_DEBUG ${BULLET_${Component}_BINARY_DEBUG})
         endif()
 
-        if(BULLET_${COMPONENT}_BINARY_RELEASE)
-            list(APPEND BULLET_BINARY_RELEASE ${BULLET_${COMPONENT}_BINARY_RELEASE})
+        if(BULLET_${Component}_BINARY_RELEASE)
+            list(APPEND BULLET_BINARY_RELEASE ${BULLET_${Component}_BINARY_RELEASE})
         endif()
     endif()
     
-    unset(BULLET_${COMPONENT}_NAMES)
+    unset(BULLET_${Component}_NAMES)
 endmacro()
 
 
@@ -89,20 +90,29 @@ package_clear_if_changed(BULLET_HOME
     BULLET_PATH_INCLUDE
     BULLET_COLLISION_BINARY_DEBUG
     BULLET_COLLISION_BINARY_RELEASE
+    BULLET_COLLISION_INCLUDE_DIR
     BULLET_COLLISION_LIBRARY_DEBUG
     BULLET_COLLISION_LIBRARY_RELEASE
     BULLET_DYNAMICS_BINARY_DEBUG
     BULLET_DYNAMICS_BINARY_RELEASE
+    BULLET_DYNAMICS_INCLUDE_DIR
     BULLET_DYNAMICS_LIBRARY_DEBUG
     BULLET_DYNAMICS_LIBRARY_RELEASE
     BULLET_INVERSEDYNAMICS_BINARY_DEBUG
     BULLET_INVERSEDYNAMICS_BINARY_RELEASE
+    BULLET_INVERSEDYNAMICS_INCLUDE_DIR
     BULLET_INVERSEDYNAMICS_LIBRARY_DEBUG
     BULLET_INVERSEDYNAMICS_LIBRARY_RELEASE
     BULLET_SOFTBODY_BINARY_DEBUG
     BULLET_SOFTBODY_BINARY_RELEASE
+    BULLET_SOFTBODY_INCLUDE_DIR
     BULLET_SOFTBODY_LIBRARY_DEBUG
     BULLET_SOFTBODY_LIBRARY_RELEASE
+    BULLET_CONVEXDECOMPOSITION_BINARY_DEBUG
+    BULLET_CONVEXDECOMPOSITION_BINARY_RELEASE
+    BULLET_CONVEXDECOMPOSITION_INCLUDE_DIR
+    BULLET_CONVEXDECOMPOSITION_LIBRARY_DEBUG
+    BULLET_CONVEXDECOMPOSITION_LIBRARY_RELEASE
 )
 
 
@@ -119,11 +129,12 @@ package_clear_if_changed(BULLET_HOME
 # Find path and file
 # ************************************************************
 package_find_path(BULLET_PATH_INCLUDE "btBulletDynamicsCommon.h" "${BULLET_SEARCH_PATH_INCLUDE}" "")
-bullet_find_component(COLLISION "BulletCollision")
-bullet_find_component(DYNAMICS "BulletDynamics")
-bullet_find_component(INVERSEDYNAMICS "BulletInverseDynamics")
-bullet_find_component(SOFTBODY "BulletSoftBody")
-bullet_find_component(LINEARMATH "LinearMath")
+bullet_find_component(COLLISION "BulletCollision" "btBulletCollisionCommon.h" "BulletCollision")
+bullet_find_component(DYNAMICS "BulletDynamics" "btBulletDynamicsCommon.h" "BulletDynamics")
+bullet_find_component(INVERSEDYNAMICS "BulletInverseDynamics" "btBulletCollisionCommon.h" "BulletInverseDynamics")
+bullet_find_component(SOFTBODY "BulletSoftBody" "btSoftBody.h" "BulletSoftBody")
+bullet_find_component(LINEARMATH "LinearMath" "btMotionState.h" "LinearMath")
+bullet_find_component(CONVEXDECOMPOSITION "ConvexDecomposition" "ConvexDecomposition.h" "ConvexDecomposition")
 package_make_library(BULLET_LIBRARY BULLET_COLLISION_LIBRARY_DEBUG BULLET_COLLISION_LIBRARY_RELEASE)
 
 
