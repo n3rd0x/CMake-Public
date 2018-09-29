@@ -28,6 +28,8 @@ package_begin(OGRE)
 package_create_home_path(OGRE OGRE_ROOT)
 
 
+# Specifiy version prefix.
+set(OGRE_VERSION_PREFIX "" CACHE STRING "Append version prefix into the search.")
 
 
 # ************************************************************
@@ -127,7 +129,9 @@ package_create_search_path_binary(OGRE)
 package_create_search_path_include(OGRE)
 package_create_search_path_library(OGRE)
 package_create_search_path_plugin(OGRE)
-
+if(NOT OGRE_VERSION_PREFIX STREQUAL "")
+    package_append_paths(OGRE_SEARCH_PATH_LIBRARY "${OGRE_VERSION_PREFIX}")
+endif()
 
 
 
