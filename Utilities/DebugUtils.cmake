@@ -277,7 +277,7 @@ endmacro()
 # ====================
 macro(MESSAGE_VERBOSE_OUTPUT State Msg)
     foreach(m ${Msg})
-        message_status("${State}" "  - ${m}")
+        message_verbose("${State}" "  - ${m}")
     endforeach()
 endmacro()
 
