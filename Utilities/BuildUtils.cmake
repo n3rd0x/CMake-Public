@@ -822,11 +822,41 @@ macro(INITIALISE_LOCAL_PROJECT Title Description)
         cmake_policy(SET CMP0048 NEW)
     endif()
 
-    project(${Title})
+    # Help information.
+    message_header(INITIALISE_LOCAL_PROJECT)
+    message_help("Required:")
+    message_help("[Title]       -> Project name.")
+    message_help("[Description] -> Project description.")
+    message_help("Optional:")
+    message_help("[CSHARP]      -> Flag the project as CSharp.")
+
+    # Parse options.
+    set(options CSHARP)
+    cmake_parse_arguments(INITIALISE_LOCAL_PROJECT "${options}" "" "" ${ARGN})
+
+    if(INITIALISE_LOCAL_PROJECT_CSHARP)
+        project(${Title} LANGUAGES CSharp)
+    else()
+        project(${Title})
+    endif()
     message(STATUS "**********************************************************************")
     message(STATUS "* Project:     ${Title}")
     message(STATUS "* Description: ${Description}")
+    if(INITIALISE_LOCAL_PROJECT_CSHARP)
+        message(STATUS "* Language:    CSharp")
+    else()
+        message(STATUS "* Language:    C/C++")
+    endif()
+
+    # Clean up.
+    unset(options)
+    unset(INITIALISE_LOCAL_PROJECT_CSHARP)
+
+    message_footer(INITIALISE_LOCAL_PROJECT)
 endmacro()
+
+
+
 
 
 
@@ -1240,6 +1270,7 @@ macro(INITIALISE_PROJECT_PATH)
     # Caching.
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_PATH_OUTPUT_EXECUTABLE} CACHE PATH "Executable directory." FORCE)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_PATH_OUTPUT_LIBRARY} CACHE PATH "Library directory." FORCE)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_PATH_OUTPUT_LIBRARY} CACHE PATH "Archive directory." FORCE)
     set(CMAKE_INSTALL_PREFIX ${PROJECT_PATH_INSTALL} CACHE PATH "Install directory." FORCE)
     if(MSVC)
         set(CMAKE_PDB_OUTPUT_DIRECTORY ${PROJECT_PATH_OUTPUT_PDB} CACHE PATH "PDB directory." FORCE)
@@ -1414,6 +1445,50 @@ endmacro()
 #endmacro()
 
 
+
+
+# ************************************************************
+# Generate UUID
+# ************************************************************
+macro(GENERATE_UUID Prefix Name)
+    # Help information.
+    message_header(GENERATE_UUID)
+    message_help("Required:")
+    message_help("[Prefix]      -> Variable to save the result.")
+    message_help("[Name]        -> Name to use for generation of UUID.")
+    message_help("Optional:")
+    message_help("[Namespace]   -> Namespace to use.")
+    message_help("[Type]        -> Type to use [MD5|SHA1].")
+
+    # Default values.
+    set(Namespace "00000000-0000-0000-0000-000000000000")
+    set(Type "MD5")
+
+    # Parse options.
+    set(oneValueArgs Namespace Type)
+    cmake_parse_arguments(GENERATE_UUID "" "${oneValueArgs}" "" ${ARGN})
+
+    # Namespace
+    if(GENERATE_UUID_Namespace)
+        set(Namespace "${GENERATE_UUID_Namespace}")
+    endif()
+
+    # Type
+    if(GENERATE_UUID_Type)
+        set(Type "${GENERATE_UUID_Type}")
+    endif()
+
+    # Generate
+    string(UUID ${Prefix} NAMESPACE ${Namespace} NAME ${Name} TYPE ${Type})
+    message_verbose(STATUS "Generated UUID: ${${Prefix}}")
+    
+    # Clean up.
+    unset(oneValueArgs)
+    unset(GENERATE_UUID_Namespace)
+    unset(GENERATE_UUID_Type)
+
+    message_footer(GENERATE_UUID)
+endmacro()
 
 
 # ************************************************************

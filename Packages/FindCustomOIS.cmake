@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -78,33 +78,18 @@ package_make_library(OIS_LIBRARY OIS_LIBRARY_DEBUG OIS_LIBRARY_RELEASE)
 # Find binaries on Windows
 # ************************************************************
 if(WIN32)
-	set(OIS_BINARY_NAMES "OIS")
-	package_create_release_binary_names(OIS_BINARY_NAMES)
-	package_create_debug_binary_names(OIS_BINARY_NAMES)
-	package_create_search_path_binary(OIS)
-	
-	set(OIS_SEARCH_BINARIES 
-		${OIS_SEARCH_PATH_BINARY}
-		${OIS_SEARCH_PATH_LIBRARY}
-	)
-	
-	if(OIS_USE_CUSTOM_PACKAGE)
-		package_find_file(OIS_BINARY_DEBUG "${OIS_BINARY_NAMES_DEBUG}" "${OIS_SEARCH_BINARIES}" "debug")
-		package_find_file(OIS_BINARY_RELEASE "${OIS_BINARY_NAMES_RELEASE}" "${OIS_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
-	else()
-		if(NOT ${OIS_BINARY_DBG})
-			package_find_file(OIS_BINARY_DBG "${OIS_BINARY_NAMES_DEBUG}" "${OIS_SEARCH_BINARIES}" "debug")
-		endif()
-		
-		if(NOT ${OIS_BINARY_REL})
-			package_find_file(OIS_BINARY_REL "${OIS_BINARY_NAMES_RELEASE}" "${OIS_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
-		endif()
-		
-		set(OIS_BINARY_DEBUG ${OIS_BINARY_DBG})
-		set(OIS_BINARY_RELEASE ${OIS_BINARY_REL})
-	endif()
-    
-    package_copy_binary_from_target(OIS)
+    set(OIS_BINARY_NAMES "OIS")
+    package_create_release_binary_names(OIS_BINARY_NAMES)
+    package_create_debug_binary_names(OIS_BINARY_NAMES)
+    package_create_search_path_binary(OIS)
+
+    set(OIS_SEARCH_BINARIES
+        ${OIS_SEARCH_PATH_BINARY}
+        ${OIS_SEARCH_PATH_LIBRARY}
+    )
+
+    package_find_file(OIS_BINARY_DEBUG "${OIS_BINARY_NAMES_DEBUG}" "${OIS_SEARCH_BINARIES}" "debug")
+    package_find_file(OIS_BINARY_RELEASE "${OIS_BINARY_NAMES_RELEASE}" "${OIS_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
 
 
