@@ -1014,6 +1014,16 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
         unset(Toolset)
     endif()
 
+    # Required CMake version 3.14
+    # Enable to generate shared scheme in XCode.
+    if(XCODE)
+        option(PROJECT_XCODE_GENERATE_SCHEME "Generate the shared scheme." ON)
+
+        if(PROJECT_XCODE_GENERATE_SCHEME)
+            set(CMAKE_XCODE_GENERATE_SCHEME TRUE)
+        endif()
+    endif()
+
 
     # ----------------------------------------
     # New C++ Features
@@ -1380,18 +1390,18 @@ macro(INSTALL_SOURCES)
     #message_help("[Headers]        -> Headers to install.")
     message_help("Optional options:")
     message_help("[SubPath]        -> Sub path of the current install diretory (${PROJECT_PATH_INSTALL}).")
-    
+
     # Parse options.
     set(oneValueArgs SubPath)
     #set(multiValueArgs Files)
     #cmake_parse_arguments(INSTALL_SOURCES "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     cmake_parse_arguments(INSTALL_SOURCES "" "${oneValueArgs}" "" ${ARGN})
-    
+
     # Default options.
     if(NOT INSTALL_SOURCES_SubPath)
         set(INSTALL_SOURCES_SubPath "/src")
     endif()
-    
+
     # Parse "Files".
     #if(INSTALL_SOURCES_Files)
     if(DEFINED LOCAL_SOURCES)
@@ -1405,7 +1415,7 @@ macro(INSTALL_SOURCES)
                 # Example:
                 # c:/builds/library/include/core
                 get_filename_component(DestPath ${InstallFile} PATH)
-                
+
                 # Install file with sub path if exists.
                 # Example:
                 # c:/library/include/Prerequisites.h -> c:/builds/library/include/Prerequisites.h
@@ -1413,19 +1423,19 @@ macro(INSTALL_SOURCES)
                 install(FILES ${source} DESTINATION ${DestPath})
                 message_debug(STATUS "Install [${source}] to [${DestPath}]")
             endif()
-            
+
             unset(InstallFile CACHE)
         endforeach()
     else()
         message_debug(STATUS "No files were supplied.")
     endif()
-    
+
     # Clean up.
     unset(oneValueArgs)
     #unset( multiValueArgs)
     unset(INSTALL_SOURCES_Files)
     unset(INSTALL_SOURCES_SubPath)
-    
+
     message_footer_help(INSTALL_SOURCES)
 endmacro()
 
@@ -1481,7 +1491,7 @@ macro(GENERATE_UUID Prefix Name)
     # Generate
     string(UUID ${Prefix} NAMESPACE ${Namespace} NAME ${Name} TYPE ${Type})
     message_verbose(STATUS "Generated UUID: ${${Prefix}}")
-    
+
     # Clean up.
     unset(oneValueArgs)
     unset(GENERATE_UUID_Namespace)
