@@ -22,19 +22,40 @@
 # ************************************************************
 # MESSAGE
 # ************************************************************
-# ************************************************************
+# ====================
+# Formatted output (Rows)
+# ====================
+macro(MESSAGE_OUTPUT_ROWS State Msg)
+    foreach(m ${Msg})
+        message(${State} "  - ${m}")
+    endforeach()
+endmacro()
+
+
+# ====================
+# Formatted output (Cols)
+# ====================
+macro(MESSAGE_OUTPUT_COLS State Msg)
+    set(_var "")
+    foreach(m ${Msg})
+        set(_var "${_var} ${m}")
+    endforeach()
+    message(${State} "${_var}")
+    unset(_var)
+endmacro()
+
+
+# ====================
 # Dash horizontal line
-# ************************************************************
+# ====================
 macro(MESSAGE_DASH_LINE)
     message(STATUS "----------------------------------------")
 endmacro()
 
 
-
-
-# ************************************************************
+# ====================
 # Footer message (Common)
-# ************************************************************
+# ====================
 macro(MESSAGE_FOOTER_COMMON Footer)
     message("************************************************************")
     message("**** End:   ${Footer}")
@@ -42,11 +63,9 @@ macro(MESSAGE_FOOTER_COMMON Footer)
 endmacro()
 
 
-
-
-# ************************************************************
+# ====================
 # Footer message (All)
-# ************************************************************
+# ====================
 macro(MESSAGE_FOOTER Footer)
     if(PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
         message_footer_common(${Footer})
@@ -54,11 +73,9 @@ macro(MESSAGE_FOOTER Footer)
 endmacro()
 
 
-
-
-# ************************************************************
+# ====================
 # Footer message (Debug)
-# ************************************************************
+# ====================
 macro(MESSAGE_FOOTER_DEBUG Footer)
     if(PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE)
         message_footer_common(${Footer})

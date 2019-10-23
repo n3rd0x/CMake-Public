@@ -20,6 +20,50 @@
 
 
 # ************************************************************
+# Debug Macros
+# ************************************************************
+# ====================
+# Print project details
+# ====================
+macro(DEBUG_PRINT_PROJECT_DETAILS)
+    set(_multiValueArgs SubProjects)
+    cmake_parse_arguments(PRINT_PROJECT_DETAILS "" "" "${_multiValueArgs}" ${ARGN})
+
+    message("** Print Project Details **")
+    message("Current:   ${CMAKE_PROJECT_NAME}")
+    message("Version:   ${CMAKE_PROJECT_VERSION}")
+    message("   Major:  ${CMAKE_PROJECT_VERSION_MAJOR}")
+    message("   Minor:  ${CMAKE_PROJECT_VERSION_MINOR}")
+    message("   Patch:  ${CMAKE_PROJECT_VERSION_PATCH}")
+    message("   Tweak:  ${CMAKE_PROJECT_VERSION_TWEAK}")
+
+    if(PRINT_PROJECT_DETAILS_SubProjects)
+        message("SubProjects:")
+        foreach(pro ${PRINT_PROJECT_DETAILS_SubProjects})
+            if(${pro}_PROJECT_VERSION)
+                message("   Project:   ${pro}")
+                message("   Version:   ${${pro}_PROJECT_VERSION}")
+                message("       Major:  ${${pro}_PROJECT_VERSION_MAJOR}")
+                message("       Minor:  ${${pro}_PROJECT_VERSION_MINOR}")
+                message("       Patch:  ${${pro}_PROJECT_VERSION_PATCH}")
+                message("       Tweak:  ${${pro}_PROJECT_VERSION_TWEAK}")
+            else()
+                message("   The project ${pro} doesn't exists.")
+            endif()
+        endforeach()
+    endif()
+    message("****************************")
+
+    # Clean up.
+    unset(_multiValueArgs)
+    unset(PRINT_PROJECT_DETAILS_SubProjects)
+endmacro()
+
+
+
+
+
+# ************************************************************
 # Add new C++ features
 macro(ADD_NEW_CXX_FEATURES)
     if(UNIX OR MINGW)
@@ -413,12 +457,12 @@ macro(COPY_FILE_TO_OUTPUT_DIRECTORY SrcFile DstFileName)
     cmake_parse_arguments(COPY_FILE_TO_OUTPUT_DIRECTORY "" "${oneValueArgs}" "" ${ARGN})
 
     # With Visual Studio we will copy the file into the debug and release directory.
-	if(MSVC OR XCODE)
-		copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Debug${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${DstFileName}" "${COPY_SINGLE_FILE_Params}")
-		copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Release${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${DstFileName}" "${COPY_SINGLE_FILE_Params}")
-	else()
-		copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${DstFileName}" "${COPY_SINGLE_FILE_Params}")
-	endif()
+    if(MSVC OR XCODE)
+        copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Debug${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${DstFileName}" "${COPY_SINGLE_FILE_Params}")
+        copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Release${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${DstFileName}" "${COPY_SINGLE_FILE_Params}")
+    else()
+        copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${DstFileName}" "${COPY_SINGLE_FILE_Params}")
+    endif()
 
     # Clean up.
     unset(oneValueArgs)
@@ -533,7 +577,7 @@ endmacro()
 # Generate dynamic library extension
 # ************************************************************
 macro(GENERATE_DYNAMIC_EXTENSION Value)
-	if(WIN32)
+    if(WIN32)
         set(${Value} "dll")
     elseif(APPLE)
         set(${Value} "dylib")
@@ -549,7 +593,7 @@ endmacro()
 # Create a directory
 macro(CREATE_DIRECTORY DIST_DIR)
     file(MAKE_DIRECTORY "${DIST_DIR}")
-	message_verbose(STATUS "Create the directory: ${DIST_DIR}")
+    message_verbose(STATUS "Create the directory: ${DIST_DIR}")
 endmacro()
 
 
@@ -559,11 +603,11 @@ endmacro()
 # Create a directory in the output directory
 macro(CREATE_DIRECTORY_IN_OUTPUT_DIRECTORY DIST_DIR)
     if(MSVC OR XCODE)
-		create_directory("${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${DIST_DIR}")
-		create_directory("${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/${DIST_DIR}")
-	else()
-		create_directory("${PROJECT_PATH_OUTPUT_EXECUTABLE}/${DIST_DIR}")
-	endif()
+        create_directory("${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${DIST_DIR}")
+        create_directory("${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/${DIST_DIR}")
+    else()
+        create_directory("${PROJECT_PATH_OUTPUT_EXECUTABLE}/${DIST_DIR}")
+    endif()
 endmacro()
 
 
@@ -700,113 +744,147 @@ endmacro()
 
 
 
-# ************************************************************
-# Initialise main project details
-macro(INITIALISE_PROJECT Title)
-    if(CMAKE_MAJOR_VERSION GREATER 2)
-        # Define policies.
-        # Use project version.
-        cmake_policy(SET CMP0048 NEW)
 
+# ************************************************************
+# Initialise project details
+# ************************************************************
+macro(INITIALISE_PROJECT)
+    if(CMAKE_MAJOR_VERSION GREATER 2)
         # Compiler definitions.
         cmake_policy(SET CMP0043 NEW)
     endif()
 
     # Help information.
     message_header(INITIALISE_PROJECT)
-    message_help("Required:")
-    message_help("[Title]          -> Title of this project.")
     message_help("Optional:")
     message_help("[Description]    -> Description of this project.")
     message_help("[Major]          -> The major version.")
     message_help("[Minor]          -> The minor version.")
     message_help("[Path]           -> The patch version.")
-    message_help("[Twaek]          -> The twaek version.")
-
-    message(STATUS "**********************************************************************")
-    message(STATUS "* Project:     ${Title}")
+    message_help("[Tweak]          -> The tweak version.")
 
     # Parse options.
-    set(oneValueArgs Description Major Minor Patch Tweak)
-    cmake_parse_arguments(INITIALISE_PROJECT "" "${oneValueArgs}" "" ${ARGN})
+    set(_oneValueArgs Description Major Minor Patch Tweak)
+    cmake_parse_arguments(INITIALISE_PROJECT "" "${_oneValueArgs}" "" ${ARGN})
 
     # Description.
     if(INITIALISE_PROJECT_Description)
-        message(STATUS "* Description: ${INITIALISE_PROJECT_Description}")
+        set(CMAKE_PROJECT_DESCRIPTION ${INITIALISE_PROJECT_Description})
     endif()
 
     # Major version.
-    set(MajorVersion "0")
     if(INITIALISE_PROJECT_Major)
-        set(MajorVersion ${INITIALISE_PROJECT_Major})
+        set(CMAKE_PROJECT_VERSION_MAJOR ${INITIALISE_PROJECT_Major})
+    else()
+        set(CMAKE_PROJECT_VERSION_MAJOR "0")
     endif()
 
     # Minor version.
-    set(MinorVersion "0")
     if(INITIALISE_PROJECT_Minor)
-        set(MinorVersion ${INITIALISE_PROJECT_Minor})
+        set(CMAKE_PROJECT_VERSION_MINOR ${INITIALISE_PROJECT_Minor})
+    else()
+        set(CMAKE_PROJECT_VERSION_MINOR "0")
     endif()
 
     # Patch version.
-    set(PatchVersion "1")
     if(INITIALISE_PROJECT_Patch)
-        set(PatchVersion ${INITIALISE_PROJECT_Patch})
+        set(CMAKE_PROJECT_VERSION_PATCH ${INITIALISE_PROJECT_Patch})
+    else()
+        set(CMAKE_PROJECT_VERSION_PATCH "0")
     endif()
 
     # Tweak version.
-    set(TweakVersion "0")
     if(INITIALISE_PROJECT_Tweak)
-        set(TweakVersion ${INITIALISE_PROJECT_Tweak})
-    endif()
-
-    # Set the project title.
-    if(CMAKE_MAJOR_VERSION GREATER 2)
-        project(${Title} VERSION "${MajorVersion}.${MinorVersion}.${PatchVersion}.${TweakVersion}")
+        set(CMAKE_PROJECT_VERSION_TWEAK ${INITIALISE_PROJECT_Tweak})
     else()
-        project(${Title})
-        set(PROJECT_MAJOR_VERSION ${MajorVersion})
-        set(PROJECT_MINOR_VERSION ${MinorVersion})
-        set(PROJECT_PATCH_VERSION ${PatchVersion})
-        set(PROJECT_VERSION "${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION}")
+        set(CMAKE_PROJECT_VERSION_TWEAK "0")
     endif()
 
-    # Build timestamp.
+    # Set the project version.
+    set(CMAKE_PROJECT_VERSION "${CMAKE_PROJECT_VERSION_MAJOR}.${CMAKE_PROJECT_VERSION_MINOR}.${CMAKE_PROJECT_VERSION_PATCH}.${CMAKE_PROJECT_VERSION_TWEAK}")
+    initialise_project_details(
+        ${CMAKE_PROJECT_NAME}
+        ${CMAKE_PROJECT_DESCRIPTION}
+        ${CMAKE_PROJECT_VERSION_MAJOR}
+        ${CMAKE_PROJECT_VERSION_MINOR}
+        ${CMAKE_PROJECT_VERSION_PATCH}
+        ${CMAKE_PROJECT_VERSION_TWEAK}
+    )
+
+
+    # Set build timestamp.
     string(TIMESTAMP PROJECT_BUILD_TIME "%d/%m-%Y")
 
-    # Project version.
-    message(STATUS "* Version:     ${PROJECT_VERSION}")
-    message(STATUS "* Time:        ${PROJECT_BUILD_TIME}")
+    # Compiler details.
+    if(CMAKE_C_COMPILER_ID)
+        set(_cCompiler ${CMAKE_C_COMPILER_ID})
+    else()
+        set(_cCompiler ${CMAKE_C_COMPILER})
+    endif()
 
-    # Compiler version.
+    if(CMAKE_CXX_COMPILER_ID)
+        set(_cxxCompiler ${CMAKE_CXX_COMPILER_ID})
+    else()
+        set(_cxxCompiler ${CMAKE_CXX_COMPILER})
+    endif()
+
     if(MSVC)
-        set(MSVC_FULLNAME "Visual Studio")
-        set(MSVC_CODENAME "msvc")
-        if(MSVC_VERSION GREATER_EQUAL 1920)
-            set(MSVC_FULLNAME "Visual Studio 2019")
-            set(MSVC_CODENAME "msvc2019")
-        elseif(MSVC_VERSION GREATER_EQUAL 1910)
-            set(MSVC_FULLNAME "Visual Studio 2017")
-            set(MSVC_CODENAME "msvc2017")
-        elseif(MSVC_VERSION GREATER_EQUAL 1900)
-            set(MSVC_FULLNAME "Visual Studio 2015")
-            set(MSVC_CODENAME "msvc2015")
-        elseif(MSVC_VERSION GREATER_EQUAL 1800)
-            set(MSVC_FULLNAME "Visual Studio 2013")
-            set(MSVC_CODENAME "msvc2013")
-        elseif(MSVC_VERSION GREATER_EQUAL 1700)
-            set(MSVC_FULLNAME "Visual Studio 2012")
-            set(MSVC_CODENAME "msvc2012")
-        elseif(MSVC_VERSION GREATER_EQUAL 1600)
-            set(MSVC_FULLNAME "Visual Studio 2011")
-            set(MSVC_CODENAME "msvc2011")
+        set(_LongName "Visual Studio")
+        set(_ShortName "VC")
+        if(MSVC14)
+            if(MSVC_TOOLSET_VERSION MATCHES 142)
+                set(_LongName "Visual Studio 2019")
+                set(_ShortName "VC16")
+            elseif(MSVC_TOOLSET_VERSION MATCHES 141)
+                set(_LongName "Visual Studio 2017")
+                set(_ShortName "VC15")
+            else()
+                set(_LongName "Visual Studio 2015")
+                set(_ShortName "VC14")
+            endif()
+        elseif(MSVC12)
+            set(_LongName "Visual Studio 2013")
+            set(_ShortName "VC12")
+        elseif(MSVC11)
+            set(_LongName "Visual Studio 2012")
+            set(_ShortName "VC11")
+        elseif(MSVC10)
+            set(_LongName "Visual Studio 2011")
+            set(_ShortName "VC10")
         endif()
-        message(STATUS "* Compiler:    Microsoft ${MSVC_FULLNAME}")
-        message(STATUS "               Toolset: ${MSVC_TOOLSET_VERSION}")
-        message(STATUS "               Version: ${MSVC_VERSION}")
+
+        set(_ideTool "${_LongName} (${_ShortName}), ${MSVC_VERSION}")
+
+        unset(_LongName)
+        unset(_ShortName)
+    elseif(XCODE)
+        set(_ideTool "Apple XCode, ${XCODE_VERSION}")
+    endif()
+
+    # Project details.
+    message(STATUS "**********************************************************************")
+    message(STATUS "* Project:      ${CMAKE_PROJECT_NAME}")
+    message(STATUS "* Description:  ${CMAKE_PROJECT_DESCRIPTION}")
+    message(STATUS "* Version:      ${CMAKE_PROJECT_VERSION}")
+    message(STATUS "* Time:         ${PROJECT_BUILD_TIME}")
+    message(STATUS "* System:       ${CMAKE_HOST_SYSTEM}")
+    message(STATUS "* Processor:    ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+    message(STATUS "* CMake:        ${CMAKE_VERSION}")
+    if(_cCompiler)
+        message(STATUS "* C Compiler:   ${_cCompiler}")
+    endif()
+    if(_cxxCompiler)
+        message(STATUS "* CXX Compiler: ${_cxxCompiler}")
+    endif()
+    if(_ideTool)
+        message(STATUS "* IDE Tool:     ${_ideTool}")
     endif()
 
     # Clean up.
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
+    unset(_cCompiler)
+    unset(_cxxCompiler)
+    unset(_ideTool)
     unset(INITIALISE_PROJECT_Description)
     unset(INITIALISE_PROJECT_Major)
     unset(INITIALISE_PROJECT_Minor)
@@ -820,11 +898,26 @@ endmacro()
 
 
 # ************************************************************
-# Initialise sub project details.
+# Initialise project description and version
+# ************************************************************
+macro(INITIALISE_PROJECT_DETAILS Prefix Desc Major Minor Patch Tweak)
+    set(${Prefix}_PROJECT_DESCRIPTION ${Desc})
+    set(${Prefix}_PROJECT_VERSION_MAJOR ${Major})
+    set(${Prefix}_PROJECT_VERSION_MINOR ${Minor})
+    set(${Prefix}_PROJECT_VERSION_PATCH ${Patch})
+    set(${Prefix}_PROJECT_VERSION_TWEAK ${Tweak})
+    set(${Prefix}_PROJECT_VERSION "${Major}.${Minor}.${Patch}.${Tweak}")
+endmacro()
+
+
+
+
+# ************************************************************
+# Initialise sub project details
+# ************************************************************
 macro(INITIALISE_LOCAL_PROJECT Title Description)
     if(CMAKE_MAJOR_VERSION GREATER 2)
-        # Define policies.
-        # Use project version.
+        # Version definitions.
         cmake_policy(SET CMP0048 NEW)
     endif()
 
@@ -834,29 +927,87 @@ macro(INITIALISE_LOCAL_PROJECT Title Description)
     message_help("[Title]       -> Project name.")
     message_help("[Description] -> Project description.")
     message_help("Optional:")
-    message_help("[CSHARP]      -> Flag the project as CSharp.")
+    message_help("[Major]       -> The major version.")
+    message_help("[Minor]       -> The minor version.")
+    message_help("[Path]        -> The patch version.")
+    message_help("[Tweak]       -> The tweak version.")
+    message_help("[Languages]   -> The language.")
 
     # Parse options.
-    set(options CSHARP)
-    cmake_parse_arguments(INITIALISE_LOCAL_PROJECT "${options}" "" "" ${ARGN})
+    set(_oneValueArgs Major Minor Patch Tweak)
+    set(_multiValueArgs Languages)
+    cmake_parse_arguments(INITIALISE_LOCAL_PROJECT "" "${_oneValueArgs}" "${_multiValueArgs}" ${ARGN})
 
-    if(INITIALISE_LOCAL_PROJECT_CSHARP)
-        project(${Title} LANGUAGES CSharp)
-    else()
-        project(${Title})
+    # Set project and language.
+    set(_languages "C" "CXX")
+    if(INITIALISE_LOCAL_PROJECT_Languages)
+        set(_languages ${INITIALISE_LOCAL_PROJECT_Languages})
     endif()
-    message(STATUS "**********************************************************************")
-    message(STATUS "* Project:     ${Title}")
-    message(STATUS "* Description: ${Description}")
-    if(INITIALISE_LOCAL_PROJECT_CSHARP)
-        message(STATUS "* Language:    CSharp")
+    project(${Title} LANGUAGES ${_languages})
+    list(JOIN _languages " " _languages)
+
+
+    # Description.
+    set(PROJECT_DESCRIPTION ${Description})
+
+    # Major version.
+    if(INITIALISE_LOCAL_PROJECT_Major)
+        set(PROJECT_VERSION_MAJOR ${INITIALISE_LOCAL_PROJECT_Major})
     else()
-        message(STATUS "* Language:    C/C++")
+        set(PROJECT_VERSION_MAJOR ${CMAKE_PROJECT_VERSION_MAJOR})
     endif()
+
+    # Minor version.
+    if(INITIALISE_LOCAL_PROJECT_Minor)
+        set(PROJECT_VERSION_MINOR ${INITIALISE_LOCAL_PROJECT_Minor})
+    else()
+        set(PROJECT_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
+    endif()
+
+    # Patch version.
+    if(INITIALISE_LOCAL_PROJECT_Patch)
+        set(PROJECT_VERSION_PATCH ${INITIALISE_LOCAL_PROJECT_Patch})
+    else()
+        set(PROJECT_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
+    endif()
+
+    # Tweak version.
+    if(INITIALISE_LOCAL_PROJECT_Tweak)
+        set(PROJECT_VERSION_TWEAK ${INITIALISE_LOCAL_PROJECT_Tweak})
+    else()
+        set(PROJECT_VERSION_TWEAK ${CMAKE_PROJECT_VERSION_TWEAK})
+    endif()
+
+    set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_TWEAK}")
+    initialise_project_details(
+        ${Title}
+        ${PROJECT_DESCRIPTION}
+        ${PROJECT_VERSION_MAJOR}
+        ${PROJECT_VERSION_MINOR}
+        ${PROJECT_VERSION_PATCH}
+        ${PROJECT_VERSION_TWEAK}
+    )
+
+
+    # Project details.
+    message(STATUS "----------------------------------------------------------------------")
+    message(STATUS "- Project:      ${PROJECT_NAME}")
+    message(STATUS "- Description:  ${PROJECT_DESCRIPTION}")
+    message(STATUS "- Language:     ${_languages}")
+    if(NOT PROJECT_VERSION STREQUAL ${CMAKE_PROJECT_VERSION})
+        message(STATUS "- Version:      ${PROJECT_VERSION}")
+    endif()
+
 
     # Clean up.
-    unset(options)
-    unset(INITIALISE_LOCAL_PROJECT_CSHARP)
+    unset(_oneValueArgs)
+    unset(_multiValueArgs)
+    unset(_languages)
+    unset(INITIALISE_LOCAL_PROJECT_Major)
+    unset(INITIALISE_LOCAL_PROJECT_Minor)
+    unset(INITIALISE_LOCAL_PROJECT_Patch)
+    unset(INITIALISE_LOCAL_PROJECT_Tweak)
+    unset(INITIALISE_LOCAL_PROJECT_Languages)
 
     message_footer(INITIALISE_LOCAL_PROJECT)
 endmacro()
@@ -922,7 +1073,7 @@ macro(INITIALISE_PROJECT_ENVIRONMENT)
 
         # # Set target mode.
         # set(CMAKE_BUILD_TYPE "${SelectTarget}" CACHE STRING "Target mode of this project." FORCE)
-		# unset(SelectTarget)
+        # unset(SelectTarget)
 
 
         if(CMAKE_BUILD_TYPE STREQUAL "" OR NOT CMAKE_BUILD_TYPE)
@@ -1214,8 +1365,8 @@ macro(INITIALISE_PROJECT_PATH)
     # Output path.
     set(PROJECT_PATH_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/Output")
 
-	# Install directory.
-	package_get_environment_path(PROJECT_INSTALL INSTALL_ROOT)
+    # Install directory.
+    package_get_environment_path(PROJECT_INSTALL INSTALL_ROOT)
     if(PROJECT_INSTALL_ENV_INSTALL_ROOT)
         message_verbose(STATUS "Set install to ${PROJECT_INSTALL_ENV_INSTALL_ROOT}.")
         set(PROJECT_PATH_INSTALL "${PROJECT_INSTALL_ENV_INSTALL_ROOT}" CACHE PATH "Installation directory.")
@@ -1306,7 +1457,7 @@ macro(INITIALISE_PROJECT_PATH)
     endif()
 
     # Clean up.
-	unset(BuildTarget)
+    unset(BuildTarget)
     unset(BuildTargetDebug)
     unset(BuildTargetRelease)
     unset(oneValueArgs)
@@ -1523,17 +1674,17 @@ macro(INSTALL_BINARY Prefix)
 
     # Install debug files.
     if(${Prefix}_BINARY_DEBUG)
-		foreach(DebugFile ${${Prefix}_BINARY_DEBUG})
-			install(FILES ${DebugFile} DESTINATION "${PROJECT_PATH_INSTALL}${INSTALL_BINARY_${Prefix}_SubPath}" CONFIGURATIONS Debug)
-		endforeach()
-	endif()
+        foreach(DebugFile ${${Prefix}_BINARY_DEBUG})
+            install(FILES ${DebugFile} DESTINATION "${PROJECT_PATH_INSTALL}${INSTALL_BINARY_${Prefix}_SubPath}" CONFIGURATIONS Debug)
+        endforeach()
+    endif()
 
     # Install release files.
-	if(${Prefix}_BINARY_RELEASE)
-		foreach(ReleaseFile ${${Prefix}_BINARY_RELEASE})
-			install(FILES ${ReleaseFile} DESTINATION "${PROJECT_PATH_INSTALL}${INSTALL_BINARY_${Prefix}_SubPath}" CONFIGURATIONS Release)
-		endforeach()
-	endif()
+    if(${Prefix}_BINARY_RELEASE)
+        foreach(ReleaseFile ${${Prefix}_BINARY_RELEASE})
+            install(FILES ${ReleaseFile} DESTINATION "${PROJECT_PATH_INSTALL}${INSTALL_BINARY_${Prefix}_SubPath}" CONFIGURATIONS Release)
+        endforeach()
+    endif()
 
     # Clean up.
     unset(oneValueArgs)
