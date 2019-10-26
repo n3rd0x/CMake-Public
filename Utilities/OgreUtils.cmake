@@ -64,7 +64,7 @@ macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
     set(InstallPath "${PROJECT_PATH_INSTALL}")
     
     # Parse options.
-    message_status(STATUS "Configure plugins.cfg.")
+    cm_message_status(STATUS "Configure plugins.cfg.")
     set(options INSTALL)
     set(oneValueArgs Path SubPath InstallPath InstallLocation)
     cmake_parse_arguments(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG "${options}" "${oneValueArgs}" "" ${ARGN})
@@ -73,9 +73,9 @@ macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
         set(Path "${OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_Path}")
     endif()
     
-    message_status(STATUS "Selected plugins:")
+    cm_message_status(STATUS "Selected plugins:")
     foreach(Var ${Plugins})
-        message_status(STATUS " * ${Var}")
+        cm_message_status(STATUS " * ${Var}")
     endforeach()
     unset(Var)
     
@@ -163,7 +163,7 @@ macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
         configure_file("${Path}/plugins_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/plugins_install.cfg")
         
         # Copy correct file based on the configuration.
-        message_status(STATUS "Adding 'plugins.cfg' into the INSTALL target at destination ${InstallPath}")
+        cm_message_status(STATUS "Adding 'plugins.cfg' into the INSTALL target at destination ${InstallPath}")
 
         install(
             FILES
@@ -233,7 +233,7 @@ macro(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
     set(InstallPath "${PROJECT_PATH_INSTALL}")
     
     # Parse options.
-    message_status(STATUS "Configure resources.cfg.")
+    cm_message_status(STATUS "Configure resources.cfg.")
     set(options INSTALL)
     set(oneValueArgs Path SubPath InstallPath MediaLocation InstallLocation)
     cmake_parse_arguments(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG "${options}" "${oneValueArgs}" "" ${ARGN})
@@ -268,7 +268,7 @@ macro(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
         if(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_InstallPath)
             set(InstallPath "${OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_InstallPath}")
         endif()
-        message_status(STATUS "Adding 'resources.cfg' into the INSTALL target at destination ${InstallPath}")
+        cm_message_status(STATUS "Adding 'resources.cfg' into the INSTALL target at destination ${InstallPath}")
         install(FILES "${CMAKE_CURRENT_BINARY_DIR}/resources_install.cfg" DESTINATION "${InstallPath}" RENAME "resources.cfg")
     endif()
 

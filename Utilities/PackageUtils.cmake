@@ -40,9 +40,9 @@ macro(PACKAGE_ADD_RUNTIME_TARGET SrcFile Path)
             ${SrcFile}
             "${Path}/${FileName}"
       )
-        message_verbose(STATUS "Adding [${SrcFile}] to [${Path}] in ALL_CopyRuntime target.")
+        cm_message_verbose(STATUS "Adding [${SrcFile}] to [${Path}] in ALL_CopyRuntime target.")
     #else()
-    #    message_status("" "Failed to locate: ${SrcFile}")
+    #    cm_message_status("" "Failed to locate: ${SrcFile}")
     #endif()
 
     #unset(FileFound CACHE)
@@ -109,7 +109,7 @@ endmacro()
 # ************************************************************
 # Append names
 macro(PACKAGE_APPEND_NAMES Prefix Name)
-    message_verbose(STATUS "Append ${Name} to ${Prefix}.")
+    cm_message_verbose(STATUS "Append ${Name} to ${Prefix}.")
 
     set(NewNames "")
     foreach(Var ${${Prefix}})
@@ -118,7 +118,7 @@ macro(PACKAGE_APPEND_NAMES Prefix Name)
 
     set(${Prefix} "${NewNames}")
     unset(NewNames)
-    message_debug(STATUS "Append names: ${${Prefix}}")
+    cm_message_debug(STATUS "Append names: ${${Prefix}}")
 endmacro()
 
 
@@ -147,7 +147,7 @@ endmacro()
 # Begin the package
 # ************************************************************
 macro(PACKAGE_BEGIN Prefix)
-    message_status(STATUS "Looking for the ${Prefix} library.")
+    cm_message_status(STATUS "Looking for the ${Prefix} library.")
 endmacro()
 
 
@@ -156,7 +156,7 @@ endmacro()
 # ************************************************************
 # Create binary names
 macro(PACKAGE_CREATE_BINARY_NAMES Prefix)
-    message_verbose(STATUS "Creating binary names ${${Prefix}}.")
+    cm_message_verbose(STATUS "Creating binary names ${${Prefix}}.")
     generate_dynamic_extension(DynamicSuffix)
 
     foreach(name ${${Prefix}})
@@ -164,7 +164,7 @@ macro(PACKAGE_CREATE_BINARY_NAMES Prefix)
     endforeach()
 
     unset(DynamicSuffix)
-    message_debug(STATUS "Binary names: ${${Prefix}}")
+    cm_message_debug(STATUS "Binary names: ${${Prefix}}")
 endmacro()
 
 
@@ -232,7 +232,7 @@ endmacro()
 # ************************************************************
 macro(PACKAGE_CLEAR_IF_CHANGED TestVar)
     if(NOT "${${TestVar}}" STREQUAL "${${TestVar}_INT_CHECK}")
-        message_verbose(STATUS "${TestVar} changed.")
+        cm_message_verbose(STATUS "${TestVar} changed.")
 
         # Reset variables.
         foreach(var ${ARGN})
@@ -249,7 +249,7 @@ endmacro()
 # ************************************************************
 # Create binary names
 macro(PACKAGE_CREATE_BINARY_NAMES Input)
-    message_verbose(STATUS "Creating binary names of ${${Input}}.")
+    cm_message_verbose(STATUS "Creating binary names of ${${Input}}.")
 
     set(Names ${${Input}})
     set(${Input} "")
@@ -271,17 +271,17 @@ endmacro()
 # ************************************************************
 macro(PACKAGE_CREATE_HOME_PATH Prefix EnvPrefix)
     if(NOT DEFINED ${Prefix}_HOME)
-        message_verbose(STATUS "${Prefix}_HOME doesn't exists.")
-        message_verbose(STATUS "Looking for ${EnvPrefix} environment variable.")
+        cm_message_verbose(STATUS "${Prefix}_HOME doesn't exists.")
+        cm_message_verbose(STATUS "Looking for ${EnvPrefix} environment variable.")
         package_get_environment_path(${Prefix} ${EnvPrefix})
 
         if(${Prefix}_ENV_${EnvPrefix})
-            message_verbose(STATUS "Set ${EnvPrefix} as ${Prefix}_HOME (${${Prefix}_ENV_${EnvPrefix}}).")
+            cm_message_verbose(STATUS "Set ${EnvPrefix} as ${Prefix}_HOME (${${Prefix}_ENV_${EnvPrefix}}).")
             set(${Prefix}_HOME "${${Prefix}_ENV_${EnvPrefix}}"
                 CACHE PATH "Path to ${Prefix} directory."
             )
         else()
-            message_verbose(STATUS "Creating an empty ${Prefix}_HOME.")
+            cm_message_verbose(STATUS "Creating an empty ${Prefix}_HOME.")
             set(${Prefix}_HOME "" CACHE PATH "Path to ${Prefix} directory.")
         endif()
     endif()
@@ -326,7 +326,7 @@ endmacro()
 # ************************************************************
 # Create search binary path
 macro(PACKAGE_CREATE_SEARCH_PATH_BINARY Prefix)
-    message_verbose(STATUS "Creating ${Prefix} binary search path.")
+    cm_message_verbose(STATUS "Creating ${Prefix} binary search path.")
 
     # Create search for "default" directories.
     foreach(dir ${${Prefix}_PREFIX_PATH})
@@ -352,7 +352,7 @@ macro(PACKAGE_CREATE_SEARCH_PATH_BINARY Prefix)
     package_create_search_platform(${Prefix}_SEARCH_PATH_BINARY)
     package_create_prefix_subpath(${Prefix}_SEARCH_PATH_BINARY ${Prefix})
 
-    #message_debug(STATUS "Binary search path: ${${Prefix}_SEARCH_PATH_BINARY}")
+    #cm_message_debug(STATUS "Binary search path: ${${Prefix}_SEARCH_PATH_BINARY}")
 endmacro()
 
 
@@ -366,7 +366,7 @@ macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
     message_header(PACKAGE_CREATE_SEARCH_PATH_INCLUDE)
     message_help("Required:")
     message_help("[Prefix]      -> Prefix of the variable to process.")
-    message_verbose(STATUS "Creating ${Prefix} include search path.")
+    cm_message_verbose(STATUS "Creating ${Prefix} include search path.")
 
     # Create search for "default" directories.
     foreach(dir ${${Prefix}_PREFIX_PATH})
@@ -413,7 +413,7 @@ endmacro()
 # ************************************************************
 # Create search library path
 macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
-    message_verbose(STATUS "Creating ${Prefix} library search path.")
+    cm_message_verbose(STATUS "Creating ${Prefix} library search path.")
 
     # Create search for "default" directories.
     foreach(dir ${${Prefix}_PREFIX_PATH})
@@ -471,7 +471,7 @@ macro(PACKAGE_CREATE_SEARCH_PATH_LIBRARY Prefix)
     package_create_search_platform(${Prefix}_SEARCH_PATH_LIBRARY)
     package_create_prefix_subpath(${Prefix}_SEARCH_PATH_LIBRARY ${Prefix})
 
-    #message_debug(STATUS "Library search path: ${${Prefix}_SEARCH_PATH_LIBRARY}")
+    #cm_message_debug(STATUS "Library search path: ${${Prefix}_SEARCH_PATH_LIBRARY}")
 endmacro()
 
 
@@ -481,7 +481,7 @@ endmacro()
 # ************************************************************
 # Create search media path
 macro(PACKAGE_CREATE_SEARCH_PATH_MEDIA Prefix)
-    message_verbose(STATUS "Creating ${Prefix} media search path.")
+    cm_message_verbose(STATUS "Creating ${Prefix} media search path.")
 
     foreach(dir ${${Prefix}_PREFIX_PATH})
         set(${Prefix}_SEARCH_PATH_MEDIA
@@ -493,7 +493,7 @@ macro(PACKAGE_CREATE_SEARCH_PATH_MEDIA Prefix)
 
     package_create_prefix_subpath(${Prefix}_SEARCH_PATH_MEDIA ${Prefix})
 
-    message_debug(STATUS "Media search path: ${${Prefix}_SEARCH_PATH_MEDIA}")
+    cm_message_debug(STATUS "Media search path: ${${Prefix}_SEARCH_PATH_MEDIA}")
 endmacro()
 
 
@@ -502,7 +502,7 @@ endmacro()
 # ************************************************************
 # Create search plug-in path
 macro(PACKAGE_CREATE_SEARCH_PATH_PLUGIN Prefix)
-    message_verbose(STATUS "Creating ${Prefix} plugin search path.")
+    cm_message_verbose(STATUS "Creating ${Prefix} plugin search path.")
 
     # Create search for "default" directories.
     foreach(dir ${${Prefix}_PREFIX_PATH})
@@ -525,7 +525,7 @@ macro(PACKAGE_CREATE_SEARCH_PATH_PLUGIN Prefix)
     package_create_search_platform(${Prefix}_SEARCH_PATH_PLUGIN)
     package_create_prefix_subpath(${Prefix}_SEARCH_PATH_PLUGIN ${Prefix})
 
-    message_debug(STATUS "Plugin search path: ${${Prefix}_SEARCH_PATH_PLUGIN}")
+    cm_message_debug(STATUS "Plugin search path: ${${Prefix}_SEARCH_PATH_PLUGIN}")
 endmacro()
 
 
@@ -584,7 +584,7 @@ endmacro()
 # ************************************************************
 # Create debug names
 macro(PACKAGE_CREATE_DEBUG_NAMES Prefix)
-    message_verbose(STATUS "Creating debug names of ${${Prefix}}.")
+    cm_message_verbose(STATUS "Creating debug names of ${${Prefix}}.")
 
     foreach(name ${${Prefix}})
         set(${Prefix}_DEBUG
@@ -599,8 +599,8 @@ macro(PACKAGE_CREATE_DEBUG_NAMES Prefix)
       )
     endforeach()
 
-    message_debug(STATUS "Debug names:")
-    message_debug_output(STATUS "${${Prefix}_DEBUG}")
+    cm_message_debug(STATUS "Debug names:")
+    cm_message_debug_output(STATUS "${${Prefix}_DEBUG}")
 endmacro()
 
 
@@ -610,7 +610,7 @@ endmacro()
 # Create debug binary names
 # ************************************************************
 macro(PACKAGE_CREATE_DEBUG_BINARY_NAMES Prefix)
-    message_verbose(STATUS "Creating debug binary names of ${${Prefix}}.")
+    cm_message_verbose(STATUS "Creating debug binary names of ${${Prefix}}.")
     generate_dynamic_extension(DynamicSuffix)
 
     foreach(name ${${Prefix}})
@@ -627,8 +627,8 @@ macro(PACKAGE_CREATE_DEBUG_BINARY_NAMES Prefix)
     endforeach()
 
     unset(DynamicSuffix)
-    message_debug(STATUS "Debug binary names:")
-    message_debug_output(STATUS "${${Prefix}_DEBUG}")
+    cm_message_debug(STATUS "Debug binary names:")
+    cm_message_debug_output(STATUS "${${Prefix}_DEBUG}")
 endmacro()
 
 
@@ -638,7 +638,7 @@ endmacro()
 # Create debug framework names
 # ************************************************************
 macro(PACKAGE_CREATE_DEBUG_FRAMEWORK_NAMES Prefix)
-    message_verbose(STATUS "Creating debug framework names of ${${Prefix}}.")
+    cm_message_verbose(STATUS "Creating debug framework names of ${${Prefix}}.")
     foreach(name ${${Prefix}})
         set(${Prefix}_DEBUG
              ${${Prefix}_DEBUG}
@@ -652,8 +652,8 @@ macro(PACKAGE_CREATE_DEBUG_FRAMEWORK_NAMES Prefix)
       )
     endforeach()
 
-    message_debug(STATUS "Debug framework names:")
-    message_debug_output(STATUS "${${Prefix}_DEBUG}")
+    cm_message_debug(STATUS "Debug framework names:")
+    cm_message_debug_output(STATUS "${${Prefix}_DEBUG}")
 endmacro()
 
 
@@ -663,7 +663,7 @@ endmacro()
 # Create release binary names
 # ************************************************************
 macro(PACKAGE_CREATE_RELEASE_BINARY_NAMES Prefix)
-    message_verbose(STATUS "Creating release binary names ${${Prefix}}.")
+    cm_message_verbose(STATUS "Creating release binary names ${${Prefix}}.")
     generate_dynamic_extension(DynamicSuffix)
 
     foreach(name ${${Prefix}})
@@ -674,7 +674,7 @@ macro(PACKAGE_CREATE_RELEASE_BINARY_NAMES Prefix)
     endforeach()
 
     unset(DynamicSuffix)
-    message_debug(STATUS "Release binary names: ${${Prefix}_RELEASE}")
+    cm_message_debug(STATUS "Release binary names: ${${Prefix}_RELEASE}")
 endmacro()
 
 
@@ -684,7 +684,7 @@ endmacro()
 # Create release framework names
 # ************************************************************
 macro(PACKAGE_CREATE_RELEASE_FRAMEWORK_NAMES Prefix)
-    message_verbose(STATUS "Creating release framework names of ${${Prefix}}.")
+    cm_message_verbose(STATUS "Creating release framework names of ${${Prefix}}.")
     foreach(name ${${Prefix}})
         set(${Prefix}_RELEASE
              ${${Prefix}_RELEASE}
@@ -692,8 +692,8 @@ macro(PACKAGE_CREATE_RELEASE_FRAMEWORK_NAMES Prefix)
         )
     endforeach()
 
-    message_debug(STATUS "Release framework names:")
-    message_debug_output(STATUS "${${Prefix}_RELEASE}")
+    cm_message_debug(STATUS "Release framework names:")
+    cm_message_debug_output(STATUS "${${Prefix}_RELEASE}")
 endmacro()
 
 
@@ -702,7 +702,7 @@ endmacro()
 # ************************************************************
 # Create statical names
 macro(PACKAGE_CREATE_STATICAL_NAMES Var)
-    message_verbose(STATUS "Creating statical names ${${Var}}.")
+    cm_message_verbose(STATUS "Creating statical names ${${Var}}.")
 
     foreach(name ${${Var}})
         set(${Var}
@@ -719,7 +719,7 @@ macro(PACKAGE_CREATE_STATICAL_NAMES Var)
       )
     endforeach()
 
-    message_debug(STATUS "Statical names: ${${Var}}")
+    cm_message_debug(STATUS "Statical names: ${${Var}}")
 endmacro()
 
 
@@ -729,20 +729,20 @@ endmacro()
 # Create versional names
 macro(PACKAGE_CREATE_VERSIONAL_NAMES Var Versions)
     message_header_debug("PACKAGE_CREATE_VERSIONAL_NAMES")
-    message_verbose(STATUS "Creating versional names of ${${Var}}.")
+    cm_message_verbose(STATUS "Creating versional names of ${${Var}}.")
 
     # Each version will be added to the name.
     foreach(name ${${Var}})
         foreach(v ${Versions})
             # Split into major, minor, patch and tweak numbers.
-            message_debug("" "----------------------------------------")
-            message_debug("" "Version: ${v} (source)")
+            cm_message_debug("" "----------------------------------------")
+            cm_message_debug("" "Version: ${v} (source)")
 
             string(REGEX MATCHALL "[0-9]+" components ${v})
-            message_debug("" "Components: ${components}")
+            cm_message_debug("" "Components: ${components}")
 
             list(LENGTH components length)
-            message_debug("" "Length: ${length}")
+            cm_message_debug("" "Length: ${length}")
 
             # Whole version.
             set(Version "")
@@ -751,31 +751,31 @@ macro(PACKAGE_CREATE_VERSIONAL_NAMES Var Versions)
             if(${length} GREATER 0)
                 list(GET components 0 MajorVersion)
                 set(Version "${MajorVersion}")
-                message_debug("" "Major: ${MajorVersion}")
+                cm_message_debug("" "Major: ${MajorVersion}")
             endif()
 
             # Minor version.
             if(${length} GREATER 1)
                 list(GET components 1 MinorVersion)
                 set(Version "${Version}${MinorVersion}")
-                message_debug("" "Minor: ${MinorVersion}")
+                cm_message_debug("" "Minor: ${MinorVersion}")
             endif()
 
             # Path version.
             if(${length} GREATER 2)
                 list(GET components 2 PatchVersion)
                 set(Version "${Version}${PatchVersion}")
-                message_debug("" "Patch: ${PatchVersion}")
+                cm_message_debug("" "Patch: ${PatchVersion}")
             endif()
 
             # Tweak version.
             if(${length} GREATER 3)
                 list(GET components 3 TweakVersion)
                 set(Version "${Version}${TweakVersion}")
-                message_debug("" "Tweak: ${TweakVersion}")
+                cm_message_debug("" "Tweak: ${TweakVersion}")
             endif()
 
-            message_debug("" "Version: ${Version}")
+            cm_message_debug("" "Version: ${Version}")
 
             set(nName "${name}${v}")
             if(${length} GREATER 1)
@@ -786,9 +786,9 @@ macro(PACKAGE_CREATE_VERSIONAL_NAMES Var Versions)
                 ${nName}
                 ${${Var}}
           )
-            message_debug("" "Adding: ${name}${v} and ${name}${Version}")
+            cm_message_debug("" "Adding: ${name}${v} and ${name}${Version}")
 
-            message_debug("" "----------------------------------------")
+            cm_message_debug("" "----------------------------------------")
 
             unset(components)
             unset(length)
@@ -801,7 +801,7 @@ macro(PACKAGE_CREATE_VERSIONAL_NAMES Var Versions)
         endforeach()
 
     endforeach()
-    message_debug("" "Final: ${${Var}}")
+    cm_message_debug("" "Final: ${${Var}}")
     message_footer_debug("PACKAGE_CREATE_VERSIONAL_NAMES")
 endmacro()
 
@@ -813,9 +813,9 @@ endmacro()
 macro(PACKAGE_DISPLAY_LIBRARY Libraries)
     foreach(lib ${Libraries})
         if(NOT ${lib} STREQUAL "optimized" AND NOT ${lib} STREQUAL "debug")
-            message_verbose(STATUS "  * ${lib}")
+            cm_message_verbose(STATUS "  * ${lib}")
         else()
-            message_verbose(STATUS "[${lib}]")
+            cm_message_verbose(STATUS "[${lib}]")
         endif()
     endforeach()
     unset(lib)
@@ -828,13 +828,13 @@ endmacro()
 # End the package
 macro(PACKAGE_END Prefix)
     if(${Prefix}_FOUND)
-        message_verbose(STATUS "${Prefix} libraries:")
+        cm_message_verbose(STATUS "${Prefix} libraries:")
         package_display_library("${${Prefix}_LIBRARIES}")
-        message_verbose(STATUS "${Prefix} includes:")
-        message_verbose_output(STATUS "${${Prefix}_INCLUDE_DIR}")
-        message_status(STATUS "The ${Prefix} library is located.")
+        cm_message_verbose(STATUS "${Prefix} includes:")
+        cm_message_verbose_output(STATUS "${${Prefix}_INCLUDE_DIR}")
+        cm_message_status(STATUS "The ${Prefix} library is located.")
     else()
-        message_status("" "Failed to locate the ${Prefix} library.")
+        cm_message_status("" "Failed to locate the ${Prefix} library.")
     endif()
 endmacro()
 
@@ -845,18 +845,18 @@ endmacro()
 # Find file
 macro(PACKAGE_FIND_FILE Prefix SearchName SearchPath Suffixes)
     message_sub_header("Package Find File (${Prefix})")
-    message_debug(STATUS "Search names:")
-    message_debug_output(STATUS "${SearchName}")
-    message_debug(STATUS "Search path:")
-    message_debug_output(STATUS "${SearchPath}")
-    message_debug(STATUS "Suffixes:")
-    message_debug_output(STATUS "${Suffixes}")
+    cm_message_debug(STATUS "Search names:")
+    cm_message_debug_output(STATUS "${SearchName}")
+    cm_message_debug(STATUS "Search path:")
+    cm_message_debug_output(STATUS "${SearchPath}")
+    cm_message_debug(STATUS "Suffixes:")
+    cm_message_debug_output(STATUS "${Suffixes}")
 
     find_file(${Prefix} NAMES ${SearchName} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
     if(${Prefix})
-        message_verbose(STATUS "Found file:      ${${Prefix}}")
+        cm_message_verbose(STATUS "Found file:      ${${Prefix}}")
     else()
-        message_verbose("" "Failed to locate one of these files: ${SearchName}")
+        cm_message_verbose("" "Failed to locate one of these files: ${SearchName}")
     endif()
 
     message_sub_footer("Package Find File (${Prefix})")
@@ -871,20 +871,20 @@ endmacro()
 # Find library
 macro(PACKAGE_FIND_LIBRARY Prefix SearchName SearchPath Suffixes)
     message_sub_header("Package Find Library (${Prefix})")
-    message_debug(STATUS "Searching files:")
-    message_debug_output(STATUS "${Files}")
-    message_debug(STATUS "Names:")
-    message_debug_output(STATUS "${SearchName}")
-    message_debug(STATUS "Search path:")
-    message_debug_output(STATUS "${SearchPath}")
-    message_debug(STATUS "Suffixes:")
-    message_debug_output(STATUS "${Suffixes}")
+    cm_message_debug(STATUS "Searching files:")
+    cm_message_debug_output(STATUS "${Files}")
+    cm_message_debug(STATUS "Names:")
+    cm_message_debug_output(STATUS "${SearchName}")
+    cm_message_debug(STATUS "Search path:")
+    cm_message_debug_output(STATUS "${SearchPath}")
+    cm_message_debug(STATUS "Suffixes:")
+    cm_message_debug_output(STATUS "${Suffixes}")
 
     find_library(${Prefix} NAMES ${SearchName} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
     if(${Prefix})
-        message_verbose(STATUS "Found library: ${${Prefix}}")
+        cm_message_verbose(STATUS "Found library: ${${Prefix}}")
     else()
-        message_verbose("" "Failed to locate one of these files: ${SearchName}")
+        cm_message_verbose("" "Failed to locate one of these files: ${SearchName}")
     endif()
 
     message_sub_footer("Package Find Library (${Prefix})")
@@ -896,18 +896,18 @@ endmacro()
 # Find directory
 macro(PACKAGE_FIND_PATH Prefix Files SearchPath Suffixes)
     message_sub_header("Package Find Path (${Prefix})")
-    message_debug(STATUS "Files:")
-    message_debug_output(STATUS "${Files}")
-    message_debug(STATUS "Search path:")
-    message_debug_output(STATUS "${SearchPath}")
-    message_debug(STATUS "Suffixes:")
-    message_debug_output(STATUS "${Suffixes}")
+    cm_message_debug(STATUS "Files:")
+    cm_message_debug_output(STATUS "${Files}")
+    cm_message_debug(STATUS "Search path:")
+    cm_message_debug_output(STATUS "${SearchPath}")
+    cm_message_debug(STATUS "Suffixes:")
+    cm_message_debug_output(STATUS "${Suffixes}")
 
     find_path(${Prefix} NAMES ${Files} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
     if(${Prefix})
-        message_verbose(STATUS "Found path: ${${Prefix}}")
+        cm_message_verbose(STATUS "Found path: ${${Prefix}}")
     else()
-        message_verbose("" "Failed to locate path of the search files: ${Files}")
+        cm_message_verbose("" "Failed to locate path of the search files: ${Files}")
     endif()
 
     message_sub_footer("Package Find Path (${Prefix})")
@@ -923,7 +923,7 @@ endmacro()
 #     package_get_environment_path(${Prefix} ${EnvPrefix})
 #      if(${Prefix}_ENV_${EnvPrefix})
 #         if(${Prefix}_HOME)
-#             message_verbose(STATUS "Set ${EnvPrefix} as ${Prefix}_HOME (${${Prefix}_ENV_${EnvPrefix}}).")
+#             cm_message_verbose(STATUS "Set ${EnvPrefix} as ${Prefix}_HOME (${${Prefix}_ENV_${EnvPrefix}}).")
 #             set(${Prefix}_HOME "${${Prefix}_ENV_${EnvPrefix}}" CACHE PATH "Path to ${Prefix} directory.")
 #         endif()
 #     else()
@@ -953,7 +953,7 @@ macro(PACKAGE_INSTALL_BINARY_FROM_TARGET Prefix)
     if(${Prefix}_BINARY_DEBUG)
         foreach(DebugFile ${${Prefix}_BINARY_DEBUG})
             install(FILES "${DebugFile}" DESTINATION "${Path}" CONFIGURATIONS "debug")
-            message_verbose(STATUS "Install [${DebugFile}] to ${Path}.")
+            cm_message_verbose(STATUS "Install [${DebugFile}] to ${Path}.")
         endforeach()
     endif()
 
@@ -962,7 +962,7 @@ macro(PACKAGE_INSTALL_BINARY_FROM_TARGET Prefix)
     if(${Prefix}_BINARY_RELEASE)
         foreach(ReleaseFile ${${Prefix}_BINARY_RELEASE})
             install(FILES "${ReleaseFile}" DESTINATION "${Path}" CONFIGURATIONS "release")
-            message_verbose(STATUS "Install [${ReleaseFile}] to ${Path}.")
+            cm_message_verbose(STATUS "Install [${ReleaseFile}] to ${Path}.")
         endforeach()
     endif()
 
@@ -983,19 +983,19 @@ macro(PACKAGE_MAKE_LIBRARY Prefix Debug Release)
     message_sub_header("Package Make Library (${Prefix})")
 
     if(${Debug} AND ${Release})
-        message_debug(STATUS "Release and Debug found.")
+        cm_message_debug(STATUS "Release and Debug found.")
         set(${Prefix} optimized ${${Release}} debug ${${Debug}})
     elseif(${Release})
-        message_debug(STATUS "Release found.")
+        cm_message_debug(STATUS "Release found.")
         set(${Prefix} ${${Release}})
     elseif(${Debug})
-        message_debug(STATUS "Debug found.")
+        cm_message_debug(STATUS "Debug found.")
         set(${Prefix} ${${Debug}})
     else()
-        message_debug("" "Failed to make the library (${Prefix}).")
+        cm_message_debug("" "Failed to make the library (${Prefix}).")
     endif()
 
-    message_debug(STATUS "Library: ${${Prefix}}")
+    cm_message_debug(STATUS "Library: ${${Prefix}}")
     message_sub_footer("Package Make Library (${Prefix})")
 endmacro()
 
@@ -1027,7 +1027,7 @@ macro(PACKAGE_GET_ENVIRONMENT_PATH Prefix Var)
 
     # Make sure backslashes are converted to forward slashes.
     if(TmpEnv)
-        message_debug(STATUS "${Var} is located.")
+        cm_message_debug(STATUS "${Var} is located.")
         string(REGEX REPLACE "\\\\" "/" TmpEnv ${TmpEnv})
 
         # We must also remove the double quote if exists.
@@ -1035,7 +1035,7 @@ macro(PACKAGE_GET_ENVIRONMENT_PATH Prefix Var)
         string(REGEX REPLACE "\"" "" TmpEnv ${TmpEnv})
 
         set(${Prefix}_ENV_${Var} ${TmpEnv})
-        message_debug(STATUS "Set ${Prefix}_ENV_${Var} to ${TmpEnv}.")
+        cm_message_debug(STATUS "Set ${Prefix}_ENV_${Var} to ${TmpEnv}.")
     endif ()
 
     unset(TmpEnv)

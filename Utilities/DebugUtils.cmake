@@ -67,7 +67,7 @@ endmacro()
 # Footer message (All)
 # ====================
 macro(MESSAGE_FOOTER Footer)
-    if(PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
+    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
         message_footer_common(${Footer})
     endif()
 endmacro()
@@ -77,7 +77,7 @@ endmacro()
 # Footer message (Debug)
 # ====================
 macro(MESSAGE_FOOTER_DEBUG Footer)
-    if(PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE)
+    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE)
         message_footer_common(${Footer})
     endif()
 endmacro()
@@ -113,7 +113,7 @@ endmacro()
 # Header message (All)
 # ************************************************************
 macro(MESSAGE_HEADER Header)
-    if(PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
+    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
         message_header_common(${Header})
     endif()
 endmacro()
@@ -125,7 +125,7 @@ endmacro()
 # Header message (Debug)
 # ************************************************************
 macro(MESSAGE_HEADER_DEBUG Header)
-    if(PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE)
+    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE)
         message_header_common(${Header})
     endif()
 endmacro()
@@ -149,7 +149,7 @@ endmacro()
 # Footer sub message
 # ************************************************************
 macro(MESSAGE_SUB_FOOTER Footer)
-    if(PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
+    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
         message(STATUS "------------------------------------------------------------")
         message(STATUS "- End:   ${Footer}")
         message(STATUS "------------------------------------------------------------")
@@ -163,7 +163,7 @@ endmacro()
 # Header sub message
 # ************************************************************
 macro(MESSAGE_SUB_HEADER Header)
-    if(PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
+    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
         message(STATUS "------------------------------------------------------------")
         message(STATUS "- Start: ${Header}")
         message(STATUS "------------------------------------------------------------")
@@ -196,22 +196,50 @@ endmacro()
 # ************************************************************
 # DEBUG MESSAGE
 # ************************************************************
-# ====================
+# ----------------------------------------
 # Debug message
-# ====================
-macro(MESSAGE_DEBUG State Msg)
-    if(PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE)
+# ----------------------------------------
+macro(CM_MESSAGE_DEBUG State Msg)
+    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE)
         message("${State}" "[Debug]   ${Msg}")
     endif()
 endmacro()
 
 
-# ====================
+# ----------------------------------------
+# Debug line
+# ----------------------------------------
+macro(CM_MESSAGE_DEBUG_LINE State)
+    cm_message_debug("${State}" "----------------------------------------")
+endmacro()
+
+
+# ----------------------------------------
+# Debug footer
+# ----------------------------------------
+function(CM_MESSAGE_DEBUG_FOOTER State Footer)
+    cm_message_debug_line(${State})
+    cm_message_debug(${State} "End:   ${Footer}")
+    cm_message_debug_line(${State})
+endfunction()
+
+
+# ----------------------------------------
+# Debug header
+# ----------------------------------------
+function(CM_MESSAGE_DEBUG_HEADER State Header)
+    cm_message_debug_line(${State})
+    cm_message_debug(${State} "Start: ${Header}")
+    cm_message_debug_line(${State})
+endfunction()
+
+
+# ----------------------------------------
 # Formatted output (debug mode)
-# ====================
-macro(MESSAGE_DEBUG_OUTPUT State Values)
+# ----------------------------------------
+macro(CM_MESSAGE_DEBUG_OUTPUT State Values)
     foreach(v ${Values})
-        message_debug("${State}" "  - ${v}")
+        cm_message_debug("${State}" "  - ${v}")
     endforeach()
 endmacro()
 
@@ -256,20 +284,20 @@ endmacro()
 # ************************************************************
 # STATUS MESSAGE
 # ************************************************************
-# ====================
+# ----------------------------------------
 # Status message
-# ====================
-macro(MESSAGE_STATUS State Msg)
+# ----------------------------------------
+macro(CM_MESSAGE_STATUS State Msg)
     message("${State}" "[Status]  ${Msg}")
 endmacro()
 
 
-# ====================
+# ----------------------------------------
 # Formatted output (status mode)
-# ====================
-macro(MESSAGE_STATUS_OUTPUT State Msg)
+# ----------------------------------------
+macro(CM_MESSAGE_STATUS_OUTPUT State Msg)
     foreach(m ${Msg})
-        message_status("${State}" "  - ${m}")
+        cm_message_status("${State}" "  - ${m}")
     endforeach()
 endmacro()
 
@@ -279,40 +307,41 @@ endmacro()
 # ************************************************************
 # VERBOSE MESSAGE
 # ************************************************************
-# ====================
+# ----------------------------------------
 # Verbose message
-# ====================
-macro(MESSAGE_VERBOSE State Msg)
-    if(PROJECT_CMAKE_ENABLE_VERBOSE_MESSAGE OR PROJECT_CMAKE_ENABLE_DEBUG_MESSAGE)
+# ----------------------------------------
+macro(CM_MESSAGE_VERBOSE State Msg)
+    if(Project_CMAKE_ENABLE_VERBOSE_MESSAGE OR Project_CMAKE_ENABLE_DEBUG_MESSAGE)
         message("${State}" "[Verbose] ${Msg}")
     endif()
 endmacro()
 
 
-# ====================
+# ----------------------------------------
+# Dash line
+# ----------------------------------------
+macro(CM_MESSAGE_VERBOSE_DASH_LINE State)
+    cm_message_verbose("${State}" "----------------------------------------")
+endmacro()
+
+
+# ----------------------------------------
 # Formatted output (verbose mode)
-# ====================
-macro(MESSAGE_VERBOSE_OUTPUT State Msg)
+# ----------------------------------------
+macro(CM_MESSAGE_VERBOSE_OUTPUT State Msg)
     foreach(m ${Msg})
-        message_verbose("${State}" "  - ${m}")
+        cm_message_verbose("${State}" "  - ${m}")
     endforeach()
 endmacro()
 
 
-# ====================
-# Dash horizontal line (verbose mode)
-# ====================
-macro(MESSAGE_VERBOSE_DASH_LINE)
-    if(PROJECT_CMAKE_ENABLE_VERBOSE_MESSAGE)
-        message(STATUS "[Verbose] ----------------------------------------")
-    endif()
-endmacro()
+
 
 
 # ====================
 # New line (verbose mode)
 # ====================
-macro(MESSAGE_VERBOSE_NEW_LINE)
+macro(CM_MESSAGE_VERBOSE_NEW_LINE)
     if(PROJECT_CMAKE_ENABLE_VERBOSE_MESSAGE)
         message(STATUS "[Verbose]")
     endif()
@@ -322,7 +351,7 @@ endmacro()
 # ====================
 # Star horizontal line (verbose mode)
 # ====================
-macro(MESSAGE_VERBOSE_STAR_LINE)
+macro(CM_MESSAGE_VERBOSE_STAR_LINE)
     if(PROJECT_CMAKE_ENABLE_VERBOSE_MESSAGE)
         message(STATUS "[Verbose] ****************************************")
     endif()
