@@ -58,7 +58,7 @@ endmacro()
 # Ex: /usr/include/json -> /usr/include
 macro(PACKAGE_ADD_PARENT_DIR Prefix)
     # Help information.
-    message_header(PACKAGE_ADD_PARENT_DIR)
+    cm_message_header(PACKAGE_ADD_PARENT_DIR)
     message_help("Required:")
     message_help("[Prefix]      -> Prefix of the variable to process.")
     message_help("Optional:")
@@ -363,7 +363,7 @@ endmacro()
 # ************************************************************
 macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
     # Help information.
-    message_header(PACKAGE_CREATE_SEARCH_PATH_INCLUDE)
+    cm_message_header(PACKAGE_CREATE_SEARCH_PATH_INCLUDE)
     message_help("Required:")
     message_help("[Prefix]      -> Prefix of the variable to process.")
     cm_message_verbose(STATUS "Creating ${Prefix} include search path.")
@@ -728,7 +728,7 @@ endmacro()
 # ************************************************************
 # Create versional names
 macro(PACKAGE_CREATE_VERSIONAL_NAMES Var Versions)
-    message_header_debug("PACKAGE_CREATE_VERSIONAL_NAMES")
+    cm_message_header_debug("PACKAGE_CREATE_VERSIONAL_NAMES")
     cm_message_verbose(STATUS "Creating versional names of ${${Var}}.")
 
     # Each version will be added to the name.
@@ -936,7 +936,7 @@ endmacro()
 # Install binaries.
 macro(PACKAGE_INSTALL_BINARY_FROM_TARGET Prefix)
     # Help information.
-    message_header(PACKAGE_INSTALL_BINARY_FROM_TARGET)
+    cm_message_header(PACKAGE_INSTALL_BINARY_FROM_TARGET)
     message_help("Required:")
     message_help("[Prefix]     -> Prefix of the variable to process.")
     message_help("Optional:")

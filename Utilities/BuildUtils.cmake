@@ -135,7 +135,7 @@ endmacro()
 # Copy data from target.
 macro(ADD_DATA_TARGET SrcFile)
     # Help information.
-    message_header(ADD_DATA_TARGET)
+    cm_message_header(ADD_DATA_TARGET)
     message_help("Required:")
     message_help("[SrcFile]    -> The source file.")
     message_help("Optional:")
@@ -300,7 +300,7 @@ endmacro()
 # ************************************************************
 # Generate group files, create a common variable for all grouped files.
 macro(BUILD_GENERATE_GROUP_FILES Prefix)
-    message_header(BUILD_GENERATE_GROUP_FILES)
+    cm_message_header(BUILD_GENERATE_GROUP_FILES)
     cm_message_debug(STATUS "Prefix: ${Prefix}")
 
     # Just verify that the Prefix has at least one header or source file.
@@ -354,7 +354,7 @@ endmacro()
 # Group files.
 macro(BUILD_GROUP_FILES)
     # Help information.
-    message_header(BUILD_GROUP_FILES)
+    cm_message_header(BUILD_GROUP_FILES)
     message_help("Required options:")
     message_help("[Prefix]         -> Prefix for this group section.")
     message_help("Optional options:")
@@ -457,7 +457,7 @@ endmacro()
 # Copy build file to the output directory
 macro(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY)
     # Help information.
-    message_header(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY)
+    cm_message_header(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY)
     message_help("Available options:")
     message_help("[Path]       -> Output directory. Default: ${PROJECT_PATH_OUTPUT_EXECUTABLE}.")
     message_help("[SubPath]    -> Sub directory of the output directory.")
@@ -503,7 +503,7 @@ endmacro()
 # Copy a single file to the output directory
 macro(COPY_FILE_TO_OUTPUT_DIRECTORY SrcFile DstFileName)
     # Help information.
-    message_header(COPY_FILE_TO_OUTPUT_DIRECTORY)
+    cm_message_header(COPY_FILE_TO_OUTPUT_DIRECTORY)
     message_help("Required:")
     message_help("[SrcFile]        -> Source file.")
     message_help("[DstFileName]    -> Destination file name.")
@@ -538,7 +538,7 @@ endmacro()
 # Copy project template
 macro(COPY_PROJECT_TEMPLATE)
     # Help information.
-    message_header(COPY_PROJECT_TEMPLATE)
+    cm_message_header(COPY_PROJECT_TEMPLATE)
     message_help("Available options:")
     message_help("[Source]         -> Path to the source file.")
     message_help("[Destination]    -> Path to the destination file.")
@@ -592,7 +592,7 @@ endmacro()
 # Copy a single file
 macro(COPY_SINGLE_FILE SrcFile DstFile)
     # Help information.
-    message_header(COPY_SINGLE_FILE)
+    cm_message_header(COPY_SINGLE_FILE)
     message_help("Required:")
     message_help("[SrcFile]    -> Source file.")
     message_help("[DstFile]    -> Destination file.")
@@ -773,7 +773,7 @@ endmacro()
 # Group files
 macro(GROUP_FILES TopGroup Files)
     # Help information.
-    message_header(GROUP_FILES)
+    cm_message_header(GROUP_FILES)
     message_help("Requires:")
     message_help("[TopGroup]   -> Name of the top group.")
     message_help("[Files]      -> Files to group.")
@@ -815,7 +815,7 @@ endmacro()
 # [Path]        -> The patch version.
 # [Tweak]       -> The tweak version.
 macro(CM_INITIALISE_PROJECT)
-    message_header(CM_INITIALISE_PROJECT)
+    cm_message_header(CM_INITIALISE_PROJECT)
 
 
     # ----------------------------------------
@@ -1009,8 +1009,9 @@ endmacro()
 # [Minor]       -> The minor version.
 # [Path]        -> The patch version.
 # [Tweak]       -> The tweak version.
+# [Languages]   -> Languages to use.
 macro(CM_INITIALISE_LOCAL_PROJECT Title Description)
-    message_header(CM_INITIALISE_LOCAL_PROJECT)
+    cm_message_header(CM_INITIALISE_LOCAL_PROJECT)
 
 
     # ----------------------------------------
@@ -1148,74 +1149,7 @@ endmacro()
 
 
 
-# ************************************************************
-# Initialise C++ compiler standard
-# ************************************************************
-macro(CM_COMPILER_CXX_INITIALISE_STANDARD)
-    set(_cxxStdName "Manually specified")
-    if(CMAKE_CXX_COMPILER_ID)
-        # Option for C++ standard.
-        set(Project_COMPILER_CXX_STANDARD "ISO C++11" CACHE STRING "Select C++ standards.")
-        set_property(
-            CACHE Project_COMPILER_CXX_STANDARD PROPERTY
-            STRINGS "Legacy C++ 98" "ISO C++11" "ISO C++14" "ISO C++17" "ISO C++20"
-        )
 
-
-        # Apply C++ standard.
-        if(Project_COMPILER_CXX_APPLY_STANDARD)
-            if(Project_COMPILER_CXX_STANDARD STREQUAL "ISO C++20")
-                set(_cxxStdName "ISO C++20")
-                set(_cxxStdFlag "-std=c++20")
-                set(_cxxStdDef "CXX20_SUPPORT")
-            elseif(Project_COMPILER_CXX_STANDARD STREQUAL "ISO C++17")
-                set(_cxxStdName "ISO C++17")
-                set(_cxxStdFlag "-std=c++17")
-                set(_cxxStdDef "CXX17_SUPPORT")
-            elseif(Project_COMPILER_CXX_STANDARD STREQUAL "ISO C++14")
-                set(_cxxStdName "ISO C++14")
-                set(_cxxStdFlag "-std=c++14")
-                set(_cxxStdDef "CXX14_SUPPORT")
-            elseif(Project_COMPILER_CXX_STANDARD STREQUAL "ISO C++11")
-                set(_cxxStdName "ISO C++11")
-                set(_cxxStdFlag "-std=c++11")
-                set(_cxxStdDef "CXX11_SUPPORT")
-            else()
-                set(_cxxStdName "Legacy C++ 98")
-            endif()
-
-            # Reauired CMake macro "check_cxx_compiler_flag".
-            # NB! This will be perfom just once.
-            # Lower version of CMake there was no flag check, so we assume that the flags are supported by the compiler.
-            if(_cxxStdDef)
-                if(CMAKE_MAJOR_VERSION GREATER 2)
-                    cm_message_verbose(STATUS "Check supported flag: ${_cxxStdFlag}")
-                    check_cxx_compiler_flag(${_cxxStdFlag} ${_cxxStdDef}_STATE)
-                    if(NOT ${_cxxStdDef}_STATE)
-                        cm_message_status("" "The compiler has no support for C++ standard ${_cxxStdName}.")
-                        set(_cxxStdName "Legacy C++ 98")
-                        unset(_cxxStdFlag)
-                    endif()
-                endif()
-            endif()
-
-            if(_cxxStdFlag)
-                cm_message_debug(STATUS "Add C++ flag (${_cxxStdFlag}).")
-                list(APPEND Project_COMPILER_CXX_INTERNAL_STANDARD ${_cxxStdFlag})
-
-                if(_cxxStdDef)
-                    cm_add_definition(CXX_STANDARD_SUPPORT)
-                    cm_add_definition(${_cxxStdDef})
-                endif()
-            endif()
-        endif()
-    endif()
-
-    cm_message_status(STATUS "C++ Standard: ${_cxxStdName}")
-    unset(_cxxStdFlag)
-    unset(_cxxStdName)
-    unset(_cxxStdDef)
-endmacro()
 
 
 
@@ -1233,7 +1167,7 @@ endmacro()
 # Initialise project environments
 # ************************************************************
 macro(CM_INITIALISE_PROJECT_ENVIRONMENT)
-    message_header(CM_INITIALISE_PROJECT_ENVIRONMENT)
+    cm_message_header(CM_INITIALISE_PROJECT_ENVIRONMENT)
 
 
     # ----------------------------------------
@@ -1242,10 +1176,10 @@ macro(CM_INITIALISE_PROJECT_ENVIRONMENT)
     # Setup for single configuration system.
     if(MINGW OR UNIX)
         if(NOT MSCV AND NOT XCODE)
-            set(PROJECT_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Select build type.")
-            set_property(CACHE PROJECT_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo MinSizeRel)
+            set(Project_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Select build type.")
+            set_property(CACHE Project_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo MinSizeRel)
 
-            set(CMAKE_BUILD_TYPE ${PROJECT_BUILD_TYPE} CACHE STRING "Target mode of this project." FORCE)
+            set(CMAKE_BUILD_TYPE ${Project_BUILD_TYPE} CACHE STRING "Target mode of this project." FORCE)
 
             cm_message_status(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
         endif()
@@ -1278,42 +1212,16 @@ macro(CM_INITIALISE_PROJECT_ENVIRONMENT)
 #    endif()
 
 
-    # ----------------------------------------
-    # Multiple Compilation
-    # Set multi processor compilation.
-    # For UNIX / MinGW: Use the flag -j X, where X is number of processor, for make program.
-    # ----------------------------------------
-    if(MSVC)
-        option(PROJECT_ENABLE_MULTI_PROCESSOR_COMPILATION "Enable multi processor compilation." ON)
-        if(PROJECT_ENABLE_MULTI_PROCESSOR_COMPILATION)
-            cm_message_status(STATUS "Enable multi processor compilation.")
-            cm_add_value(PROJECT_COMPILER_C_FLAGS "/MP" CACHING)
-            cm_add_value(PROJECT_COMPILER_CXX_FLAGS "/MP" CACHING)
-        else()
-            cm_message_status(STATUS "Disable multi processor compilation.")
-            remove_value(PROJECT_COMPILER_C_FLAGS "/MP" CACHING)
-            remove_value(PROJECT_COMPILER_CXX_FLAGS "/MP" CACHING)
-        endif()
-    endif()
 
 
     # ----------------------------------------
-    # Toolset & OS
+    # Toolset
     # ----------------------------------------
     # Set option for build for targeting XP.
     if(MSVC)
-        option(PROJECT_BUILD_FOR_WIN_XP "Build for Windows XP SP3." OFF)
+        option(Project_BUILD_FOR_WIN_XP "Build for Windows XP SP3." OFF)
 
-        set(Toolset "")
-        if(PROJECT_ENABLE_LLVM_CLANG)
-            if(MSVC_VERSION GREATER 1600)
-                create_msvc_toolset_clang(Toolset)
-            else()
-                cm_message_status("" "Current version of MSVC don't support LLVM Clang.")
-            endif()
-        endif()
-
-        if(PROJECT_BUILD_FOR_WIN_XP)
+        if(Project_BUILD_FOR_WIN_XP)
             if(NOT PROJECT_ENABLE_LLVM_CLANG)
                 create_msvc_toolset(Toolset)
             endif()
@@ -1335,23 +1243,27 @@ macro(CM_INITIALISE_PROJECT_ENVIRONMENT)
     # Required CMake version 3.14
     # Enable to generate shared scheme in XCode.
     if(XCODE)
-        option(PROJECT_XCODE_GENERATE_SCHEME "Generate the shared scheme." ON)
+        option(Project_XCODE_GENERATE_SCHEME "Generate the shared scheme." ON)
 
-        if(PROJECT_XCODE_GENERATE_SCHEME)
+        if(Project_XCODE_GENERATE_SCHEME)
             set(CMAKE_XCODE_GENERATE_SCHEME TRUE)
         endif()
     endif()
 
 
 
-
+    set(Project_COMPILER_INTERNAL_FLAG_OPTIONS "")
+    set(Compiler_FLAG_OPTION "" CACHE STRING "Compiler options.")
+    set_property(CACHE Compiler_FLAG_OPTION PROPERTY STRINGS "" "Default" "All Off")
     # ----------------------------------------
     # Compiler Options
     # ----------------------------------------
+    set(Project_COMPILER_C_INTERNAL_FLAGS "")
+    set(Project_COMPILER_CXX_INTERNAL_FLAGS "")
+    set(Project_COMPILER_CXX_INTERNAL_STANDARD "")
+
     # C compiler.
     if(CMAKE_C_COMPILER_LOADED)
-        set(Project_COMPILER_C_INTERNAL_FLAGS "")
-
         set(Project_COMPILER_C_FLAGS "" CACHE STRING "Flags for the C compiler.")
         option(Project_COMPILER_C_APPLY_FLAGS "Apply C compiler flags." ON)
     endif()
@@ -1359,9 +1271,6 @@ macro(CM_INITIALISE_PROJECT_ENVIRONMENT)
 
     # CXX compiler.
     if(CMAKE_CXX_COMPILER_LOADED)
-        set(Project_COMPILER_CXX_INTERNAL_FLAGS "")
-        set(Project_COMPILER_CXX_INTERNAL_STANDARD "")
-
         set(Project_COMPILER_CXX_FLAGS "" CACHE STRING "Flags for the CXX compiler.")
         option(Project_COMPILER_CXX_APPLY_FLAGS "Apply CXX compiler flags." ON)
         option(Project_COMPILER_CXX_APPLY_STANDARD "Apply CXX compiler standard." ON)
@@ -1376,45 +1285,27 @@ macro(CM_INITIALISE_PROJECT_ENVIRONMENT)
     # ----------------------------------------
     # Options
     # ----------------------------------------
-    option(PROJECT_ENABLE_COMPILER_FLAGS "Enable to set compiler flags." ON)
-    option(PROJECT_ENABLE_COMPILER_FLAGS2 "Enable to set compiler flags." OFF)
-
-    cmake_dependent_option(
-            PROJECT_ENABLE_COMPILER_FLAGS2 "efsadfds" ON
-            "PROJECT_ENABLE_COMPILER_FLAGS" ON
-        )
-
-
-
-    option(PROJECT_ENABLE_COMPILER_DEFAULT_FLAGS "Enable default compiler flags." ON)
-    if(PROJECT_ENABLE_COMPILER_DEFAULT_FLAGS)
-        cm_message_status(STATUS "Enable COMPILER_DEFAULT_FLAGS.")
-        if(UNIX)
-            # Following OGRE warning settings.
-            # -fPIC
-            #   Emit position independent code, suitable for dynamic linking
-            #   and avoiding any limit on the size of the global offset table.
-            set(CommonFlags
-                "-fPIC"
-           )
+    # ----------------------------------------
+    # Multiple Compilation
+    # Set multi processor compilation.
+    # For UNIX / MinGW: Use the flag -j X, where X is number of processor, for make program.
+    # ----------------------------------------
+    if(MSVC)
+        option(Project_ENABLE_MULTI_PROCESSOR_COMPILATION "Enable multi processor compilation." ON)
+        if(Project_ENABLE_MULTI_PROCESSOR_COMPILATION)
+            cm_message_status(STATUS "Enable MULTI PROCESSOR COMPILATION.")
+            list(APPEND Project_COMPILER_C_INTERNAL_FLAGS "/MP")
+            list(APPEND Project_COMPILER_CXX_INTERNAL_FLAGS "/MP")
         endif()
-
-        cm_message_debug(STATUS "----------------------------------------")
-        cm_message_debug(STATUS "Setting default flags:")
-        foreach(Flag ${CommonFlags})
-            cm_message_debug(STATUS "Iterate: ${Flag}")
-            cm_add_value(PROJECT_COMPILER_C_FLAGS ${Flag} CACHING)
-            cm_add_value(PROJECT_COMPILER_CXX_FLAGS ${Flag} CACHING)
-        endforeach()
-        cm_message_debug(STATUS "----------------------------------------")
-        unset(CommonFlags)
     endif()
+
+
 
 
     # ----------------------------------------
     # Warnings
     # ----------------------------------------
-    option(PROJECT_ENABLE_COMPILER_DEFAULT_WARNINGS "Enable default compiler warnings." ON)
+    option(PROJECT_ENABLE_COMPILER_DEFAULT_WARNINGS "Enable default compiler warnings." OFF)
     if(PROJECT_ENABLE_COMPILER_DEFAULT_WARNINGS)
         if(MSVC)
             #4018 -> signed / unsigned mismatch.
@@ -1425,36 +1316,22 @@ macro(CM_INITIALISE_PROJECT_ENVIRONMENT)
                 "/wd4275"
                 "/wd4244"
            )
-        elseif(UNIX)
-            # Following OGRE warning settings.
-            set(CommonWarnings
-                "-Wall"
-                "-Wcast-qual"
-                "-Wextra"
-                "-Winit-self"
-                "-Wno-long-long"
-                "-Wno-missing-field-initializers"
-                "-Wno-unused-parameter"
-                "-Wno-overloaded-virtual"
-                "-Wshadow"
-                "-Wwrite-strings"
-           )
         endif()
 
-        cm_message_debug(STATUS "----------------------------------------")
-        cm_message_debug(STATUS "Setting warnings flags:")
-        foreach(Flag ${CommonWarnings})
-            cm_message_debug(STATUS "Iterate: ${Flag}")
-                if(CMAKE_C_COMPILER)
-                    cm_add_value(PROJECT_COMPILER_C_FLAGS ${Flag} CACHING)
-                endif()
+#        cm_message_debug(STATUS "----------------------------------------")
+#        cm_message_debug(STATUS "Setting warnings flags:")
+#        foreach(Flag ${CommonWarnings})
+#            cm_message_debug(STATUS "Iterate: ${Flag}")
+#                if(CMAKE_C_COMPILER)
+#                    cm_add_value(PROJECT_COMPILER_C_FLAGS ${Flag} CACHING)
+#                endif()
 
-                if(CMAKE_CXX_COMPILER)
-                    cm_add_value(PROJECT_COMPILER_CXX_FLAGS ${Flag} CACHING)
-                endif()
-        endforeach()
-        cm_message_debug(STATUS "----------------------------------------")
-        unset(CommonWarnings)
+#                if(CMAKE_CXX_COMPILER)
+#                    cm_add_value(PROJECT_COMPILER_CXX_FLAGS ${Flag} CACHING)
+#                endif()
+#        endforeach()
+#        cm_message_debug(STATUS "----------------------------------------")
+#        unset(CommonWarnings)
     endif()
 
 
@@ -1484,7 +1361,7 @@ endmacro()
 # Initialise default project paths.
 macro(INITIALISE_PROJECT_PATH)
     # Help information.
-    message_header(INITIALISE_PROJECT_PATH)
+    cm_message_header(INITIALISE_PROJECT_PATH)
     message_help("Available options:")
     message_help("[Binary]     -> Output path of binary files. Default: 'bin'.")
     message_help("[Include]    -> Output path of include files. Default: 'include'.")
@@ -1708,7 +1585,7 @@ endmacro()
 # ************************************************************
 macro(INSTALL_SOURCES)
     # Help information.
-    message_header(INSTALL_SOURCES)
+    cm_message_header(INSTALL_SOURCES)
     #message_help("Required options:")
     #message_help("[Headers]        -> Headers to install.")
     message_help("Optional options:")
@@ -1785,7 +1662,7 @@ endmacro()
 # ************************************************************
 macro(GENERATE_UUID Prefix Name)
     # Help information.
-    message_header(GENERATE_UUID)
+    cm_message_header(GENERATE_UUID)
     message_help("Required:")
     message_help("[Prefix]      -> Variable to save the result.")
     message_help("[Name]        -> Name to use for generation of UUID.")
@@ -1828,7 +1705,7 @@ endmacro()
 # Install binaries
 macro(INSTALL_BINARY Prefix)
     # Help information.
-    message_header(INSTALL_BINARY_${Prefix})
+    cm_message_header(INSTALL_BINARY_${Prefix})
     message_help("Required:")
     message_help("[Prefix]     -> The Prefix to use. Example '${Prefix}' for respective related files.")
     message_help("Optional:")
@@ -1867,7 +1744,7 @@ endmacro()
 macro(INSTALL_DEBUG_SYMBOLS)
     if(MSVC)
         # Help information.
-        message_header(INSTALL_DEBUG_SYMBOLS)
+        cm_message_header(INSTALL_DEBUG_SYMBOLS)
         message_help("Optional:")
         message_help("[Name]       -> Name of the PDB file. Default is the '${PROJECT_NAME}${CMAKE_DEBUG_POSTFIX}.pdb'.")
         message_help("[SubPath]    -> Sub path in ${PROJECT_PATH_INSTALL}. Default is 'bin'.")
@@ -1935,7 +1812,7 @@ endmacro()
 # Install files.
 macro(INSTALL_FILES Files)
     # Help information.
-    message_header(INSTALL_FILES)
+    cm_message_header(INSTALL_FILES)
     message_help("Required:")
     message_help("[Files]     -> Files to install.")
     message_help("Optional:")
@@ -1969,7 +1846,7 @@ endmacro()
 # Install headers
 macro(INSTALL_HEADERS)
     # Help information.
-    message_header(INSTALL_HEADERS)
+    cm_message_header(INSTALL_HEADERS)
     #message_help("Required options:")
     #message_help("[Headers]        -> Headers to install.")
     message_help("Optional options:")

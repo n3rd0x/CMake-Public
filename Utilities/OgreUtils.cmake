@@ -26,7 +26,7 @@
 # ************************************************************
 macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
     # Help information.
-    message_header(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG)
+    cm_message_header(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG)
     message_help("HELP:")
     message_help("This macro will generate a 'plugins.cfg' from the template 'plugins_in.cfg'.")
     message_help("Variables using in 'plugins_in.cfg':")
@@ -202,7 +202,7 @@ endmacro()
 # ************************************************************
 macro(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
     # Help information.
-    message_header(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
+    cm_message_header(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
     message_help("HELP:")
     message_help("This macro will generate a 'resources.cfg' from the template 'resources_in.cfg'.")
     message_help("Variables using in 'resources_in.cfg':")

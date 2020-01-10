@@ -100,7 +100,7 @@ endmacro()
 # ************************************************************
 # Header message (Common)
 # ************************************************************
-macro(MESSAGE_HEADER_COMMON Header)
+macro(CM_MESSAGE_HEADER_COMMON Header)
     message("************************************************************")
     message("**** Start: ${Header}")
     message("************************************************************")
@@ -112,9 +112,9 @@ endmacro()
 # ************************************************************
 # Header message (All)
 # ************************************************************
-macro(MESSAGE_HEADER Header)
+macro(CM_MESSAGE_HEADER Header)
     if(Project_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
-        message_header_common(${Header})
+        cm_message_header_common(${Header})
     endif()
 endmacro()
 
@@ -124,9 +124,9 @@ endmacro()
 # ************************************************************
 # Header message (Debug)
 # ************************************************************
-macro(MESSAGE_HEADER_DEBUG Header)
+macro(CM_MESSAGE_HEADER_DEBUG Header)
     if(Project_CMAKE_ENABLE_DEBUG_MESSAGE)
-        message_header_common(${Header})
+        cm_message_header_common(${Header})
     endif()
 endmacro()
 
@@ -136,9 +136,9 @@ endmacro()
 # ************************************************************
 # Header message (Help)
 # ************************************************************
-macro(MESSAGE_HEADER_HELP Header)
+macro(CM_MESSAGE_HEADER_HELP Header)
     if(PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
-        message_header_common(${Header})
+        cm_message_header_common(${Header})
     endif()
 endmacro()
 

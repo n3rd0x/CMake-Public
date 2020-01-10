@@ -83,26 +83,39 @@ function(CM_PROJECT_COMPILER_APPLY_OPTIONS)
         # ----------------------------------------
         # C++ Compiler
         # ----------------------------------------
-        if(CMAKE_C_COMPILER_LOADED)
+        if(CMAKE_CXX_COMPILER_LOADED)
             set(_cxxFlags "")
 
             if(Project_COMPILER_CXX_APPLY_FLAGS)
                 cm_message_status(STATUS "Apply COMPILER_CXX_FLAGS.")
                 list(APPEND _cxxFlags ${_flags})
+                message("Flags: ${_cxxFlags}")
+                cm_message_debug_header(STATUS "Add flags from Project_COMPILER_CXX_FLAGS")
 
+                # Internal compiler flags.
+                if(Project_COMPILER_CXX_INTERNAL_FLAGS)
+                    cm_message_status(STATUS "Apply COMPILER_CXX_INTERNAL_FLAGS.")
+
+                    set(_cxxIntFlags ${Project_COMPILER_CXX_INTERNAL_FLAGS})
+                    separate_arguments(_cxxIntFlags)
+                    foreach(flag ${_cxxIntFlags})
+                        cm_append_list(_cxxFlags flag)
+                    endforeach()
+                endif()
+
+                # Project compiler flags.
                 if(Project_COMPILER_CXX_FLAGS)
                     cm_message_status(STATUS "Apply COMPILER_CXX_PROJECT_FLAGS.")
 
-                    cm_message_debug_header(STATUS "Add flags from Project_COMPILER_CXX_FLAGS")
-
-                    set(_cProFlags ${Project_COMPILER_CXX_FLAGS})
-                    separate_arguments(_cProFlags)
-                    foreach(flag ${_cProFlags})
+                    set(_cxxProFlags ${Project_COMPILER_CXX_FLAGS})
+                    separate_arguments(_cxxProFlags)
+                    foreach(flag ${_cxxProFlags})
                         cm_append_list(_cxxFlags flag)
                     endforeach()
-
-                    cm_message_debug_footer(STATUS "Add flags from Project_COMPILER_CXX_FLAGS")
                 endif()
+
+                cm_message_debug_footer(STATUS "Add flags from Project_COMPILER_CXX_FLAGS")
+
             endif()
 
 
