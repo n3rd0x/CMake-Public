@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -27,9 +27,39 @@ message_header(OGRE)
 package_begin(OGRE)
 package_create_home_path(OGRE OGRE_ROOT)
 
-
 # Specifiy version prefix.
 set(OGRE_VERSION_PREFIX "" CACHE STRING "Append version prefix into the search.")
+
+
+# Working variables.
+set(_IncludeSuffix
+    "Ogre"
+    "OGRE"
+    "Ogre3D"
+    "OGRE3D"
+    "ogre"
+    "ogre3d"
+)
+set(_DebugSuffix
+    "debug"
+    "debug/opt"
+    "debug/OGRE"
+    "opt"
+    "OGRE"
+)
+set(_ReleaseSuffix
+    "release"
+    "release/opt"
+    "release/OGRE"
+    "relwithdebinfo"
+    "relwithdebinfo/opt"
+    "relwithdebinfo/OGRE"
+    "minsizerel"
+    "minsizerel/opt"
+    "minsizerel/OGRE"
+    "opt"
+    "OGRE"
+)
 
 
 # ************************************************************
@@ -37,13 +67,13 @@ set(OGRE_VERSION_PREFIX "" CACHE STRING "Append version prefix into the search."
 # ************************************************************
 macro(OGRE_FIND_COMPONENT_BINARY COMPONENT NAME)
     set(OGRE_${COMPONENT}_BINARY_NAMES "${NAME}")
-    
+
     package_create_debug_binary_names(OGRE_${COMPONENT}_BINARY_NAMES)
     package_create_release_binary_names(OGRE_${COMPONENT}_BINARY_NAMES)
 
-    package_find_file(OGRE_${COMPONENT}_BINARY_DEBUG "${OGRE_${COMPONENT}_BINARY_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "debug")
-    package_find_file(OGRE_${COMPONENT}_BINARY_RELEASE "${OGRE_${COMPONENT}_BINARY_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
-    
+    package_find_file(OGRE_${COMPONENT}_BINARY_DEBUG "${OGRE_${COMPONENT}_BINARY_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "${_DebugSuffix}")
+    package_find_file(OGRE_${COMPONENT}_BINARY_RELEASE "${OGRE_${COMPONENT}_BINARY_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "${_ReleaseSuffix}")
+
     unset(OGRE_${COMPONENT}_BINARY_NAMES)
     unset(OGRE_${COMPONENT}_BINARY_NAMES_DEBUG)
     unset(OGRE_${COMPONENT}_BINARY_NAMES_RELEASE)
@@ -61,13 +91,13 @@ macro(OGRE_FIND_COMPONENT_LIBRARY COMPONENT NAME HEADER SUFFIX)
     package_create_debug_names(OGRE_${COMPONENT}_LIBRARY_NAMES)
 
     package_find_path(OGRE_${COMPONENT}_PATH_INCLUDE "${HEADER}" "${OGRE_SEARCH_PATH_INCLUDE}" "${SUFFIX}")
-    package_find_library(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "debug")
-    package_find_library(OGRE_${COMPONENT}_LIBRARY_RELEASE "${OGRE_${COMPONENT}_LIBRARY_NAMES}" "${OGRE_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+    package_find_library(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_DebugSuffix}")
+    package_find_library(OGRE_${COMPONENT}_LIBRARY_RELEASE "${OGRE_${COMPONENT}_LIBRARY_NAMES}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_ReleaseSuffix}")
     package_make_library(OGRE_${COMPONENT}_LIBRARY OGRE_${COMPONENT}_LIBRARY_DEBUG OGRE_${COMPONENT}_LIBRARY_RELEASE)
-    
+
     package_validate(OGRE_${COMPONENT})
     package_end(OGRE_${COMPONENT})
-    
+
     unset(OGRE_${COMPONENT}_LIBRARY_NAMES)
     unset(OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG)
 endmacro()
@@ -81,7 +111,7 @@ endmacro()
 macro(OGRE_FIND_EXTRA_COMPONENT_LIBRARY COMPONENT NAME HEADER SUFFIX)
     package_begin(OGRE_${COMPONENT})
     if(APPLE)
-        set(LibSuffix "framework")
+        set(LibSuffix "dylib")
     elseif(MSVC)
         set(LibSuffix "lib")
     else()
@@ -94,25 +124,29 @@ macro(OGRE_FIND_EXTRA_COMPONENT_LIBRARY COMPONENT NAME HEADER SUFFIX)
     set(OGRE_${COMPONENT}_NAMES_RELEASE
         "${NAME}.${LibSuffix}"
     )
+    if(APPLE)
+        list(APPEND OGRE_${COMPONENT}_NAMES_DEBUG "${NAME}.framework")
+        list(APPEND OGRE_${COMPONENT}_NAMES_RELEASE "${NAME}.framework")
+    endif()
     if(WIN32)
         list(APPEND OGRE_${COMPONENT}_NAMES_DEBUG "${NAME}_d.dll" "${NAME}.dll")
         list(APPEND OGRE_${COMPONENT}_NAMES_RELEASE "${NAME}.dll")
     endif()
 
     package_find_path(OGRE_${COMPONENT}_PATH_INCLUDE "${HEADER}" "${OGRE_SEARCH_PATH_INCLUDE}" "${SUFFIX}")
-    
-    package_find_file(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "debug;debug/opt;opt")
-    package_find_file(OGRE_${COMPONENT}_LIBRARY_RELEASE "${OGRE_${COMPONENT}_NAMES_RELEASE}" "${OGRE_SEARCH_PATH_LIBRARY}" "release;release/opt;relwithdebinfo;relwithdebinfo/opt;minsizerel;minsizerel/opt;opt")
+
+    package_find_file(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_DebugSuffix}")
+    package_find_file(OGRE_${COMPONENT}_LIBRARY_RELEASE "${OGRE_${COMPONENT}_NAMES_RELEASE}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_ReleaseSuffix}")
     package_make_library(OGRE_${COMPONENT}_LIBRARY OGRE_${COMPONENT}_LIBRARY_DEBUG OGRE_${COMPONENT}_LIBRARY_RELEASE)
 
     if(WIN32)
-        package_find_file(OGRE_${COMPONENT}_BINARY_DEBUG "${OGRE_${COMPONENT}_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "debug")
-        package_find_file(OGRE_${COMPONENT}_BINARY_RELEASE "${OGRE_${COMPONENT}_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+        package_find_file(OGRE_${COMPONENT}_BINARY_DEBUG "${OGRE_${COMPONENT}_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "${_DebugSuffix}")
+        package_find_file(OGRE_${COMPONENT}_BINARY_RELEASE "${OGRE_${COMPONENT}_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "${_ReleaseSuffix}")
     endif()
-    
+
     package_validate(OGRE_${COMPONENT})
     package_end(OGRE_${COMPONENT})
-    
+
     unset(ExtSuffix)
     unset(OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG)
     unset(OGRE_${COMPONENT}_LIBRARY_NAMES_RELEASE)
@@ -149,126 +183,126 @@ package_clear_if_changed(OGRE_HOME
     OGRE_LIBRARY_RELEASE
     OGRE_Overlay_BINARY_DEBUG
     OGRE_Overlay_BINARY_RELEASE
-    OGRE_Overlay_INCLUDE_DIR
+    OGRE_Overlay_PATH_INCLUDE
     OGRE_Overlay_LIBRARY_DEBUG
     OGRE_Overlay_LIBRARY_RELEASE
     OGRE_Paging_BINARY_DEBUG
     OGRE_Paging_BINARY_RELEASE
-    OGRE_Paging_INCLUDE_DIR
+    OGRE_Paging_PATH_INCLUDE
     OGRE_Paging_LIBRARY_DEBUG
     OGRE_Paging_LIBRARY_RELEASE
     OGRE_Property_BINARY_DEBUG
     OGRE_Property_BINARY_RELEASE
-    OGRE_Property_INCLUDE_DIR
+    OGRE_Property_PATH_INCLUDE
     OGRE_Property_LIBRARY_DEBUG
     OGRE_Property_LIBRARY_RELEASE
     OGRE_RTShaderSystem_BINARY_DEBUG
     OGRE_RTShaderSystem_BINARY_RELEASE
-    OGRE_RTShaderSystem_INCLUDE_DIR
+    OGRE_RTShaderSystem_PATH_INCLUDE
     OGRE_RTShaderSystem_LIBRARY_DEBUG
     OGRE_RTShaderSystem_LIBRARY_RELEASE
     OGRE_Terrain_BINARY_DEBUG
     OGRE_Terrain_BINARY_RELEASE
-    OGRE_Terrain_INCLUDE_DIR
+    OGRE_Terrain_PATH_INCLUDE
     OGRE_Terrain_LIBRARY_DEBUG
     OGRE_Terrain_LIBRARY_RELEASE
     OGRE_Volume_BINARY_DEBUG
     OGRE_Volume_BINARY_RELEASE
-    OGRE_Volume_INCLUDE_DIR
+    OGRE_Volume_PATH_INCLUDE
     OGRE_Volume_LIBRARY_DEBUG
     OGRE_Volume_LIBRARY_RELEASE
     OGRE_Plugin_BSPSceneManager_BINARY_DEBUG
     OGRE_Plugin_BSPSceneManager_BINARY_RELEASE
-    OGRE_Plugin_BSPSceneManager_INCLUDE_DIR
+    OGRE_Plugin_BSPSceneManager_PATH_INCLUDE
     OGRE_Plugin_BSPSceneManager_LIBRARY_DEBUG
     OGRE_Plugin_BSPSceneManager_LIBRARY_RELEASE
     OGRE_Plugin_CgProgramManager_BINARY_DEBUG
     OGRE_Plugin_CgProgramManager_BINARY_RELEASE
-    OGRE_Plugin_CgProgramManager_INCLUDE_DIR
+    OGRE_Plugin_CgProgramManager_PATH_INCLUDE
     OGRE_Plugin_CgProgramManager_LIBRARY_DEBUG
     OGRE_Plugin_CgProgramManager_LIBRARY_RELEASE
     OGRE_Plugin_OctreeSceneManager_BINARY_DEBUG
     OGRE_Plugin_OctreeSceneManager_BINARY_RELEASE
-    OGRE_Plugin_OctreeSceneManager_INCLUDE_DIR
+    OGRE_Plugin_OctreeSceneManager_PATH_INCLUDE
     OGRE_Plugin_OctreeSceneManager_LIBRARY_DEBUG
     OGRE_Plugin_OctreeSceneManager_LIBRARY_RELEASE
     OGRE_Plugin_OctreeZone_BINARY_DEBUG
     OGRE_Plugin_OctreeZone_BINARY_RELEASE
-    OGRE_Plugin_OctreeZone_INCLUDE_DIR
+    OGRE_Plugin_OctreeZone_PATH_INCLUDE
     OGRE_Plugin_OctreeZone_LIBRARY_DEBUG
     OGRE_Plugin_OctreeZone_LIBRARY_RELEASE
     OGRE_Plugin_PCZSceneManager_BINARY_DEBUG
     OGRE_Plugin_PCZSceneManager_BINARY_RELEASE
-    OGRE_Plugin_PCZSceneManager_INCLUDE_DIR
+    OGRE_Plugin_PCZSceneManager_PATH_INCLUDE
     OGRE_Plugin_PCZSceneManager_LIBRARY_DEBUG
     OGRE_Plugin_PCZSceneManager_LIBRARY_RELEASE
     OGRE_Codec_EXR_BINARY_DEBUG
     OGRE_Codec_EXR_BINARY_RELEASE
-    OGRE_Codec_EXR_INCLUDE_DIR
+    OGRE_Codec_EXR_PATH_INCLUDE
     OGRE_Codec_EXR_LIBRARY_DEBUG
     OGRE_Codec_EXR_LIBRARY_RELEASE
     OGRE_Codec_FreeImage_BINARY_DEBUG
     OGRE_Codec_FreeImage_BINARY_RELEASE
-    OGRE_Codec_FreeImage_INCLUDE_DIR
+    OGRE_Codec_FreeImage_PATH_INCLUDE
     OGRE_Codec_FreeImage_LIBRARY_DEBUG
     OGRE_Codec_FreeImage_LIBRARY_RELEASE
     OGRE_Codec_STBI_BINARY_DEBUG
     OGRE_Codec_STBI_BINARY_RELEASE
-    OGRE_Codec_STBI_INCLUDE_DIR
+    OGRE_Codec_STBI_PATH_INCLUDE
     OGRE_Codec_STBI_LIBRARY_DEBUG
     OGRE_Codec_STBI_LIBRARY_RELEASE
     OGRE_RenderSystem_Direct3D9_BINARY_DEBUG
     OGRE_RenderSystem_Direct3D9_BINARY_RELEASE
-    OGRE_RenderSystem_Direct3D9_INCLUDE_DIR
+    OGRE_RenderSystem_Direct3D9_PATH_INCLUDE
     OGRE_RenderSystem_Direct3D9_LIBRARY_DEBUG
     OGRE_RenderSystem_Direct3D9_LIBRARY_RELEASE
     OGRE_RenderSystem_Direct3D11_BINARY_DEBUG
     OGRE_RenderSystem_Direct3D11_BINARY_RELEASE
-    OGRE_RenderSystem_Direct3D11_INCLUDE_DIR
+    OGRE_RenderSystem_Direct3D11_PATH_INCLUDE
     OGRE_RenderSystem_Direct3D11_LIBRARY_DEBUG
     OGRE_RenderSystem_Direct3D11_LIBRARY_RELEASE
     OGRE_RenderSystem_GL_BINARY_DEBUG
     OGRE_RenderSystem_GL_BINARY_RELEASE
-    OGRE_RenderSystem_GL_INCLUDE_DIR
+    OGRE_RenderSystem_GL_PATH_INCLUDE
     OGRE_RenderSystem_GL_LIBRARY_DEBUG
     OGRE_RenderSystem_GL_LIBRARY_RELEASE
     OGRE_RenderSystem_GL3Plus_BINARY_DEBUG
     OGRE_RenderSystem_GL3Plus_BINARY_RELEASE
-    OGRE_RenderSystem_GL3Plus_INCLUDE_DIR
+    OGRE_RenderSystem_GL3Plus_PATH_INCLUDE
     OGRE_RenderSystem_GL3Plus_LIBRARY_DEBUG
     OGRE_RenderSystem_GL3Plus_LIBRARY_RELEASE
 
     # OGRE v1.11
     OGRE_Bites_BINARY_DEBUG
     OGRE_Bites_BINARY_RELEASE
-    OGRE_Bites_INCLUDE_DIR
+    OGRE_Bites_PATH_INCLUDE
     OGRE_Bites_LIBRARY_DEBUG
     OGRE_Bites_LIBRARY_RELEASE
     OGRE_MeshLodGenerator_BINARY_DEBUG
     OGRE_MeshLodGenerator_BINARY_RELEASE
-    OGRE_MeshLodGenerator_INCLUDE_DIR
+    OGRE_MeshLodGenerator_PATH_INCLUDE
     OGRE_MeshLodGenerator_LIBRARY_DEBUG
     OGRE_MeshLodGenerator_LIBRARY_RELEASE
-    
+
     # OGRE v2
     OGRE_HlmsPbs_BINARY_DEBUG
     OGRE_HlmsPbs_BINARY_RELEASE
-    OGRE_HlmsPbs_INCLUDE_DIR
+    OGRE_HlmsPbs_PATH_INCLUDE
     OGRE_HlmsPbs_LIBRARY_DEBUG
     OGRE_HlmsPbs_LIBRARY_RELEASE
     OGRE_HlmsPbsMobile_BINARY_DEBUG
     OGRE_HlmsPbsMobile_BINARY_RELEASE
-    OGRE_HlmsPbsMobile_INCLUDE_DIR
+    OGRE_HlmsPbsMobile_PATH_INCLUDE
     OGRE_HlmsPbsMobile_LIBRARY_DEBUG
-    OGRE_HlmsPbsMobile_LIBRARY_RELEASE 
+    OGRE_HlmsPbsMobile_LIBRARY_RELEASE
     OGRE_HlmsUnlit_BINARY_DEBUG
     OGRE_HlmsUnlit_BINARY_RELEASE
-    OGRE_HlmsUnlit_INCLUDE_DIR
+    OGRE_HlmsUnlit_PATH_INCLUDE
     OGRE_HlmsUnlit_LIBRARY_DEBUG
     OGRE_HlmsUnlit_LIBRARY_RELEASE
     OGRE_HlmsUnlitMobile_BINARY_DEBUG
     OGRE_HlmsUnlitMobile_BINARY_RELEASE
-    OGRE_HlmsUnlitMobile_INCLUDE_DIR
+    OGRE_HlmsUnlitMobile_PATH_INCLUDE
     OGRE_HlmsUnlitMobile_LIBRARY_DEBUG
     OGRE_HlmsUnlitMobile_LIBRARY_RELEASE
 )
@@ -279,11 +313,7 @@ package_clear_if_changed(OGRE_HOME
 # ************************************************************
 # Create search name
 # ************************************************************
-if(NOT APPLE)
-    set(OGRE_LIBRARY_NAMES "OgreMain")
-else()
-    set(OGRE_LIBRARY_NAMES "Ogre")
-endif()
+set(OGRE_LIBRARY_NAMES "OgreMain" "Ogre")
 package_create_debug_names(OGRE_LIBRARY_NAMES)
 
 
@@ -292,9 +322,9 @@ package_create_debug_names(OGRE_LIBRARY_NAMES)
 # ************************************************************
 # Find path and file
 # ************************************************************
-package_find_path(OGRE_PATH_INCLUDE "Ogre.h" "${OGRE_SEARCH_PATH_INCLUDE}" "Ogre;OGRE;Ogre3D;OGRE3D;ogre;ogre3d")
-package_find_library(OGRE_LIBRARY_DEBUG "${OGRE_LIBRARY_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "debug" )
-package_find_library(OGRE_LIBRARY_RELEASE "${OGRE_LIBRARY_NAMES}" "${OGRE_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+package_find_path(OGRE_PATH_INCLUDE "Ogre.h" "${OGRE_SEARCH_PATH_INCLUDE}" "${_IncludeSuffix}")
+package_find_library(OGRE_LIBRARY_DEBUG "${OGRE_LIBRARY_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_DebugSuffix}" )
+package_find_library(OGRE_LIBRARY_RELEASE "${OGRE_LIBRARY_NAMES}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_ReleaseSuffix}")
 package_make_library(OGRE_LIBRARY OGRE_LIBRARY_DEBUG OGRE_LIBRARY_RELEASE)
 
 
@@ -317,22 +347,22 @@ ogre_find_component_library(Volume "OgreVolume" "OgreVolumeSource.h" "Volume")
 # Find binaries on Windows
 # ************************************************************
 if(WIN32)
-    set(OGRE_SEARCH_BINARIES 
+    set(OGRE_SEARCH_BINARIES
         ${OGRE_SEARCH_PATH_BINARY}
         ${OGRE_SEARCH_PATH_LIBRARY}
     )
-    
+
     set(OGRE_BINARY_NAMES "OgreMain")
     package_create_release_binary_names(OGRE_BINARY_NAMES)
     package_create_debug_binary_names(OGRE_BINARY_NAMES)
 
-    package_find_file(OGRE_BINARY_DEBUG "${OGRE_BINARY_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "debug")
-    package_find_file(OGRE_BINARY_RELEASE "${OGRE_BINARY_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
-    
+    package_find_file(OGRE_BINARY_DEBUG "${OGRE_BINARY_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "${_DebugSuffix}")
+    package_find_file(OGRE_BINARY_RELEASE "${OGRE_BINARY_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "${_ReleaseSuffix}")
+
     unset(OGRE_BINARY_NAMES)
     unset(OGRE_BINARY_NAMES_DEBUG)
     unset(OGRE_BINARY_NAMES_RELEASE)
-    
+
     ogre_find_component_binary(Bites "OgreBites")
     ogre_find_component_binary(MeshLodGenerator "OgreBites")
     ogre_find_component_binary(Overlay "OgreOverlay")
@@ -378,17 +408,21 @@ else()
 endif()
 if(PlugDebugPath)
     get_filename_component(OGRE_RenderSystem_GL_FileName ${${PlugDebugPath}} NAME)
-    package_find_path(OGRE_PATH_PLUGIN_DEBUG "${OGRE_RenderSystem_GL_FileName}" "${OGRE_SEARCH_PLUGINS}" "debug;debug/opt;opt")
+    package_find_path(OGRE_PATH_PLUGIN_DEBUG "${OGRE_RenderSystem_GL_FileName}" "${OGRE_SEARCH_PLUGINS}" "${_DebugSuffix}")
     unset(OGRE_RenderSystem_GL_FileName)
 endif()
 
 if(PlugReleasePath)
     get_filename_component(OGRE_RenderSystem_GL_FileName ${${PlugReleasePath}} NAME)
-    package_find_path(OGRE_PATH_PLUGIN_RELEASE "${OGRE_RenderSystem_GL_FileName}" "${OGRE_SEARCH_PLUGINS}" "release;release/opt;relwithdebinfo;relwithdebinfo/opt;minsizerel;minsizerel/opt;opt")
+    package_find_path(OGRE_PATH_PLUGIN_RELEASE "${OGRE_RenderSystem_GL_FileName}" "${OGRE_SEARCH_PLUGINS}" "${_ReleaseSuffix}")
     unset(OGRE_RenderSystem_GL_FileName)
 endif()
 
 
+# Clean.
+unset(_IncludeSuffix)
+unset(_DebugSuffix)
+unset(_ReleaseSuffix)
 
 
 # ************************************************************
