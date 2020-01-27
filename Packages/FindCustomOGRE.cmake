@@ -337,6 +337,7 @@ ogre_find_component_library(Bites "OgreBites" "OgreApplicationContext.h" "Bites"
 ogre_find_component_library(MeshLodGenerator "OgreMeshLodGenerator" "OgreMeshLodGenerator.h" "MeshLodGenerator")
 ogre_find_component_library(Overlay "OgreOverlay" "OgreOverlaySystem.h" "Overlay")
 ogre_find_component_library(Paging "OgrePaging" "OgrePaging.h" "Paging")
+ogre_find_component_library(RTShaderSystem "OgreRTShaderSystem" "OgreRTShaderSystem.h" "RTShaderSystem")
 ogre_find_component_library(Terrain "OgreTerrain" "OgreTerrain.h" "Terrain")
 ogre_find_component_library(Volume "OgreVolume" "OgreVolumeSource.h" "Volume")
 
