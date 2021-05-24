@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header(VULKAN)
+cm_message_header(VULKAN)
 package_begin(VULKAN)
 package_create_home_path(VULKAN VULKAN_SDK VULKAN_ROOT)
 
@@ -58,7 +58,7 @@ set(VULKAN_COMMON_VARIABLES
     VULKAN_LIBRARY_RELEASE
     VULKAN_PATH_INCLUDE
 )
-set(VULKAN_CLEAR_IF_CHANGED 
+set(VULKAN_CLEAR_IF_CHANGED
     VULKAN_PREFIX_PATH
 )
 foreach(Var ${VULKAN_CLEAR_IF_CHANGED})
@@ -96,7 +96,7 @@ package_make_library(VULKAN_LIBRARY VULKAN_LIBRARY_DEBUG VULKAN_LIBRARY_RELEASE)
 # Find binaries
 if(WIN32)
     set(VULKAN_DATA_BINARY_NAMES ${VULKAN_DATA_LIBRARY_NAMES})
-    package_create_debug_binary_names(VULKAN_ZIP_BINARY_NAMES) 
+    package_create_debug_binary_names(VULKAN_ZIP_BINARY_NAMES)
 	package_create_release_binary_names(VULKAN_DATA_BINARY_NAMES)
 
 	package_find_file(VULKAN_BINARY_DEBUG "${VULKAN_DATA_BINARY_NAMES_DEBUG}" "${VULKAN_SEARCH_BINARIES}" "debug")
@@ -111,5 +111,5 @@ endif()
 package_validate(VULKAN)
 package_add_parent_dir(VULKAN)
 package_end(VULKAN)
-message_footer(VULKAN)
+cm_message_footer(VULKAN)
 

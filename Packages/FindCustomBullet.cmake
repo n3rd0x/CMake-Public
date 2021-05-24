@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,7 +23,7 @@
 # ************************************************************
 # Start package
 # ************************************************************
-message_header(BULLET)
+cm_message_header(BULLET)
 package_begin(BULLET)
 package_create_home_path(BULLET BULLET_ROOT)
 
@@ -35,7 +35,7 @@ package_create_home_path(BULLET BULLET_ROOT)
 macro(BULLET_FIND_COMPONENT Component Name Headers Suffix)
     set(BULLET_${Component}_NAMES "${Name}")
     package_create_debug_names(BULLET_${Component}_NAMES)
-    
+
     package_find_path(BULLET_${Component}_PATH_INCLUDE "${Headers}" "${BULLET_SEARCH_PATH_INCLUDE}" "${Suffix}")
     package_find_library(BULLET_${Component}_LIBRARY_DEBUG "${BULLET_${Component}_NAMES_DEBUG}" "${BULLET_SEARCH_PATH_LIBRARY}" "debug")
     package_find_library(BULLET_${Component}_LIBRARY_RELEASE "${BULLET_${Component}_NAMES}" "${BULLET_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
@@ -59,7 +59,7 @@ macro(BULLET_FIND_COMPONENT Component Name Headers Suffix)
             list(APPEND BULLET_BINARY_RELEASE ${BULLET_${Component}_BINARY_RELEASE})
         endif()
     endif()
-    
+
     unset(BULLET_${Component}_NAMES)
 endmacro()
 
@@ -74,7 +74,7 @@ package_create_search_path_binary(BULLET)
 package_create_search_path_include(BULLET)
 package_create_search_path_library(BULLET)
 package_create_search_path_plugin(BULLET)
-set(BULLET_SEARCH_BINARIES 
+set(BULLET_SEARCH_BINARIES
     ${BULLET_SEARCH_PATH_BINARY}
     ${BULLET_SEARCH_PATH_LIBRARY}
 )
@@ -155,5 +155,5 @@ endif()
 package_validate(BULLET)
 package_add_parent_dir(BULLET ADD_PARENT)
 package_end(BULLET)
-message_footer(BULLET)
+cm_message_footer(BULLET)
 

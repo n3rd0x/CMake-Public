@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,7 @@
 
 # ************************************************************
 # Start package
-message_header( GTK )
+cm_message_header( GTK )
 package_begin( GTK )
 package_create_home_path( GTK GTK_ROOT )
 
@@ -41,12 +41,12 @@ endif()
 
 # Only search if specified.
 if( NOT GTK_VERSION STREQUAL "")
-    message_status( STATUS "Selected version: ${GTK_VERSION}" )
+    cm_message_status( STATUS "Selected version: ${GTK_VERSION}" )
     set( GTK_ROOT "${GTK_HOME}/${GTK_VERSION}-prebuild-x86" )
     set( GTK_PATH_INCLUDE "${GTK_ROOT}/include" )
     set( GTK_PATH_LIBRARY "${GTK_ROOT}/lib" )
     set( GTK_PATH_BINARY "${GTK_ROOT}/bin" )
-    
+
     # At the moment we use GTK+ for Cairo and LibRSVG.
     if( GTK_VERSION STREQUAL "3.6.4" )
         set( GTK_INCLUDE_DIR
@@ -114,13 +114,13 @@ if( NOT GTK_VERSION STREQUAL "")
     else()
         set( GTK_FOUND FALSE )
     endif()
-    
+
     foreach( VAR ${GTK_DEPENDENCIES} )
         package_find_file( GTK_${VAR}_BINARY_DEBUG "${VAR}" "${GTK_PATH_BINARY}" "debug" )
         if( GTK_${VAR}_BINARY_DEBUG )
             set( GTK_BINARY_DEBUG ${GTK_BINARY_DEBUG} ${GTK_${VAR}_BINARY_DEBUG} )
         endif()
-        
+
         package_find_file( GTK_${VAR}_BINARY_RELEASE "${VAR}" "${GTK_PATH_BINARY}" "release;relwithdebinfo;minsizerel" )
         if( GTK_${VAR}_BINARY_RELEASE )
             set( GTK_BINARY_RELEASE ${GTK_BINARY_RELEASE} ${GTK_${VAR}_BINARY_RELEASE} )
@@ -135,4 +135,4 @@ endif()
 # ************************************************************
 # Finalize package
 package_end( GTK )
-message_footer( GTK )
+cm_message_footer( GTK )

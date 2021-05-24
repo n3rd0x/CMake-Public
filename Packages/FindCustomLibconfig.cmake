@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,7 +23,7 @@
 
 # ************************************************************
 # Start package
-message_header( LIBCONFIG )
+cm_message_header( LIBCONFIG )
 package_begin( LIBCONFIG )
 package_create_home_path( LIBCONFIG LIBCONFIG_ROOT )
 
@@ -75,8 +75,8 @@ if( WIN32 )
 	package_create_release_binary_names( LIBCONFIG_BINARY_NAMES )
 	package_create_debug_binary_names( LIBCONFIG_BINARY_NAMES )
 	package_create_search_path_binary( LIBCONFIG )
-	
-	set( LIBCONFIG_SEARCH_BINARIES 
+
+	set( LIBCONFIG_SEARCH_BINARIES
 		${LIBCONFIG_SEARCH_PATH_BINARY}
 		${LIBCONFIG_SEARCH_PATH_LIBRARY}
 	)
@@ -91,4 +91,4 @@ endif()
 package_validate( LIBCONFIG )
 package_add_parent_dir( LIBCONFIG )
 package_end( LIBCONFIG )
-message_footer( LIBCONFIG )
+cm_message_footer( LIBCONFIG )

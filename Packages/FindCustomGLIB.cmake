@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header(GLIB)
+cm_message_header(GLIB)
 package_begin(GLIB)
 package_create_home_path(GLIB GLIB_ROOT)
 
@@ -48,7 +48,7 @@ package_create_search_path_library(GLIB)
 
 # ************************************************************
 # Clear
-set(GLIB_CLEAR_IF_CHANGED 
+set(GLIB_CLEAR_IF_CHANGED
     GLIB_PREFIX_PATH
 )
 foreach(VAR ${GLIB_CLEAR_IF_CHANGED})
@@ -87,5 +87,5 @@ package_make_library(GLIB_LIBRARY GLIB_LIBRARY_DEBUG GLIB_LIBRARY_RELEASE)
 package_validate(GLIB)
 package_add_parent_dir(GLIB ADD_PARENT)
 package_end(GLIB)
-message_footer(GLIB)
+cm_message_footer(GLIB)
 

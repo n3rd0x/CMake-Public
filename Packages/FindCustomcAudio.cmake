@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,7 +23,7 @@
 # ************************************************************
 # Start Package
 # ************************************************************
-message_header(CAUDIO)
+cm_message_header(CAUDIO)
 package_begin(CAUDIO)
 package_create_home_path(CAUDIO CAUDIO_ROOT)
 
@@ -57,7 +57,7 @@ set(CAUDIO_COMMON_VARIABLES
     CAUDIO_LIBRARY_RELEASE
     CAUDIO_PATH_INCLUDE
 )
-set(CAUDIO_CLEAR_IF_CHANGED 
+set(CAUDIO_CLEAR_IF_CHANGED
     CAUDIO_PREFIX_PATH
 )
 foreach(VAR ${CAUDIO_CLEAR_IF_CHANGED})
@@ -99,12 +99,12 @@ if(WIN32 AND NOT CAUDIO_ENABLE_STATICAL)
     package_create_debug_binary_names(CAUDIO_BINARY_NAMES)
 	package_create_release_binary_names(CAUDIO_BINARY_NAMES)
 	package_create_search_path_binary(CAUDIO)
-	
-	set(CAUDIO_SEARCH_BINARIES 
+
+	set(CAUDIO_SEARCH_BINARIES
 		${CAUDIO_SEARCH_PATH_BINARY}
 		${CAUDIO_SEARCH_PATH_LIBRARY}
 	)
-	
+
 	package_find_file(CAUDIO_BINARY_DEBUG "${CAUDIO_BINARY_NAMES_DEBUG}" "${CAUDIO_SEARCH_BINARIES}" "debug")
 	package_find_file(CAUDIO_BINARY_RELEASE "${CAUDIO_BINARY_NAMES_RELEASE}" "${CAUDIO_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
@@ -118,4 +118,4 @@ endif()
 package_validate(CAUDIO)
 package_add_parent_dir(CAUDIO ADD_PARENT)
 package_end(CAUDIO)
-message_footer(CAUDIO)
+cm_message_footer(CAUDIO)

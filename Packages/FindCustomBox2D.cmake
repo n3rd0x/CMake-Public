@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header(BOX2D)
+cm_message_header(BOX2D)
 package_begin(BOX2D)
 package_create_home_path(BOX2D BOX2D_ROOT)
 
@@ -63,4 +63,4 @@ package_make_library(BOX2D_LIBRARY BOX2D_LIBRARY_DEBUG BOX2D_LIBRARY_RELEASE )
 package_validate(BOX2D)
 package_add_parent_dir(BOX2D)
 package_end(BOX2D)
-message_footer(BOX2D)
+cm_message_footer(BOX2D)

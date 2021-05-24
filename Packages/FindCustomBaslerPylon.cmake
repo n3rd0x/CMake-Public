@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,7 +23,7 @@
 # ************************************************************
 # Start Package
 # ************************************************************
-message_header(BASLER_PYLON)
+cm_message_header(BASLER_PYLON)
 package_begin(BASLER_PYLON)
 package_create_home_path(BASLER_PYLON BASLER_PYLON_ROOT)
 
@@ -112,4 +112,4 @@ else()
     package_add_parent_dir(BASLER_PYLON ADD_PARENT)
 endif()
 package_end(BASLER_PYLON)
-message_footer(BASLER_PYLON)
+cm_message_footer(BASLER_PYLON)

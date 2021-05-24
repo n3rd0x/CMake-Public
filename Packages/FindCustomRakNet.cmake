@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header(RAKNET)
+cm_message_header(RAKNET)
 package_begin(RAKNET)
 package_create_home_path(RAKNET RAKNET_ROOT)
 
@@ -43,7 +43,7 @@ option( RAKNET_ENABLE_STATICAL "Flag for using statical library." OFF )
 # Create search name
 set(RAKNET_LIBRARY_NAMES "RakNet")
 if(RAKNET_ENABLE_STATICAL)
-    message_verbose( STATUS "Enable statical library." )
+    cm_message_verbose( STATUS "Enable statical library." )
     package_create_statical_names( RAKNET_LIBRARY_NAMES )
 else()
     set(RAKNET_LIBRARY_NAMES "${RAKNET_LIBRARY_NAMES};RakNetDLL")
@@ -58,7 +58,7 @@ set(RAKNET_COMMON_VARIABLES
     RAKNET_LIBRARY_RELEASE
     RAKNET_PATH_INCLUDE
 )
-set(RAKNET_CLEAR_IF_CHANGED 
+set(RAKNET_CLEAR_IF_CHANGED
     RAKNET_PREFIX_PATH
     RAKNET_ENABLE_STATICAL
 )
@@ -78,7 +78,7 @@ foreach(VAR ${RAKNET_CLEAR_IF_CHANGED})
     endif()
 endforeach()
 
-	
+
 
 # ************************************************************
 # Find paths
@@ -95,8 +95,8 @@ if(WIN32 AND NOT RAKNET_ENABLE_STATICAL)
 	package_create_release_binary_names(RAKNET_BINARY_NAMES)
 	package_create_debug_binary_names(RAKNET_BINARY_NAMES)
 	package_create_search_path_binary(RAKNET)
-	
-	set(RAKNET_SEARCH_BINARIES 
+
+	set(RAKNET_SEARCH_BINARIES
 		${RAKNET_SEARCH_PATH_BINARY}
 		${RAKNET_SEARCH_PATH_LIBRARY}
 	)
@@ -111,4 +111,4 @@ endif()
 package_validate(RAKNET)
 package_add_parent_dir(RAKNET ADD_PARENT)
 package_end(RAKNET)
-message_footer(RAKNET)
+cm_message_footer(RAKNET)

@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header( PROJ )
+cm_message_header( PROJ )
 package_begin( PROJ )
 package_create_home_path( PROJ PROJ_ROOT )
 
@@ -57,7 +57,7 @@ if( WIN32 )
 		PROJ_BINARY_DEBUG
 		PROJ_LIBRARY_DEBUG
 		PROJ_LIBRARY_RELEASE
-		PROJ_PATH_INCLUDE	
+		PROJ_PATH_INCLUDE
 	)
 else()
 	package_clear_if_changed( PROJ_USE_STATIC_LIBRARY
@@ -81,24 +81,24 @@ package_make_library( PROJ_LIBRARY PROJ_LIBRARY_DEBUG PROJ_LIBRARY_RELEASE )
 if( WIN32 AND NOT PROJ_USE_STATIC_LIBRARY )
     string( REGEX MATCH "proj_i" DYNAMIC_DEBUG_FOUND ${PROJ_LIBRARY_DEBUG} )
     string( REGEX MATCH "proj_i" DYNAMIC_RELEASE_FOUND ${PROJ_LIBRARY_RELEASE} )
-    
+
     if( DYNAMIC_DEBUG_FOUND OR DYNAMIC_RELEASE_FOUND )
-        message_verbose( STATUS "Searching for dynamic library." )
+        cm_message_verbose( STATUS "Searching for dynamic library." )
 
         set( PROJ_BINARY_NAMES "proj" )
         package_create_release_binary_names( PROJ_BINARY_NAMES )
         package_create_debug_binary_names( PROJ_BINARY_NAMES )
         package_create_search_path_binary( PROJ )
-        
-        set( PROJ_SEARCH_BINARIES 
+
+        set( PROJ_SEARCH_BINARIES
             ${PROJ_SEARCH_PATH_BINARY}
             ${PROJ_SEARCH_PATH_LIBRARY}
         )
-        
+
         package_find_file( PROJ_BINARY_DEBUG "${PROJ_BINARY_NAMES_DEBUG}" "${PROJ_SEARCH_BINARIES}" "debug" )
         package_find_file( PROJ_BINARY_RELEASE "${PROJ_BINARY_NAMES_RELEASE}" "${PROJ_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
     endif()
-	
+
 	unset( DYNAMIC_DEBUG_FOUND )
 	unset( DYNAMIC_RELEASE_FOUND )
 endif()
@@ -109,4 +109,4 @@ endif()
 package_validate( PROJ )
 package_add_parent_dir( PROJ ADD_PARENT )
 package_end( PROJ )
-message_footer( PROJ )
+cm_message_footer( PROJ )

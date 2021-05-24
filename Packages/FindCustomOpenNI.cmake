@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,7 @@
 
 # ************************************************************
 # Start package
-message_header( OPENNI )
+cm_message_header( OPENNI )
 package_begin( OPENNI )
 package_create_home_path( OPENNI OPENNI_ROOT )
 
@@ -52,7 +52,7 @@ package_create_debug_names( OPENNI_LIBRARY_NAMES )
 
 # ************************************************************
 # Clear
-set( OPENNI_CLEAR_TRIGGER 
+set( OPENNI_CLEAR_TRIGGER
     OPENNI_HOME
     OPENNI_VERSION
 )
@@ -62,7 +62,7 @@ set( OPENNI_CLEAR_COMPONENTS
     OPENNI_PATH_INCLUDE
 )
 if( WIN32 )
-    set( OPENNI_CLEAR_COMPONENTS 
+    set( OPENNI_CLEAR_COMPONENTS
         ${OPENNI_CLEAR_COMPONENTS}
         OPENNI_PATH_REDIST
     )
@@ -99,18 +99,18 @@ if( WIN32 )
             "${OPENNI_PATH_REDIST}/OpenNI.ini"
             "${OPENNI_PATH_REDIST}/OpenNI${OPENNI_VERSION}.dll"
         )
-        
+
         # Debug.
         foreach( VAR ${OPENNI_REDIST_MAIN})
             package_add_runtime_target( ${VAR} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}" )
         endforeach()
-        
+
         # Release.
         foreach( VAR ${OPENNI_REDIST_MAIN} )
             package_add_runtime_target( ${VAR} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}" )
         endforeach()
-        
-        
+
+
         # Driver redistribution.
         set( OPENNI_REDIST_DRIVERS
             "${OPENNI_PATH_REDIST}/OpenNI${OPENNI_VERSION}/Drivers/Kinect.dll"
@@ -120,12 +120,12 @@ if( WIN32 )
             "${OPENNI_PATH_REDIST}/OpenNI${OPENNI_VERSION}/Drivers/PSLink.dll"
             "${OPENNI_PATH_REDIST}/OpenNI${OPENNI_VERSION}/Drivers/PSLink.ini"
         )
-        
+
         # Debug
         foreach( VAR ${OPENNI_REDIST_DRIVERS} )
             package_add_runtime_target( ${VAR} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/OpenNI${OPENNI_VERSION}/Drivers" )
         endforeach()
-        
+
         # Release
         foreach( VAR ${OPENNI_REDIST_DRIVERS} )
             package_add_runtime_target( ${VAR} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/OpenNI${OPENNI_VERSION}/Drivers" )
@@ -140,4 +140,4 @@ endif()
 # Finalize package
 package_validate( OPENNI )
 package_end( OPENNI )
-message_footer( OPENNI )
+cm_message_footer( OPENNI )

@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header(OPENVSLAM)
+cm_message_header(OPENVSLAM)
 package_begin(OPENVSLAM)
 package_create_home_path(OPENVSLAM OPENVSLAM_ROOT)
 
@@ -94,4 +94,4 @@ endif()
 package_validate(OPENVSLAM)
 package_add_parent_dir(OPENVSLAM ADD_PARENT)
 package_end(OPENVSLAM)
-message_footer(OPENVSLAM)
+cm_message_footer(OPENVSLAM)

@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,7 +23,7 @@
 # ************************************************************
 # Start Package
 # ************************************************************
-message_header(OPENSPLICE)
+cm_message_header(OPENSPLICE)
 package_begin(OPENSPLICE)
 package_create_home_path(OPENSPLICE OPENSPLICE_ROOT)
 
@@ -106,7 +106,7 @@ if(NOT OPENSPLICE_FOUND)
         set(OPENSPLICE_FOUND TRUE)
         set(OPENSPLICE_LIBRARIES ${OPENSPLICE_DDSKERNEL_LIBRARIES})
         set(OPENSPLICE_INCLUDE_DIR ${OPENSPLICE_PATH_INCLUDE})
-        
+
         if(OPENSPLICE_DCPSSACPP_PATH_INCLUDE)
             list(APPEND OPENSPLICE_INCLUDE_DIR ${OPENSPLICE_DCPSSACPP_PATH_INCLUDE})
         endif()
@@ -124,4 +124,4 @@ endif()
 # Finalize Package
 # ************************************************************
 package_end(OPENSPLICE)
-message_footer(OPENSPLICE)
+cm_message_footer(OPENSPLICE)

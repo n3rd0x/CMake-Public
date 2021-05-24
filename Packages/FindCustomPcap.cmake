@@ -23,7 +23,7 @@
 # ************************************************************
 # Start package
 # ************************************************************
-message_header(PCAP)
+cm_message_header(PCAP)
 package_begin(PCAP)
 package_create_home_path(PCAP PCAP_ROOT)
 
@@ -78,5 +78,5 @@ package_make_library(PCAP_LIBRARY PCAP_LIBRARY_DEBUG PCAP_LIBRARY_RELEASE)
 package_validate(PCAP)
 package_add_parent_dir(PCAP ADD_PARENT)
 package_end(PCAP)
-message_footer(PCAP)
+cm_message_footer(PCAP)
 

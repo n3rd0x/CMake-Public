@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header( JSONCPP )
+cm_message_header( JSONCPP )
 package_begin( JSONCPP )
 package_create_home_path( JSONCPP JSONCPP_ROOT )
 
@@ -62,4 +62,4 @@ package_make_library( JSONCPP_LIBRARY JSONCPP_LIBRARY_DEBUG JSONCPP_LIBRARY_RELE
 package_validate( JSONCPP )
 package_add_parent_dir(JSONCPP ADD_PARENT)
 package_end( JSONCPP )
-message_footer( JSONCPP )
+cm_message_footer( JSONCPP )

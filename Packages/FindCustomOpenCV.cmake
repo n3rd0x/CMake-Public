@@ -23,7 +23,7 @@
 # ************************************************************
 # Start package
 # ************************************************************
-message_header(OPENCV)
+cm_message_header(OPENCV)
 package_begin(OPENCV)
 package_create_home_path(OPENCV OPENCV_ROOT)
 
@@ -143,4 +143,4 @@ endif()
 package_validate(OPENCV)
 package_add_parent_dir(OPENCV ADD_PARENT)
 package_end(OPENCV)
-message_footer(OPENCV)
+cm_message_footer(OPENCV)

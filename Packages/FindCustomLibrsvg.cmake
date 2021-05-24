@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,7 +23,7 @@
 # ************************************************************
 # Start Package
 # ************************************************************
-message_header(RSVG)
+cm_message_header(RSVG)
 package_begin(RSVG)
 package_create_home_path(RSVG RSVG_ROOT)
 
@@ -60,7 +60,7 @@ endif()
 # ************************************************************
 set(RSVG_LIBRARY_NAMES "rsvg-${RSVG_VERSION}")
 if(RSVG_PRIORITY_STATICAL)
-    message_verbose(STATUS "Prioritu search statical library.")
+    cm_message_verbose(STATUS "Prioritu search statical library.")
     package_create_statical_names(RSVG_LIBRARY_NAMES)
 endif()
 package_create_debug_names(RSVG_LIBRARY_NAMES)
@@ -76,7 +76,7 @@ set(RSVG_COMMON_VARIABLES
     RSVG_LIBRARY_RELEASE
     RSVG_PATH_INCLUDE
 )
-set(RSVG_CLEAR_IF_CHANGED 
+set(RSVG_CLEAR_IF_CHANGED
     RSVG_PREFIX_PATH
     RSVG_PRIORITY_STATICAL
 )
@@ -119,12 +119,12 @@ if(WIN32 AND NOT RSVG_ENABLE_STATICAL)
     package_create_debug_binary_names(RSVG_BINARY_NAMES)
 	package_create_release_binary_names(RSVG_BINARY_NAMES)
 	package_create_search_path_binary(RSVG)
-	
-	set(RSVG_SEARCH_BINARIES 
+
+	set(RSVG_SEARCH_BINARIES
 		${RSVG_SEARCH_PATH_BINARY}
 		${RSVG_SEARCH_PATH_LIBRARY}
 	)
-	
+
 	package_find_file(RSVG_BINARY_DEBUG "${RSVG_BINARY_NAMES_DEBUG}" "${RSVG_SEARCH_BINARIES}" "debug")
 	package_find_file(RSVG_BINARY_RELEASE "${RSVG_BINARY_NAMES_RELEASE}" "${RSVG_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
@@ -139,4 +139,4 @@ package_statical_default()
 package_validate(RSVG)
 package_add_parent_dir(RSVG ADD_PARENT)
 package_end(RSVG)
-message_footer(RSVG)
+cm_message_footer(RSVG)

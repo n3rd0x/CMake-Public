@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,7 @@
 
 # ************************************************************
 # Start package
-message_header( QT )
+cm_message_header( QT )
 package_begin( QT )
 package_create_home_path( QT QT4_ROOT )
 
@@ -67,12 +67,12 @@ if( QT_FOUND )
 		# TST 2013-12-08
 		# Updating libraries is not necessary due to the official CMake
 		# Qt4 module will update the variables.
-		
+
 		# Update libraries.
 		#string( TOUPPER ${COMPONENT} LIBRARY )
 		#set( QT_LIBRARIES ${QT_LIBRARIES} ${QT_${LIBRARY}_LIBRARY} )
 		#unset( LIBRARY )
-		
+
 		# Update binaries.
 		if( WIN32 )
 			set( QT_BINARY_DEBUG ${QT_BINARY_DEBUG} "${QT_BINARY_DIR}/${COMPONENT}d4.dll" )
@@ -85,8 +85,8 @@ endif()
 # ************************************************************
 # Finalize package
 if( QT_FOUND )
-	message_status( STATUS "The Qt4 library is located." )
+	cm_message_status( STATUS "The Qt4 library is located." )
 else()
-	message_status( "" "Failed to locate the Qt4 library." )
+	cm_message_status( "" "Failed to locate the Qt4 library." )
 endif()
-message_footer( QT )
+cm_message_footer( QT )

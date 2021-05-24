@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header( IRRKLANG )
+cm_message_header( IRRKLANG )
 package_begin( IRRKLANG )
 package_create_home_path( IRRKLANG IRRKLANG_ROOT )
 
@@ -80,5 +80,5 @@ package_make_library( IRRKLANG_LIBRARY IRRKLANG_LIBRARY_DEBUG IRRKLANG_LIBRARY_R
 package_validate( IRRKLANG )
 package_add_parent_dir( IRRKLANG )
 package_end( IRRKLANG )
-message_footer( IRRKLANG )
+cm_message_footer( IRRKLANG )
 

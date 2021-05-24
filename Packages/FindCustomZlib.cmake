@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header(ZLIB)
+cm_message_header(ZLIB)
 package_begin(ZLIB)
 package_create_home_path(ZLIB ZLIB_ROOT)
 
@@ -49,7 +49,7 @@ option(ZLIB_ENABLE_STATICAL "Flag for using statical library." ON)
 # Create search name
 set(ZLIB_LIBRARY_NAMES "zlib")
 if(ZLIB_ENABLE_STATICAL)
-    message_verbose(STATUS "Enable statical library.")
+    cm_message_verbose(STATUS "Enable statical library.")
     package_create_statical_names(ZLIB_LIBRARY_NAMES)
 endif()
 package_create_debug_names(ZLIB_LIBRARY_NAMES)
@@ -64,7 +64,7 @@ set(ZLIB_COMMON_VARIABLES
     ZLIB_LIBRARY_RELEASE
     ZLIB_PATH_INCLUDE
 )
-set(ZLIB_CLEAR_IF_CHANGED 
+set(ZLIB_CLEAR_IF_CHANGED
     ZLIB_PREFIX_PATH
     ZLIB_ENABLE_STATICAL
 )
@@ -104,12 +104,12 @@ if(WIN32 AND NOT ZLIB_ENABLE_STATICAL)
     package_create_debug_binary_names(ZLIB_BINARY_NAMES)
 	package_create_release_binary_names(ZLIB_BINARY_NAMES)
 	package_create_search_path_binary(ZLIB)
-	
-	set(ZLIB_SEARCH_BINARIES 
+
+	set(ZLIB_SEARCH_BINARIES
 		${ZLIB_SEARCH_PATH_BINARY}
 		${ZLIB_SEARCH_PATH_LIBRARY}
 	)
-	
+
 	package_find_file(ZLIB_BINARY_DEBUG "${ZLIB_BINARY_NAMES_DEBUG}" "${ZLIB_SEARCH_BINARIES}" "debug")
 	package_find_file(ZLIB_BINARY_RELEASE "${ZLIB_BINARY_NAMES_RELEASE}" "${ZLIB_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
@@ -122,4 +122,4 @@ endif()
 package_validate(ZLIB)
 package_add_parent_dir(ZLIB)
 package_end(ZLIB)
-message_footer(ZLIB)
+cm_message_footer(ZLIB)

@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,7 @@
 
 # ************************************************************
 # Start package
-message_header( KINECT_FACETRACK )
+cm_message_header( KINECT_FACETRACK )
 
 if( WIN32 )
 	package_begin( KINECT_FACETRACK )
@@ -76,12 +76,12 @@ if( WIN32 )
 	if( WIN32 )
 		package_find_file( KINECT_FACETRACK_BINARY_TRACKLIB "FaceTrackLib.dll" "${KINECT_FACETRACK_HOME}/redist" "${PATH_SUFFIX}" )
 		package_find_file( KINECT_FACETRACK_BINARY_TRACKDATA "FaceTrackData.dll" "${KINECT_FACETRACK_HOME}/redist" "${PATH_SUFFIX}" )
-		
+
 		if( KINECT_FACETRACK_BINARY_TRACKLIB )
 			set( KINECT_FACETRACK_BINARY_DEBUG ${KINECT_FACETRACK_BINARY_TRACKLIB} )
 			set( KINECT_FACETRACK_BINARY_RELEASE ${KINECT_FACETRACK_BINARY_TRACKLIB} )
 		endif()
-		
+
 		if( KINECT_FACETRACK_BINARY_TRACKDATA )
 			set( KINECT_FACETRACK_BINARY_DEBUG ${KINECT_FACETRACK_BINARY_DEBUG} ${KINECT_FACETRACK_BINARY_TRACKDATA} )
 			set( KINECT_FACETRACK_BINARY_RELEASE ${KINECT_FACETRACK_BINARY_RELEASE} ${KINECT_FACETRACK_BINARY_TRACKDATA} )
@@ -95,6 +95,6 @@ if( WIN32 )
 	package_add_parent_dir( KINECT_FACETRACK )
 	package_end( KINECT_FACETRACK )
 else()
-	message_status( SEND_ERROR "This only works in Microsoft Windows." )
+	cm_message_status( SEND_ERROR "This only works in Microsoft Windows." )
 endif()
-message_footer( KINECT_FACETRACK )
+cm_message_footer( KINECT_FACETRACK )

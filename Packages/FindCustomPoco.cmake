@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header(POCO)
+cm_message_header(POCO)
 package_begin(POCO)
 package_create_home_path(POCO POCO_ROOT)
 
@@ -81,7 +81,7 @@ set(POCO_COMMON_VARIABLES
     POCO_ZIP_LIBRARY_RELEASE
     POCO_PATH_INCLUDE
 )
-set(POCO_CLEAR_IF_CHANGED 
+set(POCO_CLEAR_IF_CHANGED
     POCO_PREFIX_PATH
 )
 foreach(VAR ${POCO_CLEAR_IF_CHANGED})
@@ -195,7 +195,7 @@ if(WIN32)
     package_create_debug_binary_names(POCO_NET_BINARY_NAMES)
     package_create_debug_binary_names(POCO_UTIL_BINARY_NAMES)
     package_create_debug_binary_names(POCO_XML_BINARY_NAMES)
-    package_create_debug_binary_names(POCO_ZIP_BINARY_NAMES) 
+    package_create_debug_binary_names(POCO_ZIP_BINARY_NAMES)
 	package_create_release_binary_names(POCO_DATA_BINARY_NAMES)
 	package_create_release_binary_names(POCO_DATA_SQLITE_BINARY_NAMES)
 	package_create_release_binary_names(POCO_FOUNDATION_BINARY_NAMES)
@@ -205,12 +205,12 @@ if(WIN32)
 	package_create_release_binary_names(POCO_XML_BINARY_NAMES)
 	package_create_release_binary_names(POCO_ZIP_BINARY_NAMES)
 	package_create_search_path_binary(POCO)
-	
-	set(POCO_SEARCH_BINARIES 
+
+	set(POCO_SEARCH_BINARIES
 		${POCO_SEARCH_PATH_BINARY}
 		${POCO_SEARCH_PATH_LIBRARY}
 	)
-	
+
 	package_find_file(POCO_DATA_BINARY_DEBUG "${POCO_DATA_BINARY_NAMES_DEBUG}" "${POCO_SEARCH_BINARIES}" "debug")
 	package_find_file(POCO_DATA_SQLITE_BINARY_DEBUG "${POCO_DATA_SQLITE_BINARY_NAMES_DEBUG}" "${POCO_SEARCH_BINARIES}" "debug")
 	package_find_file(POCO_FOUNDATION_BINARY_DEBUG "${POCO_FOUNDATION_BINARY_NAMES_DEBUG}" "${POCO_SEARCH_BINARIES}" "debug")
@@ -227,67 +227,67 @@ if(WIN32)
     package_find_file(POCO_UTIL_BINARY_RELEASE "${POCO_UTIL_BINARY_NAMES_RELEASE}" "${POCO_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
     package_find_file(POCO_XML_BINARY_RELEASE "${POCO_XML_BINARY_NAMES_RELEASE}" "${POCO_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
     package_find_file(POCO_ZIP_BINARY_RELEASE "${POCO_ZIP_BINARY_NAMES_RELEASE}" "${POCO_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
-    
+
     if(POCO_DATA_BINARY_DEBUG)
         list(APPEND POCO_BINARY_DEBUG ${POCO_DATA_BINARY_DEBUG})
     endif()
-    
+
     if(POCO_DATA_SQLITE_BINARY_DEBUG)
         list(APPEND POCO_BINARY_DEBUG ${POCO_DATA_SQLITE_BINARY_DEBUG})
     endif()
-    
+
     if(POCO_FOUNDATION_BINARY_DEBUG)
         list(APPEND POCO_BINARY_DEBUG ${POCO_FOUNDATION_BINARY_DEBUG})
     endif()
-    
+
     if(POCO_JSON_BINARY_DEBUG)
         list(APPEND POCO_BINARY_DEBUG ${POCO_JSON_BINARY_DEBUG})
     endif()
-    
+
     if(POCO_NET_BINARY_DEBUG)
         list(APPEND POCO_BINARY_DEBUG ${POCO_NET_BINARY_DEBUG})
     endif()
-    
+
     if(POCO_UTIL_BINARY_DEBUG)
         list(APPEND POCO_BINARY_DEBUG ${POCO_UTIL_BINARY_DEBUG})
     endif()
-    
+
     if(POCO_XML_BINARY_DEBUG)
         list(APPEND POCO_BINARY_DEBUG ${POCO_XML_BINARY_DEBUG})
     endif()
-    
+
     if(POCO_ZIP_BINARY_DEBUG)
         list(APPEND POCO_BINARY_DEBUG ${POCO_ZIP_BINARY_DEBUG})
     endif()
-    
+
     if(POCO_DATA_BINARY_RELEASE)
         list(APPEND POCO_BINARY_RELEASE ${POCO_DATA_BINARY_RELEASE})
     endif()
-    
+
     if(POCO_DATA_SQLITE_BINARY_RELEASE)
         list(APPEND POCO_BINARY_RELEASE ${POCO_DATA_SQLITE_BINARY_RELEASE})
     endif()
-    
+
     if(POCO_FOUNDATION_BINARY_RELEASE)
         list(APPEND POCO_BINARY_RELEASE ${POCO_FOUNDATION_BINARY_RELEASE})
     endif()
-    
+
     if(POCO_JSON_BINARY_RELEASE)
         list(APPEND POCO_BINARY_RELEASE ${POCO_JSON_BINARY_RELEASE})
     endif()
-    
+
     if(POCO_NET_BINARY_RELEASE)
         list(APPEND POCO_BINARY_RELEASE ${POCO_NET_BINARY_RELEASE})
     endif()
-    
+
     if(POCO_UTIL_BINARY_RELEASE)
         list(APPEND POCO_BINARY_RELEASE ${POCO_UTIL_BINARY_RELEASE})
     endif()
-    
+
     if(POCO_XML_BINARY_RELEASE)
         list(APPEND POCO_BINARY_RELEASE ${POCO_XML_BINARY_RELEASE})
     endif()
-    
+
     if(POCO_ZIP_BINARY_RELEASE)
         list(APPEND POCO_BINARY_RELEASE ${POCO_ZIP_BINARY_RELEASE})
     endif()
@@ -303,35 +303,35 @@ if(NOT POCO_FOUND)
         set(POCO_FOUND TRUE)
         set(POCO_LIBRARIES ${POCO_FOUNDATION_LIBRARIES})
         set(POCO_INCLUDE_DIR ${POCO_PATH_INCLUDE})
-        
+
         if(POCO_DATA_LIBRARIES)
             list(APPEND POCO_LIBRARIES ${POCO_DATA_LIBRARIES})
         endif()
-        
+
         if(POCO_DATA_SQLITE_LIBRARIES)
             list(APPEND POCO_LIBRARIES ${POCO_DATA_SQLITE_LIBRARIES})
         endif()
-        
+
         if(POCO_FOUNDATION_LIBRARIES)
             list(APPEND POCO_LIBRARIES ${POCO_FOUNDATION_LIBRARIES})
         endif()
-        
+
         if(POCO_JSON_LIBRARIES)
             list(APPEND POCO_LIBRARIES ${POCO_JSON_LIBRARIES})
         endif()
-        
+
         if(POCO_NET_LIBRARIES)
             list(APPEND POCO_LIBRARIES ${POCO_NET_LIBRARIES})
         endif()
-        
+
         if(POCO_UTIL_LIBRARIES)
             list(APPEND POCO_LIBRARIES ${POCO_UTIL_LIBRARIES})
         endif()
-        
+
         if(POCO_XML_LIBRARIES)
             list(APPEND POCO_LIBRARIES ${POCO_XML_LIBRARIES})
         endif()
-        
+
         if(POCO_ZIP_LIBRARIES)
             list(APPEND POCO_LIBRARIES ${POCO_ZIP_LIBRARIES})
         endif()
@@ -345,5 +345,5 @@ endif()
 # Finalize package
 package_add_parent_dir(POCO)
 package_end(POCO)
-message_footer(POCO)
+cm_message_footer(POCO)
 

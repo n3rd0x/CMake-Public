@@ -23,7 +23,7 @@
 # ************************************************************
 # Start package
 # ************************************************************
-message_header(PCAPPLUSPLUS)
+cm_message_header(PCAPPLUSPLUS)
 package_begin(PCAPPLUSPLUS)
 package_create_home_path(PCAPPLUSPLUS PCAPPLUSPLUS_ROOT)
 
@@ -103,5 +103,5 @@ package_make_library(PCAPPLUSPLUS_LIBRARY PCAPPLUSPLUS_LIBRARY_DEBUG PCAPPLUSPLU
 package_validate(PCAPPLUSPLUS)
 package_add_parent_dir(PCAPPLUSPLUS ADD_PARENT)
 package_end(PCAPPLUSPLUS)
-message_footer(PCAPPLUSPLUS)
+cm_message_footer(PCAPPLUSPLUS)
 

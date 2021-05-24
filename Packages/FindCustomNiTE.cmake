@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,7 @@
 
 # ************************************************************
 # Start package
-message_header( NiTE )
+cm_message_header( NiTE )
 package_begin( NiTE )
 package_create_home_path( NiTE NiTE_ROOT )
 
@@ -52,7 +52,7 @@ package_create_debug_names( NiTE_LIBRARY_NAMES )
 
 # ************************************************************
 # Clear
-set( NiTE_CLEAR_TRIGGER 
+set( NiTE_CLEAR_TRIGGER
     NiTE_HOME
     NiTE_VERSION
 )
@@ -62,7 +62,7 @@ set( NiTE_CLEAR_COMPONENTS
     NiTE_PATH_INCLUDE
 )
 if( WIN32 )
-    set( NiTE_CLEAR_COMPONENTS 
+    set( NiTE_CLEAR_COMPONENTS
         ${NiTE_CLEAR_COMPONENTS}
         NiTE_PATH_REDIST
     )
@@ -99,11 +99,11 @@ if( WIN32 )
             "${NiTE_PATH_REDIST}/NiTE.ini"
             "${NiTE_PATH_REDIST}/NiTE${NiTE_VERSION}.dll"
         )
-        
+
         # Set binary flags.
         set( NiTE_BINARY_DEBUG ${NiTE_MAIN_REDIST} )
         set( NiTE_BINARY_RELEASE ${NiTE_MAIN_REDIST} )
-        
+
         # Add rules.
         package_copy_binary_from_target( NiTE )
     endif()
@@ -116,4 +116,4 @@ endif()
 # Finalize package
 package_validate( NiTE )
 package_end( NiTE )
-message_footer( NiTE )
+cm_message_footer( NiTE )

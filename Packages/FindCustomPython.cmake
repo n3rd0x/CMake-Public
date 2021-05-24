@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header( PYTHON )
+cm_message_header( PYTHON )
 package_begin( PYTHON )
 package_create_home_path( PYTHON PYTHON_ROOT )
 
@@ -83,8 +83,8 @@ if( WIN32 )
 	package_create_release_binary_names( PYTHON_BINARY_NAMES )
 	package_create_debug_binary_names( PYTHON_BINARY_NAMES )
 	package_create_search_path_binary( PYTHON )
-	
-	set( PYTHON_SEARCH_BINARIES 
+
+	set( PYTHON_SEARCH_BINARIES
 		${PYTHON_SEARCH_PATH_BINARY}
 		${PYTHON_SEARCH_PATH_LIBRARY}
 	)
@@ -99,4 +99,4 @@ endif()
 package_validate( PYTHON )
 package_add_parent_dir( PYTHON )
 package_end( PYTHON )
-message_footer( PYTHON )
+cm_message_footer( PYTHON )

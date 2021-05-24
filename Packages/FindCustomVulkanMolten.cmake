@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,14 +22,14 @@
 
 # ************************************************************
 # Start package
-message_header(Vulkan)
+cm_message_header(Vulkan)
 package_begin(Vulkan)
 package_create_home_path(Vulkan Vulkan_ROOT)
 
 # Notice.
-message_status("" "NB! Version 0.18.2")
-message_status("" "Replace the symbolic link 'vulkan' to the actual directory.")
-message_status("" "ln -s ../vulkan vulkan")
+cm_message_status("" "NB! Version 0.18.2")
+cm_message_status("" "Replace the symbolic link 'vulkan' to the actual directory.")
+cm_message_status("" "ln -s ../vulkan vulkan")
 
 # Options.
 option(Vulkan_STATIC_LIB "Enable statically linking." FALSE)
@@ -65,7 +65,7 @@ set(Vulkan_COMMON_VARIABLES
     Vulkan_LIBRARY_RELEASE
     Vulkan_PATH_INCLUDE
 )
-set(Vulkan_CLEAR_IF_CHANGED 
+set(Vulkan_CLEAR_IF_CHANGED
     Vulkan_PREFIX_PATH
     Vulkan_STATIC_LIB
 )
@@ -112,5 +112,5 @@ endif()
 package_validate(Vulkan)
 package_add_parent_dir(Vulkan ADD_PARENT)
 package_end(Vulkan)
-message_footer(Vulkan)
+cm_message_footer(Vulkan)
 

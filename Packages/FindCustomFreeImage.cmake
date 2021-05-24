@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header( FREEIMAGE )
+cm_message_header( FREEIMAGE )
 package_begin( FREEIMAGE )
 package_create_home_path( FREEIMAGE FREEIMAGE_ROOT )
 
@@ -75,8 +75,8 @@ if( WIN32 )
 	package_create_release_binary_names( FREEIMAGE_BINARY_NAMES )
 	package_create_debug_binary_names( FREEIMAGE_BINARY_NAMES )
 	package_create_search_path_binary( FREEIMAGE )
-	
-	set( FREEIMAGE_SEARCH_BINARIES 
+
+	set( FREEIMAGE_SEARCH_BINARIES
 		${FREEIMAGE_SEARCH_PATH_BINARY}
 		${FREEIMAGE_SEARCH_PATH_LIBRARY}
 	)
@@ -91,4 +91,4 @@ endif()
 package_validate( FREEIMAGE )
 package_add_parent_dir( FREEIMAGE )
 package_end( FREEIMAGE )
-message_footer( FREEIMAGE )
+cm_message_footer( FREEIMAGE )

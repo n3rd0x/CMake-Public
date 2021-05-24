@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,7 @@
 
 # ************************************************************
 # Start package
-message_header(RedistMSVC)
+cm_message_header(RedistMSVC)
 package_begin(RedistMSVC)
 package_create_home_path(RedistMSVC RedistMSVC_ROOT)
 
@@ -68,7 +68,7 @@ endif()
 
 # ************************************************************
 # Clear
-set(ClearIfChanged 
+set(ClearIfChanged
     RedistMSVC_HOME
 )
 set(Modules
@@ -124,7 +124,7 @@ if(NOT MSVC14)
     else()
         set(RedistFoundDebug FALSE)
     endif()
-    
+
     if(RedistMSVC_MSVCP_RELEASE AND RedistMSVC_MSVCR_RELEASE)
         set(RedistMSVC_BINARY_RELEASE "${RedistMSVC_MSVCP_RELEASE}" "${RedistMSVC_MSVCR_RELEASE}")
     else()
@@ -136,11 +136,11 @@ else()
     else()
         set(RedistFoundDebug FALSE)
     endif()
-    
+
     if(RedistMSVC_MSVCP_RELEASE)
         set(RedistMSVC_BINARY_RELEASE "${RedistMSVC_MSVCP_RELEASE}")
      else()
-        
+
     endif()
 endif()
 
@@ -162,12 +162,12 @@ endif()
 # ************************************************************
 # Finalize package
 if(RedistFoundDebug OR RedistFoundRelease)
-    message_status(STATUS "The RedistMSVC library is located.")
+    cm_message_status(STATUS "The RedistMSVC library is located.")
 else()
-    message_status("" "Failed to locate the RedistMSVC library.")
+    cm_message_status("" "Failed to locate the RedistMSVC library.")
 endif()
 
 unset(RedistFoundDebug)
 unset(RedistFoundRelease)
-message_footer(RedistMSVC)
+cm_message_footer(RedistMSVC)
 

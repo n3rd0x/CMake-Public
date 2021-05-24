@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,7 @@
 
 # ************************************************************
 # Start package
-message_header( NVIDIA_CG )
+cm_message_header( NVIDIA_CG )
 package_begin( NVIDIA_CG )
 package_create_home_path( NVIDIA_CG NVIDIA_CG_ROOT )
 
@@ -73,12 +73,12 @@ if( WIN32 )
 	package_create_debug_binary_names( NVIDIA_CG_BINARY_NAMES )
 	package_create_release_binary_names( NVIDIA_CG_BINARY_NAMES )
 	package_create_search_path_binary( NVIDIA_CG )
-	
-	set( NVIDIA_CG_SEARCH_BINARIES 
+
+	set( NVIDIA_CG_SEARCH_BINARIES
 		${NVIDIA_CG_SEARCH_PATH_BINARY}
 		${NVIDIA_CG_SEARCH_PATH_LIBRARY}
 	)
-	
+
 
 	package_find_file( NVIDIA_CG_BINARY_DEBUG "${NVIDIA_CG_BINARY_NAMES_DEBUG}" "${NVIDIA_CG_SEARCH_BINARIES}" "debug" )
 	package_find_file( NVIDIA_CG_BINARY_RELEASE "${NVIDIA_CG_BINARY_NAMES_RELEASE}" "${NVIDIA_CG_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
@@ -90,4 +90,4 @@ endif()
 package_validate( NVIDIA_CG )
 package_add_parent_dir( NVIDIA_CG )
 package_end( NVIDIA_CG )
-message_footer( NVIDIA_CG )
+cm_message_footer( NVIDIA_CG )

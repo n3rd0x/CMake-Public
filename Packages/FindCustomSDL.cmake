@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,15 +22,15 @@
 
 # ************************************************************
 # Start package
-message_header(SDL)
+cm_message_header(SDL)
 package_begin(SDL)
 package_create_home_path(SDL SDL_ROOT)
 
 # Select version.
 set(SDL_VERSION "2" CACHE STRING "Select SDL version.")
-set_property(CACHE SDL_VERSION PROPERTY STRINGS 2 1) 
+set_property(CACHE SDL_VERSION PROPERTY STRINGS 2 1)
 
-message_status(STATUS "Current SDL version: ${SDL_VERSION}")
+cm_message_status(STATUS "Current SDL version: ${SDL_VERSION}")
 
 
 # ************************************************************
@@ -119,10 +119,10 @@ package_make_library(SDL_LIBRARY_MAIN SDL_LIBRARY_MAIN_DEBUG SDL_LIBRARY_MAIN_RE
 # Make set.
 if(SDL_LIBRARY_COMMON AND SDL_LIBRARY_MAIN)
     set(SDL_LIBRARY ${SDL_LIBRARY_COMMON} ${SDL_LIBRARY_MAIN})
-    
+
     # Extension: Image.
     if(SDL_LIBRARY_IMAGE)
-        message_status(STATUS "The SDL Image extension is located.")
+        cm_message_status(STATUS "The SDL Image extension is located.")
         set(SDL_IMAGE_LIBRARIES ${SDL_LIBRARY_IMAGE})
     endif()
 endif()
@@ -137,15 +137,15 @@ if( WIN32 )
     package_create_release_binary_names(SDL_BINARY_NAMES)
     package_create_debug_binary_names(SDL_BINARY_NAMES)
     package_create_search_path_binary(SDL)
-    
-    set(SDL_SEARCH_BINARIES 
+
+    set(SDL_SEARCH_BINARIES
         ${SDL_SEARCH_PATH_BINARY}
         ${SDL_SEARCH_PATH_LIBRARY}
     )
 
     package_find_file(SDL_BINARY_DEBUG "${SDL_BINARY_NAMES_DEBUG}" "${SDL_SEARCH_BINARIES}" "debug")
     package_find_file(SDL_BINARY_RELEASE "${SDL_BINARY_NAMES_RELEASE}" "${SDL_SEARCH_BINARIES}" "release")
-    
+
     # Extensions.
     if(SDL_LIBRARY_IMAGE)
         set(SDL_IMAGE_BINARY_NAMES "SDL${SDL_VERSION}_image")
@@ -153,7 +153,7 @@ if( WIN32 )
         package_create_debug_binary_names(SDL_IMAGE_BINARY_NAMES)
         package_find_file(SDL_IMAGE_BINARY_DEBUG "${SDL_IMAGE_BINARY_NAMES_DEBUG}" "${SDL_SEARCH_BINARIES}" "debug")
         package_find_file(SDL_IMAGE_BINARY_RELEASE "${SDL_IMAGE_BINARY_NAMES_RELEASE}" "${SDL_SEARCH_BINARIES}" "release")
-        
+
         # Add dependencies.
         set(SDL_IMAGE_DEPS
             "libjpeg-9.dll"
@@ -162,13 +162,13 @@ if( WIN32 )
             "libwebp-4.dll"
             "zlib1.dll"
         )
-        
+
         foreach(VAR ${SDL_IMAGE_DEPS})
             package_find_file(SDL_${VAR}_IMAGE_BINARY_DEBUG "${VAR}" "${SDL_SEARCH_BINARIES}" "debug")
             if(SDL_${VAR}_IMAGE_BINARY_DEBUG)
                 set(SDL_IMAGE_BINARY_DEBUG ${SDL_IMAGE_BINARY_DEBUG} ${SDL_${VAR}_IMAGE_BINARY_DEBUG})
             endif()
-            
+
             package_find_file(SDL_${VAR}_IMAGE_BINARY_RELEASE "${VAR}" "${SDL_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
             if(SDL_${VAR}_IMAGE_BINARY_RELEASE )
                 set(SDL_IMAGE_BINARY_RELEASE ${SDL_IMAGE_BINARY_RELEASE} ${SDL_${VAR}_IMAGE_BINARY_RELEASE})
@@ -186,4 +186,4 @@ endif()
 package_validate(SDL)
 package_add_parent_dir(SDL)
 package_end(SDL)
-message_footer(SDL)
+cm_message_footer(SDL)

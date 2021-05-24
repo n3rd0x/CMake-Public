@@ -23,7 +23,7 @@
 # ************************************************************
 # Start package
 # ************************************************************
-message_header(SPATIALITE)
+cm_message_header(SPATIALITE)
 package_begin(SPATIALITE)
 package_create_home_path(SPATIALITE SPATIALITE_ROOT)
 
@@ -106,4 +106,4 @@ endif()
 package_validate(SPATIALITE)
 package_add_parent_dir(SPATIALITE ADD_PARENT)
 package_end(SPATIALITE)
-message_footer(SPATIALITE)
+cm_message_footer(SPATIALITE)

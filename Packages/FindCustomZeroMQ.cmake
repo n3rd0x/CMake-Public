@@ -23,7 +23,7 @@
 # ************************************************************
 # Start package
 # ************************************************************
-message_header(ZEROMQ)
+cm_message_header(ZEROMQ)
 package_begin(ZEROMQ)
 package_create_home_path(ZEROMQ ZEROMQ_ROOT)
 
@@ -78,5 +78,5 @@ package_make_library(ZEROMQ_LIBRARY ZEROMQ_LIBRARY_DEBUG ZEROMQ_LIBRARY_RELEASE)
 package_validate(ZEROMQ)
 package_add_parent_dir(ZEROMQ)
 package_end(ZEROMQ)
-message_footer(ZEROMQ)
+cm_message_footer(ZEROMQ)
 

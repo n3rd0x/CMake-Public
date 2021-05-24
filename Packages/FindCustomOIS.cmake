@@ -23,7 +23,7 @@
 # ************************************************************
 # Start package
 # ************************************************************
-message_header(OIS)
+cm_message_header(OIS)
 package_begin(OIS)
 package_create_home_path(OIS OIS_ROOT)
 
@@ -99,5 +99,5 @@ endif()
 package_validate(OIS)
 package_add_parent_dir(OIS ADD_PARENT)
 package_end(OIS)
-message_footer(OIS)
+cm_message_footer(OIS)
 

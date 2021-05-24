@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,7 +23,7 @@
 # ************************************************************
 # Start package
 # ************************************************************
-message_header(OGREBULLET)
+cm_message_header(OGREBULLET)
 package_begin(OGREBULLET)
 package_create_home_path(OGREBULLET OGREBULLET_ROOT)
 
@@ -35,7 +35,7 @@ package_create_home_path(OGREBULLET OGREBULLET_ROOT)
 macro(OGREBULLET_FIND_COMPONENT Component Name Headers Suffix)
     set(OGREBULLET_${Component}_NAMES "${Name}")
     package_create_debug_names(OGREBULLET_${Component}_NAMES)
-    
+
     package_find_path(OGREBULLET_${Component}_PATH_INCLUDE "${Headers}" "${OGREBULLET_SEARCH_PATH_INCLUDE}" "${Suffix}")
     package_find_library(OGREBULLET_${Component}_LIBRARY_DEBUG "${OGREBULLET_${Component}_NAMES_DEBUG}" "${OGREBULLET_SEARCH_PATH_LIBRARY}" "debug")
     package_find_library(OGREBULLET_${Component}_LIBRARY_RELEASE "${OGREBULLET_${Component}_NAMES}" "${OGREBULLET_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
@@ -59,7 +59,7 @@ macro(OGREBULLET_FIND_COMPONENT Component Name Headers Suffix)
             list(APPEND OGREBULLET_BINARY_RELEASE ${OGREBULLET_${Component}_BINARY_RELEASE})
         endif()
     endif()
-    
+
     unset(OGREBULLET_${Component}_NAMES)
 endmacro()
 
@@ -74,7 +74,7 @@ package_create_search_path_binary(OGREBULLET)
 package_create_search_path_include(OGREBULLET)
 package_create_search_path_library(OGREBULLET)
 package_create_search_path_plugin(OGREBULLET)
-set(OGREBULLET_SEARCH_BINARIES 
+set(OGREBULLET_SEARCH_BINARIES
     ${OGREBULLET_SEARCH_PATH_BINARY}
     ${OGREBULLET_SEARCH_PATH_LIBRARY}
 )
@@ -151,5 +151,5 @@ if(NOT OGREBULLET_FOUND)
 endif()
 package_add_parent_dir(OGREBULLET ADD_PARENT)
 package_end(OGREBULLET)
-message_footer(OGREBULLET)
+cm_message_footer(OGREBULLET)
 

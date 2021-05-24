@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header( LIBCURL )
+cm_message_header( LIBCURL )
 package_begin( LIBCURL )
 package_create_home_path( LIBCURL LIBCURL_ROOT )
 
@@ -65,12 +65,12 @@ if( WIN32 )
 	package_create_release_binary_names( LIBCURL_BINARY_NAMES )
 	package_create_debug_binary_names( LIBCURL_BINARY_NAMES )
 	package_create_search_path_binary( LIBCURL )
-	
-	set( LIBCURL_SEARCH_BINARIES 
+
+	set( LIBCURL_SEARCH_BINARIES
 		${LIBCURL_SEARCH_PATH_BINARY}
 		${LIBCURL_SEARCH_PATH_LIBRARY}
 	)
-	
+
 	package_clear_if_changed( LIBCURL_PREFIX_PATH
 		LIBCURL_BINARY_RELEASE
 		LIBCURL_BINARY_DEBUG
@@ -86,4 +86,4 @@ endif()
 package_validate( LIBCURL )
 package_add_parent_dir( LIBCURL )
 package_end( LIBCURL )
-message_footer( LIBCURL )
+cm_message_footer( LIBCURL )

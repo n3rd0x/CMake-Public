@@ -23,7 +23,7 @@
 # ************************************************************
 # Start package
 # ************************************************************
-message_header(OGRE)
+cm_message_header(OGRE)
 package_begin(OGRE)
 package_create_home_path(OGRE OGRE_ROOT)
 
@@ -512,5 +512,5 @@ unset(_ClearIfChanged)
 package_validate(OGRE)
 package_add_parent_dir(OGRE ADD_PARENT)
 package_end(OGRE)
-message_footer(OGRE)
+cm_message_footer(OGRE)
 

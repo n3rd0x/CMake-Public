@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header(GLEW)
+cm_message_header(GLEW)
 package_begin(GLEW)
 package_create_home_path(GLEW GLEW_ROOT)
 
@@ -77,7 +77,7 @@ package_create_debug_names(GLEW_LIBRARY_NAMES)
 
 # ************************************************************
 # Clear
-set(GLEW_CLEAR_IF_CHANGED 
+set(GLEW_CLEAR_IF_CHANGED
     GLEW_ENABLE_MX
     GLEW_ENABLE_STATICAL
     GLEW_PREFIX_PATH
@@ -122,16 +122,16 @@ if(WIN32 AND NOT GLEW_ENABLE_STATICAL)
     else()
         set(GLEW_BINARY_NAMES "glew32")
     endif()
-    
+
     package_create_debug_binary_names(GLEW_BINARY_NAMES)
 	package_create_release_binary_names(GLEW_BINARY_NAMES)
 	package_create_search_path_binary(GLEW)
-	
-	set(GLEW_SEARCH_BINARIES 
+
+	set(GLEW_SEARCH_BINARIES
 		${GLEW_SEARCH_PATH_BINARY}
 		${GLEW_SEARCH_PATH_LIBRARY}
 	)
-	
+
 	package_find_file(GLEW_BINARY_DEBUG "${GLEW_BINARY_NAMES_DEBUG}" "${GLEW_SEARCH_BINARIES}" "${PATH_SUFFIX}")
 	package_find_file(GLEW_BINARY_RELEASE "${GLEW_BINARY_NAMES_RELEASE}" "${GLEW_SEARCH_BINARIES}" "${PATH_SUFFIX}")
 endif()
@@ -142,5 +142,5 @@ endif()
 package_validate(GLEW)
 package_add_parent_dir(GLEW ADD_PARENT)
 package_end(GLEW)
-message_footer(GLEW)
+cm_message_footer(GLEW)
 

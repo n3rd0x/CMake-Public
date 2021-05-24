@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header(TINYXML2)
+cm_message_header(TINYXML2)
 package_begin(TINYXML2)
 package_create_home_path(TINYXML2 TINYXML2_ROOT)
 
@@ -100,20 +100,20 @@ package_make_library(TINYXML2_LIBRARY_STATIC TINYXML2_LIBRARY_DEBUG_STATIC TINYX
 
 # Make set.
 if(TINYXML2_LIBRARY_SHARED AND TINYXML2_LIBRARY_STATIC)
-    message_debug(STATUS "SHARED and STATIC found.")
+    cm_message_debug(STATUS "SHARED and STATIC found.")
     if(TINYXML2_USE_STATIC)
         set(TINYXML2_LIBRARY "${TINYXML2_LIBRARY_STATIC}")
-        message_status(STATUS "Use STATIC library of TinyXml2.")
+        cm_message_status(STATUS "Use STATIC library of TinyXml2.")
     else()
         set(TINYXML2_LIBRARY "${TINYXML2_LIBRARY_SHARED}")
-        message_status(STATUS "Use SHARED library of TinyXml2.")
+        cm_message_status(STATUS "Use SHARED library of TinyXml2.")
     endif()
 elseif(TINYXML2_LIBRARY_SHARED)
     set(TINYXML2_LIBRARY "${TINYXML2_LIBRARY_SHARED}")
-    message_status(STATUS "Use SHARED library of TinyXml2.")
+    cm_message_status(STATUS "Use SHARED library of TinyXml2.")
 elseif(TINYXML2_LIBRARY_STATIC)
     set(TINYXML2_LIBRARY "${TINYXML2_LIBRARY_STATIC}")
-    message_status(STATUS "Use STATIC library of TinyXml2.")
+    cm_message_status(STATUS "Use STATIC library of TinyXml2.")
 endif()
 
 
@@ -124,12 +124,12 @@ if(WIN32)
         set(TINYXML2_BINARY_NAMES "tinyxml2")
         package_create_release_binary_names(TINYXML2_BINARY_NAMES)
         package_create_debug_binary_names(TINYXML2_BINARY_NAMES)
-        
-        set(TINYXML2_SEARCH_BINARIES 
+
+        set(TINYXML2_SEARCH_BINARIES
             ${TINYXML2_SEARCH_PATH_BINARY}
             ${TINYXML2_SEARCH_PATH_LIBRARY}
        )
-    
+
         package_find_file(
             TINYXML2_BINARY_DEBUG
             "${TINYXML2_BINARY_NAMES_DEBUG}"
@@ -152,4 +152,4 @@ endif()
 package_validate(TINYXML2)
 package_add_parent_dir(TINYXML2 ADD_PARENT)
 package_end(TINYXML2)
-message_footer(TINYXML2)
+cm_message_footer(TINYXML2)

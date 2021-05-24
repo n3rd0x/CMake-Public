@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header( FMOD )
+cm_message_header( FMOD )
 package_begin( FMOD )
 package_create_home_path( FMOD FMOD_ROOT )
 
@@ -75,7 +75,7 @@ if( WIN32 )
 	package_create_release_binary_names( FMOD_BINARY_NAMES )
 	package_create_debug_binary_names( FMOD_BINARY_NAMES )
 	package_create_search_path_binary( FMOD )
-	
+
 	set( FMOD_SEARCH_BINARIES
         ${FMOD_HOME}
 		${FMOD_SEARCH_PATH_BINARY}

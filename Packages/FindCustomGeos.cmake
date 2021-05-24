@@ -23,7 +23,7 @@
 # ************************************************************
 # Start package
 # ************************************************************
-message_header(GEOS)
+cm_message_header(GEOS)
 package_begin(GEOS)
 package_create_home_path(GEOS GEOS_ROOT)
 
@@ -129,4 +129,4 @@ endif()
 package_validate(GEOS)
 package_add_parent_dir(GEOS ADD_PARENT)
 package_end(GEOS)
-message_footer(GEOS)
+cm_message_footer(GEOS)

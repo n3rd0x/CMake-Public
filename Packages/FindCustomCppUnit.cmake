@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -24,7 +24,7 @@
 
 # ************************************************************
 # Start package
-message_header( CPPUNIT )
+cm_message_header( CPPUNIT )
 package_begin( CPPUNIT )
 package_create_home_path( CPPUNIT CPPUNIT_ROOT )
 
@@ -76,8 +76,8 @@ if( WIN32 )
 	package_create_release_binary_names( CPPUNIT_BINARY_NAMES )
 	package_create_debug_binary_names( CPPUNIT_BINARY_NAMES )
 	package_create_search_path_binary( CPPUNIT )
-	
-	set( CPPUNIT_SEARCH_BINARIES 
+
+	set( CPPUNIT_SEARCH_BINARIES
 		${CPPUNIT_SEARCH_PATH_BINARY}
 		${CPPUNIT_SEARCH_PATH_LIBRARY}
 	)
@@ -92,4 +92,4 @@ endif()
 package_validate( CPPUNIT )
 package_add_parent_dir( CPPUNIT )
 package_end( CPPUNIT )
-message_footer( CPPUNIT )
+cm_message_footer( CPPUNIT )

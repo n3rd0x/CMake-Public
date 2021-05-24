@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header(QUAZIP)
+cm_message_header(QUAZIP)
 package_begin(QUAZIP)
 package_create_home_path(QUAZIP QUAZIP_ROOT)
 
@@ -44,7 +44,7 @@ set(QUAZIP_VERSION "5" CACHE STRING "Select the version to search.")
 # Create search name
 set(QUAZIP_LIBRARY_NAMES "quazip${QUAZIP_VERSION}")
 #if(QUAZIP_ENABLE_STATICAL)
-#    message_verbose(STATUS "Enable statical library.")
+#    cm_message_verbose(STATUS "Enable statical library.")
 #    package_create_statical_names(QUAZIP_LIBRARY_NAMES)
 #endif()
 package_create_debug_names(QUAZIP_LIBRARY_NAMES)
@@ -110,4 +110,4 @@ endif()
 package_validate(QUAZIP)
 package_add_parent_dir(QUAZIP ADD_PARENT)
 package_end(QUAZIP)
-message_footer(QUAZIP)
+cm_message_footer(QUAZIP)

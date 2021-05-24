@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header(CAIRO)
+cm_message_header(CAIRO)
 package_begin(CAIRO)
 package_create_home_path(CAIRO CAIRO_ROOT)
 
@@ -62,8 +62,8 @@ else()
 		CAIRO_PATH_INCLUDE
 	)
 endif()
-	
-    
+
+
 
 
 # ************************************************************
@@ -90,8 +90,8 @@ if(WIN32)
 	package_create_release_binary_names(CAIRO_BINARY_NAMES)
 	package_create_debug_binary_names(CAIRO_BINARY_NAMES)
 	package_create_search_path_binary(CAIRO)
-	
-	set(CAIRO_SEARCH_BINARIES 
+
+	set(CAIRO_SEARCH_BINARIES
 		${CAIRO_SEARCH_PATH_BINARY}
 		${CAIRO_SEARCH_PATH_LIBRARY}
 	)
@@ -105,7 +105,7 @@ if(WIN32)
         if(CAIRO_${VAR}_BINARY_DEBUG)
             set(CAIRO_BINARY_DEBUG ${CAIRO_BINARY_DEBUG} ${CAIRO_${VAR}_BINARY_DEBUG})
         endif()
-        
+
         package_find_file(CAIRO_${VAR}_BINARY_RELEASE "${VAR}" "${CAIRO_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
         if(CAIRO_${VAR}_BINARY_RELEASE)
             set(CAIRO_BINARY_RELEASE ${CAIRO_BINARY_RELEASE} ${CAIRO_${VAR}_BINARY_RELEASE})
@@ -123,4 +123,4 @@ endif()
 package_validate(CAIRO)
 package_add_parent_dir(CAIRO ADD_PARENT)
 package_end(CAIRO)
-message_footer(CAIRO)
+cm_message_footer(CAIRO)

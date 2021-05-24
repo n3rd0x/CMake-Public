@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,7 +23,7 @@
 # ************************************************************
 # Start package
 # ************************************************************
-message_header(SENTIMASK)
+cm_message_header(SENTIMASK)
 package_begin(SENTIMASK)
 package_create_home_path(SENTIMASK SENTIMASK_ROOT)
 
@@ -34,7 +34,7 @@ package_create_home_path(SENTIMASK SENTIMASK_ROOT)
 # ************************************************************
 macro(SENTIMASK_FIND_COMPONENT_BINARY COMPONENT NAME SUFFIX)
     set(SENTIMASK_${COMPONENT}_BINARY_NAMES "${NAME}")
-    
+
     package_create_debug_binary_names(SENTIMASK_${COMPONENT}_BINARY_NAMES)
     package_create_release_binary_names(SENTIMASK_${COMPONENT}_BINARY_NAMES)
 
@@ -48,7 +48,7 @@ macro(SENTIMASK_FIND_COMPONENT_BINARY COMPONENT NAME SUFFIX)
     if(SENTIMASK_${COMPONENT}_BINARY_RELEASE)
         list(APPEND SENTIMASK_BINARY_RELEASE ${SENTIMASK_${COMPONENT}_BINARY_RELEASE})
     endif()
-    
+
     unset(SENTIMASK_${COMPONENT}_BINARY_NAMES)
 endmacro()
 
@@ -157,11 +157,11 @@ set(SENTIMASK_NLICENSING_LIBRARIES ${SENTIMASK_NLICENSING_LIBRARY})
 # Find binaries on Windows
 # ************************************************************
 if(WIN32)
-    set(SENTIMASK_SEARCH_BINARIES 
+    set(SENTIMASK_SEARCH_BINARIES
         ${SENTIMASK_SEARCH_PATH_BINARY}
         ${SENTIMASK_SEARCH_PATH_LIBRARY}
     )
-    
+
     sentimask_find_component_binary(SENTIMASK "SentiMask.dll" "${PathSuffix}")
     sentimask_find_component_binary(NCORE "NCore.dll" "${PathSuffix}")
     sentimask_find_component_binary(NMEDIA "NMedia.dll" "${PathSuffix}")
@@ -179,5 +179,5 @@ endif()
 package_validate(SENTIMASK)
 package_add_parent_dir(SENTIMASK)
 package_end(SENTIMASK)
-message_footer(SENTIMASK)
+cm_message_footer(SENTIMASK)
 

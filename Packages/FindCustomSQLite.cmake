@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header( SQLITE )
+cm_message_header( SQLITE )
 package_begin( SQLITE )
 package_create_home_path( SQLITE SQLITE_ROOT )
 
@@ -80,5 +80,5 @@ package_make_library( SQLITE_LIBRARY SQLITE_LIBRARY_DEBUG SQLITE_LIBRARY_RELEASE
 package_validate( SQLITE )
 package_add_parent_dir( SQLITE )
 package_end( SQLITE )
-message_footer( SQLITE )
+cm_message_footer( SQLITE )
 

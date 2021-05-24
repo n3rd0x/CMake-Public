@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header(GLM)
+cm_message_header(GLM)
 package_begin(GLM)
 package_create_home_path(GLM GLM_ROOT)
 
@@ -71,12 +71,12 @@ package_find_path(GLM_PATH_INCLUDE "glm.hpp" "${GLM_SEARCH_PATH_INCLUDE}" "GLM")
 # ************************************************************
 # Finalize package
 if(GLM_PATH_INCLUDE)
-    message_status(STATUS "The GLM library is located...")
+    cm_message_status(STATUS "The GLM library is located...")
     set(GLM_FOUND TRUE)
     set(GLM_INCLUDE_DIR "${GLM_PATH_INCLUDE}")
     package_add_parent_dir(GLM ADD_PARENT)
 else()
-    message_status("" "Failed to locate the GLM library.")
+    cm_message_status("" "Failed to locate the GLM library.")
     set(GLM_FOUND FALSE)
 endif()
 
@@ -164,7 +164,7 @@ MACRO(ENABLE_LIBRARY_GLM_FILES)
     source_group("Header Files\\3rd-Party\\GLM\\GTC" FILES ${GLM_GTC_HEADER})
     source_group("Header Files\\3rd-Party\\GLM\\GTX" FILES ${GLM_GTX_INLINE})
     source_group("Header Files\\3rd-Party\\GLM\\GTX" FILES ${GLM_GTX_HEADER})
-    
+
     if(GLM_VERSION_0_9_5_0)
         source_group("Header Files\\3rd-Party\\GLM\\Detail" FILES ${GLM_DETAIL_INLINE})
         source_group("Header Files\\3rd-Party\\GLM\\Detail" FILES ${GLM_DETAIL_HEADER})
@@ -174,14 +174,14 @@ MACRO(ENABLE_LIBRARY_GLM_FILES)
         source_group("Header Files\\3rd-Party\\GLM\\Virtrev" FILES ${GLM_VIRTREV_INLINE})
         source_group("Header Files\\3rd-Party\\GLM\\Virtrev" FILES ${GLM_VIRTREV_HEADER})
     endif()
-    
+
     # Set include directory
     include_directories(${GLM_INCLUDE_DIR})
-    
+
     # Add into global header file variable.
     set(LOCAL_GROUP_HEADER_FILES ${LOCAL_GROUP_HEADER_FILES} ${GLM_HEADER_FILES})
 ENDMACRO()
 
 
-message_footer(GLM)
+cm_message_footer(GLM)
 

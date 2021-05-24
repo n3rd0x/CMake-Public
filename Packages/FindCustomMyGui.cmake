@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,7 @@
 
 # ************************************************************
 # Start package
-message_header( MYGUI )
+cm_message_header( MYGUI )
 package_begin( MYGUI )
 package_create_home_path( MYGUI MYGUI_ROOT )
 
@@ -84,12 +84,12 @@ if( WIN32 )
 	package_create_release_binary_names( MYGUI_BINARY_NAMES )
 	package_create_debug_binary_names( MYGUI_BINARY_NAMES )
 	package_create_search_path_binary( MYGUI )
-	
-	set( MYGUI_SEARCH_BINARIES 
+
+	set( MYGUI_SEARCH_BINARIES
 		${MYGUI_SEARCH_PATH_BINARY}
 		${MYGUI_SEARCH_PATH_LIBRARY}
 	)
-	
+
 	package_clear_if_changed( MYGUI_PREFIX_PATH
 		MYGUI_BINARY_RELEASE
 		MYGUI_BINARY_DEBUG
@@ -115,5 +115,5 @@ endif()
 # Finalize package
 package_add_parent_dir( MYGUI )
 package_end( MYGUI )
-message_footer( MYGUI )
+cm_message_footer( MYGUI )
 
