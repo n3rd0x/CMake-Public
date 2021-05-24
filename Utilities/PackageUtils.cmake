@@ -59,11 +59,11 @@ endmacro()
 macro(PACKAGE_ADD_PARENT_DIR Prefix)
     # Help information.
     cm_message_header(PACKAGE_ADD_PARENT_DIR)
-    message_help("Required:")
-    message_help("[Prefix]      -> Prefix of the variable to process.")
-    message_help("Optional:")
-    message_help("ADD_PARENT    -> Flag to add parent directory.")
-    #message_help("[Suffixes]    -> Suffixes to process.")
+    cm_message_help("Required:")
+    cm_message_help("[Prefix]      -> Prefix of the variable to process.")
+    cm_message_help("Optional:")
+    cm_message_help("ADD_PARENT    -> Flag to add parent directory.")
+    #cm_message_help("[Suffixes]    -> Suffixes to process.")
 
     if(${Prefix}_FOUND)
         # Parse options.
@@ -364,8 +364,8 @@ endmacro()
 macro(PACKAGE_CREATE_SEARCH_PATH_INCLUDE Prefix)
     # Help information.
     cm_message_header(PACKAGE_CREATE_SEARCH_PATH_INCLUDE)
-    message_help("Required:")
-    message_help("[Prefix]      -> Prefix of the variable to process.")
+    cm_message_help("Required:")
+    cm_message_help("[Prefix]      -> Prefix of the variable to process.")
     cm_message_verbose(STATUS "Creating ${Prefix} include search path.")
 
     # Create search for "default" directories.
@@ -844,7 +844,7 @@ endmacro()
 # ************************************************************
 # Find file
 macro(PACKAGE_FIND_FILE Prefix SearchName SearchPath Suffixes)
-    message_sub_header("Package Find File (${Prefix})")
+    cm_message_sub_header("Package Find File (${Prefix})")
     cm_message_debug(STATUS "Search names:")
     cm_message_debug_output(STATUS "${SearchName}")
     cm_message_debug(STATUS "Search path:")
@@ -859,7 +859,7 @@ macro(PACKAGE_FIND_FILE Prefix SearchName SearchPath Suffixes)
         cm_message_verbose("" "Failed to locate one of these files: ${SearchName}")
     endif()
 
-    message_sub_footer("Package Find File (${Prefix})")
+    cm_message_sub_footer("Package Find File (${Prefix})")
 endmacro()
 
 
@@ -870,7 +870,7 @@ endmacro()
 # ************************************************************
 # Find library
 macro(PACKAGE_FIND_LIBRARY Prefix SearchName SearchPath Suffixes)
-    message_sub_header("Package Find Library (${Prefix})")
+    cm_message_sub_header("Package Find Library (${Prefix})")
     cm_message_debug(STATUS "Searching files:")
     cm_message_debug_output(STATUS "${Files}")
     cm_message_debug(STATUS "Names:")
@@ -887,7 +887,7 @@ macro(PACKAGE_FIND_LIBRARY Prefix SearchName SearchPath Suffixes)
         cm_message_verbose("" "Failed to locate one of these files: ${SearchName}")
     endif()
 
-    message_sub_footer("Package Find Library (${Prefix})")
+    cm_message_sub_footer("Package Find Library (${Prefix})")
 endmacro()
 
 
@@ -895,7 +895,7 @@ endmacro()
 # ************************************************************
 # Find directory
 macro(PACKAGE_FIND_PATH Prefix Files SearchPath Suffixes)
-    message_sub_header("Package Find Path (${Prefix})")
+    cm_message_sub_header("Package Find Path (${Prefix})")
     cm_message_debug(STATUS "Files:")
     cm_message_debug_output(STATUS "${Files}")
     cm_message_debug(STATUS "Search path:")
@@ -910,7 +910,7 @@ macro(PACKAGE_FIND_PATH Prefix Files SearchPath Suffixes)
         cm_message_verbose("" "Failed to locate path of the search files: ${Files}")
     endif()
 
-    message_sub_footer("Package Find Path (${Prefix})")
+    cm_message_sub_footer("Package Find Path (${Prefix})")
 endmacro()
 
 
@@ -937,10 +937,10 @@ endmacro()
 macro(PACKAGE_INSTALL_BINARY_FROM_TARGET Prefix)
     # Help information.
     cm_message_header(PACKAGE_INSTALL_BINARY_FROM_TARGET)
-    message_help("Required:")
-    message_help("[Prefix]     -> Prefix of the variable to process.")
-    message_help("Optional:")
-    message_help("[SubPath]    -> Sub path in the installation directory (${PROJECT_PATH_INSTALL}).")
+    cm_message_help("Required:")
+    cm_message_help("[Prefix]     -> Prefix of the variable to process.")
+    cm_message_help("Optional:")
+    cm_message_help("[SubPath]    -> Sub path in the installation directory (${PROJECT_PATH_INSTALL}).")
 
     # Parse options.
     set(oneValueArgs SubPath)
@@ -980,7 +980,7 @@ endmacro()
 # ************************************************************
 # Make set of release and debug
 macro(PACKAGE_MAKE_LIBRARY Prefix Debug Release)
-    message_sub_header("Package Make Library (${Prefix})")
+    cm_message_sub_header("Package Make Library (${Prefix})")
 
     if(${Debug} AND ${Release})
         cm_message_debug(STATUS "Release and Debug found.")
@@ -996,7 +996,7 @@ macro(PACKAGE_MAKE_LIBRARY Prefix Debug Release)
     endif()
 
     cm_message_debug(STATUS "Library: ${${Prefix}}")
-    message_sub_footer("Package Make Library (${Prefix})")
+    cm_message_sub_footer("Package Make Library (${Prefix})")
 endmacro()
 
 

@@ -22,84 +22,46 @@
 # ************************************************************
 # MESSAGE
 # ************************************************************
-# ====================
-# Formatted output (Rows)
-# ====================
-macro(MESSAGE_OUTPUT_ROWS State Msg)
-    foreach(m ${Msg})
-        message(${State} "  - ${m}")
-    endforeach()
-endmacro()
-
-
-# ====================
-# Formatted output (Cols)
-# ====================
-macro(MESSAGE_OUTPUT_COLS State Msg)
-    set(_var "")
-    foreach(m ${Msg})
-        set(_var "${_var} ${m}")
-    endforeach()
-    message(${State} "${_var}")
-    unset(_var)
-endmacro()
-
-
-# ====================
-# Dash horizontal line
-# ====================
-macro(MESSAGE_DASH_LINE)
+# Dash horizontal line.
+macro(CM_MESSAGE_DASH_LINE)
     message(STATUS "----------------------------------------")
 endmacro()
 
 
-# ====================
-# Footer message (Common)
-# ====================
-macro(MESSAGE_FOOTER_COMMON Footer)
+# New line.
+macro(CM_MESSAGE_NEW_LINE)
+    message(STATUS "")
+endmacro()
+
+
+# Star line.
+macro(CM_MESSAGE_STAR_LINE)
+    message(STATUS "****************************************")
+endmacro()
+
+
+
+
+# ************************************************************
+# FOOTER / HEADER MESSAGE
+# ************************************************************
+# Footer message (All).
+macro(CM_MESSAGE_FOOTER_COMMON Footer)
     message("************************************************************")
     message("**** End:   ${Footer}")
     message("************************************************************")
 endmacro()
 
 
-# ====================
-# Footer message (All)
-# ====================
-macro(MESSAGE_FOOTER Footer)
-    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
-        message_footer_common(${Footer})
+# Footer message (State dependent).
+macro(CM_MESSAGE_FOOTER Footer)
+    if(PROJECT_CMAKE_ENABLE_MESSAGE_DEBUG OR PROJECT_CMAKE_ENABLE_HELP_MESSAG)
+        cm_message_footer_common(${Footer})
     endif()
 endmacro()
 
 
-# ====================
-# Footer message (Debug)
-# ====================
-macro(MESSAGE_FOOTER_DEBUG Footer)
-    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE)
-        message_footer_common(${Footer})
-    endif()
-endmacro()
-
-
-
-
-# ************************************************************
-# Footer message (Help)
-# ************************************************************
-macro(MESSAGE_FOOTER_HELP Footer)
-    if(PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
-        message_footer_common(${Footer})
-    endif()
-endmacro()
-
-
-
-
-# ************************************************************
-# Header message (Common)
-# ************************************************************
+# Header message (All).
 macro(CM_MESSAGE_HEADER_COMMON Header)
     message("************************************************************")
     message("**** Start: ${Header}")
@@ -107,49 +69,17 @@ macro(CM_MESSAGE_HEADER_COMMON Header)
 endmacro()
 
 
-
-
-# ************************************************************
-# Header message (All)
-# ************************************************************
+# Header message (State dependent).
 macro(CM_MESSAGE_HEADER Header)
-    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
+    if(PROJECT_CMAKE_ENABLE_MESSAGE_DEBUG OR PROJECT_CMAKE_ENABLE_HELP_MESSAG)
         cm_message_header_common(${Header})
     endif()
 endmacro()
 
 
-
-
-# ************************************************************
-# Header message (Debug)
-# ************************************************************
-macro(CM_MESSAGE_HEADER_DEBUG Header)
-    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE)
-        cm_message_header_common(${Header})
-    endif()
-endmacro()
-
-
-
-
-# ************************************************************
-# Header message (Help)
-# ************************************************************
-macro(CM_MESSAGE_HEADER_HELP Header)
-    if(PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
-        cm_message_header_common(${Header})
-    endif()
-endmacro()
-
-
-
-
-# ************************************************************
-# Footer sub message
-# ************************************************************
-macro(MESSAGE_SUB_FOOTER Footer)
-    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
+# Footer sub message (State dependent).
+macro(CM_MESSAGE_SUB_FOOTER Footer)
+    if(PROJECT_CMAKE_ENABLE_MESSAGE_DEBUG OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
         message(STATUS "------------------------------------------------------------")
         message(STATUS "- End:   ${Footer}")
         message(STATUS "------------------------------------------------------------")
@@ -157,13 +87,9 @@ macro(MESSAGE_SUB_FOOTER Footer)
 endmacro()
 
 
-
-
-# ************************************************************
-# Header sub message
-# ************************************************************
-macro(MESSAGE_SUB_HEADER Header)
-    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
+# Header sub message (State dependent).
+macro(CM_MESSAGE_SUB_HEADER Header)
+    if(PROJECT_CMAKE_ENABLE_MESSAGE_DEBUG OR PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
         message(STATUS "------------------------------------------------------------")
         message(STATUS "- Start: ${Header}")
         message(STATUS "------------------------------------------------------------")
@@ -174,105 +100,42 @@ endmacro()
 
 
 # ************************************************************
-# New line
+# MESSAGE (HELP)
 # ************************************************************
-macro(MESSAGE_NEW_LINE)
-    message(STATUS "")
-endmacro()
-
-
-
-
-# ************************************************************
-# Star horizontal line
-# ************************************************************
-macro(MESSAGE_STAR_LINE)
-    message(STATUS "****************************************")
-endmacro()
-
-
-
-
-# ************************************************************
-# DEBUG MESSAGE
-# ************************************************************
-# ----------------------------------------
-# Debug message
-# ----------------------------------------
-macro(CM_MESSAGE_DEBUG State Msg)
-    if(Project_CMAKE_ENABLE_DEBUG_MESSAGE)
-        message("${State}" "[Debug]   ${Msg}")
-    endif()
-endmacro()
-
-
-# ----------------------------------------
-# Debug line
-# ----------------------------------------
-macro(CM_MESSAGE_DEBUG_LINE State)
-    cm_message_debug("${State}" "----------------------------------------")
-endmacro()
-
-
-# ----------------------------------------
-# Debug footer
-# ----------------------------------------
-function(CM_MESSAGE_DEBUG_FOOTER State Footer)
-    cm_message_debug_line(${State})
-    cm_message_debug(${State} "End:   ${Footer}")
-    cm_message_debug_line(${State})
-endfunction()
-
-
-# ----------------------------------------
-# Debug header
-# ----------------------------------------
-function(CM_MESSAGE_DEBUG_HEADER State Header)
-    cm_message_debug_line(${State})
-    cm_message_debug(${State} "Start: ${Header}")
-    cm_message_debug_line(${State})
-endfunction()
-
-
-# ----------------------------------------
-# Formatted output (debug mode)
-# ----------------------------------------
-macro(CM_MESSAGE_DEBUG_OUTPUT State Values)
-    foreach(v ${Values})
-        cm_message_debug("${State}" "  - ${v}")
-    endforeach()
-endmacro()
-
-
-
-
-# ************************************************************
-# HELP MESSAGE
-# ************************************************************
-# ====================
-# Help message
-# ====================
-macro(MESSAGE_HELP Msg)
+# Help message.
+macro(CM_MESSAGE_HELP Msg)
     if(PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
         message(STATUS "[Help]    ${Msg}")
     endif()
 endmacro()
 
 
-# ====================
-# Dash horizontal line (verbose mode)
-# ====================
-macro(MESSAGE_HELP_DASH_LINE)
+# Footer message.
+macro(CM_MESSAGE_HELP_FOOTER Footer)
+    if(PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
+        cm_message_footer_common(${Footer})
+    endif()
+endmacro()
+
+
+# Header message.
+macro(CM_MESSAGE_HELP_HEADER Header)
+    if(PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
+        cm_message_header_common(${Header})
+    endif()
+endmacro()
+
+
+# Dash horizontal line.
+macro(CM_MESSAGE_HELP_DASH_LINE)
     if(PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
         message(STATUS "[Help]    ----------------------------------------")
     endif()
 endmacro()
 
 
-# ====================
-# Star horizontal line (help mode)
-# ====================
-macro(MESSAGE_HELP_STAR_LINE)
+# Star horizontal line.
+macro(CM_MESSAGE_HELP_STAR_LINE)
     if(PROJECT_CMAKE_ENABLE_HELP_MESSAGE)
         message(STATUS "[Help]    ****************************************")
     endif()
@@ -282,22 +145,57 @@ endmacro()
 
 
 # ************************************************************
-# STATUS MESSAGE
+# MESSAGE (DEBUG)
 # ************************************************************
-# ----------------------------------------
-# Status message
-# ----------------------------------------
+# Debug message.
+macro(CM_MESSAGE_DEBUG State Msg)
+    if(PROJECT_CMAKE_ENABLE_MESSAGE_DEBUG)
+        message("${State}" "[Debug]   ${Msg}")
+    endif()
+endmacro()
+
+
+# List output.
+macro(CM_MESSAGE_DEBUG_OUTPUT State Values)
+    if(PROJECT_CMAKE_ENABLE_MESSAGE_DEBUG)
+        foreach(m ${Values})
+            cm_message_debug("${State}" "  [*] ${m}")
+        endforeach()
+    endif()
+endmacro()
+
+
+# Footer message.
+macro(CM_MESSAGE_DEBUG_FOOTER Footer)
+    if(PROJECT_CMAKE_ENABLE_MESSAGE_DEBUG)
+        cm_message_footer_common(${Footer})
+    endif()
+endmacro()
+
+
+# Header message.
+macro(CM_MESSAGE_DEBUG_HEADER Header)
+    if(PROJECT_CMAKE_ENABLE_MESSAGE_DEBUG)
+        cm_message_header_common(${Header})
+    endif()
+endmacro()
+
+
+
+
+# ************************************************************
+# MESSAGE (STATUS)
+# ************************************************************
+# Status message.
 macro(CM_MESSAGE_STATUS State Msg)
     message("${State}" "[Status]  ${Msg}")
 endmacro()
 
 
-# ----------------------------------------
-# Formatted output (status mode)
-# ----------------------------------------
+# List output.
 macro(CM_MESSAGE_STATUS_OUTPUT State Msg)
     foreach(m ${Msg})
-        cm_message_status("${State}" "  - ${m}")
+        cm_message_status("${State}" "  [*] ${m}")
     endforeach()
 endmacro()
 
@@ -305,54 +203,43 @@ endmacro()
 
 
 # ************************************************************
-# VERBOSE MESSAGE
+# MESSAGE (VERBOSE)
 # ************************************************************
-# ----------------------------------------
-# Verbose message
-# ----------------------------------------
+# Verbose message.
 macro(CM_MESSAGE_VERBOSE State Msg)
-    if(Project_CMAKE_ENABLE_VERBOSE_MESSAGE OR Project_CMAKE_ENABLE_DEBUG_MESSAGE)
+    if(PROJECT_CMAKE_ENABLE_MESSAGE_VERBOSE OR PROJECT_CMAKE_ENABLE_MESSAGE_DEBUG)
         message("${State}" "[Verbose] ${Msg}")
     endif()
 endmacro()
 
 
-# ----------------------------------------
-# Dash line
-# ----------------------------------------
-macro(CM_MESSAGE_VERBOSE_DASH_LINE State)
-    cm_message_verbose("${State}" "----------------------------------------")
-endmacro()
-
-
-# ----------------------------------------
-# Formatted output (verbose mode)
-# ----------------------------------------
+# List output.
 macro(CM_MESSAGE_VERBOSE_OUTPUT State Msg)
     foreach(m ${Msg})
-        cm_message_verbose("${State}" "  - ${m}")
+        cm_message_verbose("${State}" "  [*] ${m}")
     endforeach()
 endmacro()
 
 
+# Dash horizontal line.
+macro(CM_MESSAGE_VERBOSE_DASH_LINE)
+    if(PROJECT_CMAKE_ENABLE_MESSAGE_VERBOSE)
+        message(STATUS "[Verbose] ----------------------------------------")
+    endif()
+endmacro()
 
 
-
-# ====================
-# New line (verbose mode)
-# ====================
+# New line.
 macro(CM_MESSAGE_VERBOSE_NEW_LINE)
-    if(PROJECT_CMAKE_ENABLE_VERBOSE_MESSAGE)
+    if(PROJECT_CMAKE_ENABLE_MESSAGE_VERBOSE)
         message(STATUS "[Verbose]")
     endif()
 endmacro()
 
 
-# ====================
-# Star horizontal line (verbose mode)
-# ====================
+# Star horizontal line.
 macro(CM_MESSAGE_VERBOSE_STAR_LINE)
-    if(PROJECT_CMAKE_ENABLE_VERBOSE_MESSAGE)
+    if(PROJECT_CMAKE_ENABLE_MESSAGE_VERBOSE)
         message(STATUS "[Verbose] ****************************************")
     endif()
 endmacro()
