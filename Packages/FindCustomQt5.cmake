@@ -29,10 +29,13 @@ cm_package_create_home_path(QT QT5_ROOT)
 
 
 # Options.
+# Enable auto linking to 'qtmain' (new for Qt5).
+cmake_policy(SET CMP0020 NEW)
+
 option(QT_ENABLE_AUTOMOC "Enable auto MOC." OFF)
 option(QT_ENABLE_AUTORCC "Enable auto RCC." OFF)
 option(QT_ENABLE_AUTOUIC "Enable auto UIC." OFF)
-option(QT_DEPLOY_LIBRARY "Flag to deploy QT libraries." OFF)
+option(QT_DEPLOY_LIBRARY "Flag to deploy QT libraries into binary directory." OFF)
 option(QT_PLUGIN_ENABLE_IMAGE_FORMAT "Enable image formats (Ex. jpg, svg, tiff)." OFF)
 option(QT_PLUGIN_ENABLE_SQL_DRIVER_SQLITE "Enable SQLite plug-in driver." OFF)
 
@@ -74,23 +77,22 @@ set(QT_AVAILABLE_COMPONENTS
     Qt5XmlPatterns_DIR
 )
 
-# Component to skip to copy binaries, due the component doesn't
+# component to skip to copy binaries, due the component doesn't
 # contain a binary library.
 set(QT_SKIP_BINARY_COMPONENT
     Qt5LinguistTools
 )
 
 
-
 # ************************************************************
 # Clear
 # ************************************************************
-set(QT_CLEAR_IF_CHANGED
+set(_clear
     QT_HOME
     QT_COMPONENTS
 )
-foreach(VAR ${QT_CLEAR_IF_CHANGED})
-    cm_package_clear_if_changed(${VAR}
+foreach(var ${_clear})
+    cm_package_clear_if_changed(${var}
         QT_PATH_BINARY
         QT_PATH_CMAKE
         QT_PATH_LIBRARY
@@ -98,11 +100,11 @@ foreach(VAR ${QT_CLEAR_IF_CHANGED})
         ${QT_AVAILABLE_COMPONENTS}
     )
 endforeach()
-
+unset(_clear)
 
 
 # ************************************************************
-# Create Search Path
+# Create Search _path
 # ************************************************************
 set(QT_PREFIX_PATH ${QT_HOME})
 cm_package_create_search_path_include(QT)
@@ -110,23 +112,19 @@ cm_package_create_search_path_library(QT)
 #cm_package_create_search_path_binary(QT)
 
 
-
-
 # ************************************************************
-# Find path
+# Find _path
 # ************************************************************
-set(QMake "qmake")
-set(QLibs "libQt5Core.so" "Qt5Core.lib" "QtCore.framework")
-cm_create_executable_extension(QMake)
-cm_package_find_path(QT_PATH_BINARY "${QMake}" "${QT_HOME}" "bin;qt5/bin")
+set(_qmake "qmake")
+set(_qlibs "libQt5Core.so" "Qt5Core.lib" "QtCore.framework")
+cm_create_executable_extension(_qmake)
+cm_package_find_path(QT_PATH_BINARY "${_qmake}" "${QT_HOME}" "bin;qt5/bin")
 cm_package_find_path(QT_PATH_CMAKE "Qt5" "${QT_SEARCH_PATH_LIBRARY}" "cmake")
-cm_package_find_path(QT_PATH_LIBRARY "${QLibs}" "${QT_SEARCH_PATH_LIBRARY}" "lib")
+cm_package_find_path(QT_PATH_LIBRARY "${_qlibs}" "${QT_SEARCH_PATH_LIBRARY}" "")
 cm_package_find_path(QT_PATH_PLUGIN "platforms" "${QT_HOME}" "plugins;qt5/plugins")
 
 # Add the directory to the CMake search path.
 set(CMAKE_PREFIX_PATH ${QT_PATH_CMAKE})
-
-
 
 
 # ************************************************************
@@ -135,19 +133,19 @@ set(CMAKE_PREFIX_PATH ${QT_PATH_CMAKE})
 # Tell CMake to run MOC when necessary.
 if(QT_ENABLE_AUTOMOC)
     set(CMAKE_AUTOMOC ON)
-    cm_message_verbose(STATIS "Enable AUTO MOC.")
+    cm_message_verbose(STATUS "Enable AUTO MOC.")
 endif()
 
 # Tell CMake to run RCC when necessary.
 if(QT_ENABLE_AUTORCC)
     set(CMAKE_AUTORCC ON)
-    cm_message_verbose(STATIS "Enable AUTO RCC.")
+    cm_message_verbose(STATUS "Enable AUTO RCC.")
 endif()
 
 # Tell CMake to run UIC when necessary.
 if(QT_ENABLE_AUTOUIC)
     set(CMAKE_AUTOUIC ON)
-    cm_message_verbose(STATIS "Enable AUTO UIC.")
+    cm_message_verbose(STATUS "Enable AUTO UIC.")
 endif()
 
 # As MOC files are generated in the binary directory,
@@ -158,87 +156,88 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(QT_COMPONENTS "${CustomQt5_FIND_COMPONENTS}" CACHE STRING "Qt5 components.")
 
 
-
 # ************************************************************
-# Find dynamic libraris
+# Find Dynamic Libraris
 # ************************************************************
-# Initialise
 set(QT_BINARY_DEBUG "")
 set(QT_BINARY_RELEASE "")
 
 # Find the packages based on defined components.
 if(QT_COMPONENTS)
-    foreach(Component ${QT_COMPONENTS})
-        find_package("${Component}")
+    # Setup search configurations.
+    set(_pathSearch ${QT_PATH_BINARY})
+    if(APPLE)
+        set(_pathSearch ${QT_HOME})
+    elseif(UNIX)
+        set(_pathSearch ${QT_PATH_LIBRARY})
+    endif()
+
+
+    foreach(component ${QT_COMPONENTS})
+        find_package("${component}")
 
         if(NOT APPLE)
             # Find out whether we will skip adding the binary component.
-            set(AddComponent TRUE)
-            foreach(SkipComponent ${QT_SKIP_BINARY_COMPONENT})
-                if(${SkipComponent} STREQUAL ${Component})
-                    set(AddComponent FALSE)
+            set(_add TRUE)
+            foreach(skip ${QT_SKIP_BINARY_COMPONENT})
+                if(${skip} STREQUAL ${component})
+                    set(_add FALSE)
                 endif()
             endforeach()
 
             # Update binaries.
-            if(AddComponent)
+            if(_add)
                 # Find files.
                 if(MSVC)
-                    cm_package_find_file(QtDebugFile "${Component}d.dll" "${QT_PATH_BINARY}" "")
-                    cm_package_find_file(QtReleaseFile "${Component}.dll" "${QT_PATH_BINARY}" "")
+                    cm_package_find_file(_debug "${component}d.dll" "${_pathSearch}" "")
+                    cm_package_find_file(_release "${component}.dll" "${_pathSearch}" "")
                 else()
-                    cm_package_find_file(QtDebugFile "lib${Component}d.so" "${QT_PATH_LIBRARY}" "")
-                    cm_package_find_file(QtReleaseFile "lib${Component}.so" "${QT_PATH_LIBRARY}" "")
+                    cm_package_find_file(_debug "lib${component}d.so" "${_pathSearch}" "")
+                    cm_package_find_file(_release "lib${component}.so" "${_pathSearch}" "")
                 endif()
 
                 # Set name.
-                if(QtReleaseFile)
-                    list(APPEND QT_BINARY_RELEASE ${QtReleaseFile})
+                if(_release)
+                    list(APPEND QT_BINARY_RELEASE ${_release})
                 endif()
 
-                if(QtDebugFile)
-                    list(APPEND QT_BINARY_DEBUG ${QtDebugFile})
+                if(_debug)
+                    list(APPEND QT_BINARY_DEBUG ${_debug})
                 else()
-                    if(QtReleaseFile)
-                        list(APPEND QT_BINARY_DEBUG ${QtReleaseFile})
+                    if(_release)
+                        list(APPEND QT_BINARY_DEBUG ${_release})
                     endif()
                 endif()
 
-                unset(QtDebugFile CACHE)
-                unset(QtReleaseFile CACHE)
+                unset(_debug CACHE)
+                unset(_release CACHE)
             endif()
-            unset(AddComponent)
-        endif()
-
-        # Temporary fix for MacOSX.
-        if(APPLE)
-            if(${Component}_LIBRARIES)
-                list(APPEND QT_BINARY_RELEASE "${${Component}_LIBRARIES}")
-                list(APPEND QT_BINARY_DEBUG "${${Component}_LIBRARIES}")
+            unset(_add)
+        elseif(APPLE)
+            # Simply to TRUE if component is found.
+            if(${component}_LIBRARIES)
+                list(APPEND QT_BINARY_RELEASE ${${component}_LIBRARIES})
+                list(APPEND QT_BINARY_DEBUG ${${component}_LIBRARIES})
             endif()
         endif()
     endforeach()
+
 
     if(QT_BINARY_DEBUG OR QT_BINARY_RELEASE)
         set(QT_FOUND TRUE)
         cm_message_debug(STATUS "Qt is located.")
 
+
         # Copy necessary binaries for both release and debug.
         if(QT_DEPLOY_LIBRARY)
             cm_message_debug(STATUS "Search for necessary files.")
-
-            # Setup search configurations.
-            set(PathSearchBinary ${QT_PATH_BINARY})
-            if(UNIX)
-                set(PathSearchBinary ${QT_PATH_LIBRARY})
-            endif()
-            cm_generate_dynamic_extension(DynSuffix)
+            cm_generate_dynamic_extension(_extSuffix)
 
             # Automatic search for files.
             # set(SearchFiles
-                # "${PathSearchBinary}/*icu*.${DynSuffix}"
-                # "${PathSearchBinary}/*EGL*.${DynSuffix}"
-                # "${PathSearchBinary}/*GLES*.${DynSuffix}"
+                # "${_pathSearch}/*icu*.${_extSuffix}"
+                # "${_pathSearch}/*EGL*.${_extSuffix}"
+                # "${_pathSearch}/*GLES*.${_extSuffix}"
                 # "${QT_PATH_PLUGIN}/platforms/*"
             # )
 
@@ -248,40 +247,58 @@ if(QT_COMPONENTS)
 
 
             # Search for files.
-            # file(GLOB QtNecessaryBinaries ${SearchFiles})
+            # file(GLOB mQtNecessaryBinaries ${SearchFiles})
+
 
             # Manually defined search files. In this way we can determind
-            # wheter to copy separately into debug and release directory.
-            # ----------------------------------------
-            # - CORE
-            # ----------------------------------------
-            # Icu files.
-            file(GLOB QtIcuFiles "${PathSearchBinary}/*icu*.${DynSuffix}")
+            # wether to copy separately into debug and release directory.
+            if(NOT APPLE)
+                # ----------------------------------------
+                # - CORE
+                # ----------------------------------------
+                # Icu files.
+                file(GLOB mQtIcuFiles "${_pathSearch}/*icu*.${_extSuffix}")
 
-            # Core files.
-            set(QtNecessaryBinaries
-                "libEGL"
-                "libGLESv2"
-            )
+                # Core files.
+                set(mQtNecessaryBinaries
+                    "libEGL"
+                    "libGLESv2"
+                )
+            endif()
+
 
             # ----------------------------------------
             # - PLUGINS
             # ----------------------------------------
             # Platform plugins.
-            set(QtNecessaryPlugins
+            set(mQtNecessaryPlugins
                 "platforms/qminimal"
                 "platforms/qoffscreen"
             )
             if(MSVC)
-                list(APPEND QtNecessaryPlugins
+                list(APPEND mQtNecessaryPlugins
                     "platforms/qwindows"
+                )
+            elseif(APPLE)
+                list(APPEND mQtNecessaryPlugins
+                    "platforms/qcocoa"
                 )
             endif()
 
             # Image format plugins.
             if(QT_PLUGIN_ENABLE_IMAGE_FORMAT)
-                list(APPEND QtNecessaryPlugins
-                    "imageformats/qdds"
+                if(NOT APPLE)
+                    list(APPEND mQtNecessaryPlugins
+                        "imageformats/qdds"
+                    )
+                elseif(APPLE)
+                    list(APPEND mQtNecessaryPlugins
+                        "imageformats/qmacheif"
+                        "imageformats/qmacjp2"
+                    )
+                endif()
+
+                list(APPEND mQtNecessaryPlugins
                     "imageformats/qgif"
                     "imageformats/qicns"
                     "imageformats/qico"
@@ -296,18 +313,18 @@ if(QT_COMPONENTS)
 
             # SQL plugins.
             if(QT_PLUGIN_ENABLE_SQL_DRIVER_SQLITE)
-                list(APPEND QtNecessaryPlugins
+                list(APPEND mQtNecessaryPlugins
                     "sqldrivers/qsqlite"
                 )
             endif()
 
-            unset(DynSuffix)
+            unset(_extSuffix)
         endif()
     endif()
+    unset(_pathSearch)
 else()
     cm_message_status("" "At least one of the Qt5 modules must be specified.")
 endif()
-
 
 
 
@@ -326,12 +343,14 @@ cm_message_footer(QT)
 
 
 # ************************************************************
-# Copy QT configuration file
+# Copy QT Configuration File
 # ************************************************************
 macro(QT_COPY_CONFIGURATION_FILE)
     if(QT_FOUND)
-        add_data_target("${PROJECT_PATH_CMAKE_TEMPLATE}/qt_in.conf"
-            Name "qt.conf" GENERATE
+        add_data_target(
+            "${PROJECT_PATH_CMAKE_TEMPLATE}/qt_in.conf"
+            Name "qt.conf"
+            GENERATE
         )
     endif()
 endmacro()
@@ -340,27 +359,28 @@ endmacro()
 
 
 # ************************************************************
-# Copy necessary binaries
+# Copy Necessary Binaries
 # ************************************************************
 macro(QT_COPY_NECESSARY_BINARIES)
     if(QT_FOUND AND QT_DEPLOY_LIBRARY AND WIN32)
-        foreach(Plugin ${QT_NECESSARY_BINARY_PLUGINS})
+        foreach(plugin ${QT_NECESSARY_BINARY_PLUGINS})
             # Find whether the file is a debug.
-            string(REGEX MATCH "d.dll" DEBUG_FOUND ${Plugin})
-            if(DEBUG_FOUND)
-                copy_single_file("${QT_HOME}/plugins/${Plugin}"
-                    "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${Plugin}"
+            string(REGEX MATCH "d.dll" _debug ${plugin})
+            if(_debug)
+                cm_copy_single_file(
+                    "${QT_PATH_PLUGIN}/${plugin}"
+                    "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${plugin}"
                     "COPYONLY"
                 )
             else()
-                copy_single_file("${QT_HOME}/plugins/${Plugin}"
-                    "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/${Plugin}"
+                cm_copy_single_file(
+                    "${QT_PATH_PLUGIN}/${plugin}"
+                    "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/${plugin}"
                     "COPYONLY"
                 )
             endif()
-            unset(DEBUG_FOUND)
+            unset(_debug)
         endforeach()
-        unset(Plugin)
     endif()
 endmacro()
 
@@ -368,119 +388,125 @@ endmacro()
 
 
 # ************************************************************
-# Copy necessary binaries from target.
+# Copy Necessary Binaries from Target
+# ************************************************************
+# Help information.
+# Optional:
+# [INSTALL]    -> Enable install configuration.
+# [SubPath]    -> Sub path of install directory.
 macro(QT_COPY_NECESSARY_BINARY_FROM_TARGET)
     cm_message_header(QT_COPY_NECESSARY_BINARY_FROM_TARGET)
-    cm_message_help("Optional:")
-    cm_message_help("[INSTALL]    -> Enable install configuration." )
-    cm_message_help("[SubPath]    -> Sub path of output directory.")
-
 
     if(QT_FOUND AND QT_DEPLOY_LIBRARY)
-        cm_generate_dynamic_extension(DynamicSuffix)
-        #foreach(Var ${QtNecessaryBinaries})
+        cm_generate_dynamic_extension(_extSuffix)
+        #foreach(var ${mQtNecessaryBinaries})
         #    # Find whether the file is a debug.
-        #    string(REGEX MATCH "d.${DynamicSuffix}" DebugFound ${Var})
+        #    string(REGEX MATCH "d.${_extSuffix}" DebugFound ${var})
         #    if(DebugFound)
-        #        package_add_runtime_target("${Var}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}")
+        #        cm_package_add_runtime_target("${var}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}")
         #    else()
-        #        package_add_runtime_target("${Var}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}")
+        #        cm_package_add_runtime_target("${var}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}")
         #    endif()
         #    unset(DebugFound)
         #endforeach()
 
 
-        # Parse options.
-        set(options INSTALL)
-        set(oneValueArgs Name SubPath)
-        cmake_parse_arguments(QT_COPY_NECESSARY_BINARY_FROM_TARGET "${options}" "${oneValueArgs}" "" ${ARGN})
+        # ----------------------------------------
+        # Parse Options
+        # ----------------------------------------
+        set(_options INSTALL)
+        set(_oneValueArgs Name SubPath)
+        cmake_parse_arguments(QT_COPY_NECESSARY_BINARY_FROM_TARGET "${_options}" "${_oneValueArgs}" "" ${ARGN})
 
-        # Icu files.
-        foreach(Var ${QtIcuFiles})
-            package_add_runtime_target("${Var}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}")
-            package_add_runtime_target("${Var}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}")
+        set(_installPath "${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath}")
+        set(_debugSuffix "d")
+        set(_preSuffix "")
+        if(APPLE)
+            set(_debugSuffix "_debug")
+            set(_preSuffix "lib")
+        endif()
+
+
+        # ----------------------------------------
+        # Icu Files
+        # ----------------------------------------
+        foreach(var ${mQtIcuFiles})
+            if(MSVC OR XCODE)
+                cm_package_add_runtime_target("${var}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}")
+                cm_package_add_runtime_target("${var}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}")
+            else()
+                cm_package_add_runtime_target("${var}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}")
+            endif()
 
             if(QT_COPY_NECESSARY_BINARY_FROM_TARGET_INSTALL)
-                install(FILES "${Var}" DESTINATION "${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath}")
-                cm_message_verbose(STATUS "Install [${Var}] to ${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath}.")
+                install(FILES "${var}" DESTINATION "${_installPath}")
+                cm_message_verbose(STATUS "Install [${var}] to ${_installPath}.")
             endif()
         endforeach()
 
-        # Binary files.
-        foreach(Var ${QtNecessaryBinaries})
-            cm_package_find_file(QtDebugFile "${Var}d.${DynamicSuffix}" "${PathSearchBinary}" "")
-            cm_package_find_file(QtReleaseFile "${Var}.${DynamicSuffix}" "${PathSearchBinary}" "")
 
-            if(QtReleaseFile)
-                package_add_runtime_target("${QtReleaseFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}")
-                if(QT_COPY_NECESSARY_BINARY_FROM_TARGET_INSTALL)
-                    install(FILES "${QtReleaseFile}" DESTINATION "${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath}" CONFIGURATIONS Release)
-                    cm_message_verbose(STATUS "Install [${QtReleaseFile}] to ${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath} for Release.")
-                endif()
+        # ----------------------------------------
+        # Binary Files
+        # ----------------------------------------
+        foreach(var ${mQtNecessaryBinaries})
+            get_filename_component(_name ${var} NAME)
+            get_filename_component(_path ${var} PATH)
 
-                if(QtDebugFile)
-                    package_add_runtime_target("${QtDebugFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}")
+            cm_package_find_file(_debug "${_preSuffix}${_name}${_debugSuffix}.${_extSuffix}" "${_pathSearch}" "${_path}")
+            cm_package_find_file(_release "${_preSuffix}${_name}.${_extSuffix}" "${_pathSearch}" "${_path}")
 
-                    if(QT_COPY_NECESSARY_BINARY_FROM_TARGET_INSTALL)
-                        install(FILES "${QtDebugFile}" DESTINATION "${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath}" CONFIGURATIONS Debug)
-                        cm_message_verbose(STATUS "Install [${QtDebugFile}] to ${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath} for Debug.")
-                    endif()
-                else()
-                    package_add_runtime_target("${QtReleaseFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}")
-
-                    if(QT_COPY_NECESSARY_BINARY_FROM_TARGET_INSTALL)
-                        install(FILES "${QtReleaseFile}" DESTINATION "${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath}" CONFIGURATIONS Debug)
-                        cm_message_verbose(STATUS "Install [${QtReleaseFile}] to ${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath} for Debug.")
-                    endif()
-                endif()
+            if(_release)
+                qt_copy_necessary_binary_from_target_helper(
+                    _release
+                    _debug
+                    _path
+                    QT_COPY_NECESSARY_BINARY_FROM_TARGET_INSTALL
+                    _installPath
+                )
             else()
-                cm_message_status(STATUS "Missing Qt necessary binary: ${Var}")
+                cm_message_status(STATUS "Missing Qt necessary binary: ${var}")
             endif()
-            unset(QtDebugFile CACHE)
-            unset(QtReleaseFile CACHE)
+
+            unset(_name)
+            unset(_path)
+            unset(_debug CACHE)
+            unset(_release CACHE)
         endforeach()
 
-        # Plugin files.
-        foreach(Var ${QtNecessaryPlugins})
-            cm_package_find_file(QtDebugFile "${Var}d.${DynamicSuffix}" "${QT_PATH_PLUGIN}" "")
-            cm_package_find_file(QtReleaseFile "${Var}.${DynamicSuffix}" "${QT_PATH_PLUGIN}" "")
 
-            if(QtReleaseFile)
-                get_filename_component(Path ${Var} PATH)
-                package_add_runtime_target("${QtReleaseFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/${Path}")
+        # ----------------------------------------
+        # Plugin Files
+        # ----------------------------------------
+        foreach(var ${mQtNecessaryPlugins})
+            get_filename_component(_name ${var} NAME)
+            get_filename_component(_path ${var} PATH)
 
-                if(QT_COPY_NECESSARY_BINARY_FROM_TARGET_INSTALL)
-                    install(FILES "${QtReleaseFile}" DESTINATION "${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath}/${Path}" CONFIGURATIONS Release)
-                    cm_message_verbose(STATUS "Install [${QtReleaseFile}] to ${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath}/${Path} for Release.")
-                endif()
+            cm_package_find_file(_debug "${_preSuffix}${_name}${_debugSuffix}.${_extSuffix}" "${QT_PATH_PLUGIN}" "${_path}")
+            cm_package_find_file(_release "${_preSuffix}${_name}.${_extSuffix}" "${QT_PATH_PLUGIN}" "${_path}")
 
-                if(QtDebugFile)
-                    package_add_runtime_target("${QtDebugFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${Path}")
-
-                    if(QT_COPY_NECESSARY_BINARY_FROM_TARGET_INSTALL)
-                        install(FILES "${QtDebugFile}" DESTINATION "${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath}/${Path}" CONFIGURATIONS Release)
-                        cm_message_verbose(STATUS "Install [${QtDebugFile}] to ${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath}/${Path} for Debug.")
-                    endif()
-                else()
-                    package_add_runtime_target("${QtReleaseFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${Path}")
-
-                    if(QT_COPY_NECESSARY_BINARY_FROM_TARGET_INSTALL)
-                        install(FILES "${QtReleaseFile}" DESTINATION "${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath}/${Path}" CONFIGURATIONS Release)
-                        cm_message_verbose(STATUS "Install [${QtReleaseFile}] to ${PROJECT_PATH_INSTALL}${QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath}/${Path} for Debug.")
-                    endif()
-                endif()
-                unset(Path)
+            if(_release)
+                qt_copy_necessary_binary_from_target_helper(
+                    _release
+                    _debug
+                    _path
+                    QT_COPY_NECESSARY_BINARY_FROM_TARGET_INSTALL
+                    _installPath
+                )
             else()
-                cm_message_status(STATUS "Missing Qt necessary binary: ${Var}")
+                cm_message_status(STATUS "Missing Qt necessary plugin: ${var}")
             endif()
-            unset(QtDebugFile CACHE)
-            unset(QtReleaseFile CACHE)
+
+            unset(_name)
+            unset(_path)
+            unset(_debug CACHE)
+            unset(_release CACHE)
         endforeach()
 
         # Cleaning up.
-        unset(Var)
-        unset(options)
-        unset(oneValueArgs)
+        unset(_debugtSuffix)
+        unset(_extSuffix)
+        unset(_options)
+        unset(_oneValueArgs)
         unset(QT_COPY_NECESSARY_BINARY_FROM_TARGET_INSTALL)
         unset(QT_COPY_NECESSARY_BINARY_FROM_TARGET_SubPath)
     endif()
@@ -490,18 +516,81 @@ endmacro()
 
 
 
+# ************************************************************
+# Helper Function of (QT_COPY_NECESSARY_BINARY_FROM_TARGET)
+# ************************************************************
+macro(QT_COPY_NECESSARY_BINARY_FROM_TARGET_HELPER ReleaseFile DebugFile SubPath INSTALL InstallPath)
+    # ----------------------------------------
+    # Multiple Configurations
+    # ----------------------------------------
+    if(MSVC OR XCODE)
+        cm_package_add_runtime_target("${${ReleaseFile}}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/${${SubPath}}")
+        if(INSTALL)
+            install(FILES "${${ReleaseFile}}" DESTINATION "${${InstallPath}}/${${SubPath}}" CONFIGURATIONS Release)
+            cm_message_verbose(STATUS "Install [${${ReleaseFile}}] to ${${InstallPath}}/${${SubPath}} for Debug.")
+        endif()
+
+        if(${DebugFile})
+            cm_package_add_runtime_target("${${DebugFile}}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${${SubPath}}")
+            if(INSTALL)
+                install(FILES "${${DebugFile}}" DESTINATION "${${InstallPath}}/${${SubPath}}" CONFIGURATIONS Debug)
+                cm_message_verbose(STATUS "Install [${${DebugFile}}] to ${${InstallPath}}/${${SubPath}} for Debug.")
+            endif()
+        else()
+            cm_package_add_runtime_target("${${ReleaseFile}}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${${SubPath}}")
+            if(INSTALL)
+                install(FILES "${${ReleaseFile}}" DESTINATION "${${InstallPath}}/${${SubPath}}" CONFIGURATIONS Debug)
+                cm_message_verbose(STATUS "Install [${${ReleaseFile}}] to ${${InstallPath}}/${${SubPath}} for Debug.")
+            endif()
+        endif()
+    # ----------------------------------------
+    # Single Configurations
+    # ----------------------------------------
+    else()
+        set(_debugMode FALSE)
+        if(CMAKE_BUILD_TYPE MATCHES Debug)
+            set(_debugMode TRUE)
+        endif()
+
+        if(_debugMode)
+            if(${DebugFile})
+                cm_package_add_runtime_target("${${DebugFile}}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${${SubPath}}")
+                if(INSTALL)
+                    install(FILES "${${DebugFile}}" DESTINATION "${${InstallPath}}/${${SubPath}}" CONFIGURATIONS Debug)
+                    cm_message_verbose(STATUS "Install [${${DebugFile}}] to ${${InstallPath}}/${${SubPath}} for Debug.")
+                endif()
+            else()
+                cm_package_add_runtime_target("${${ReleaseFile}}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${${SubPath}}")
+                if(INSTALL)
+                    install(FILES "${${ReleaseFile}}" DESTINATION "${${InstallPath}}/${${SubPath}}" CONFIGURATIONS Debug)
+                    cm_message_verbose(STATUS "Install [${${ReleaseFile}}] to ${${InstallPath}}/${${SubPath}} for Debug.")
+                endif()
+            endif()
+        else()
+            cm_package_add_runtime_target("${${ReleaseFile}}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/${${SubPath}}")
+            if(INSTALL)
+                install(FILES "${${ReleaseFile}}" DESTINATION "${${InstallPath}}/${${SubPath}}" CONFIGURATIONS Release)
+                cm_message_verbose(STATUS "Install [${${ReleaseFile}}] to ${${InstallPath}}/${${SubPath}} for Debug.")
+            endif()
+        endif()
+
+        unset(_debugMode)
+    endif()
+endmacro()
+
+
+
 
 # ************************************************************
-# Copy QT configuration file.
+# Copy QT Configuration File
+# ************************************************************
 macro(QT_DEPLOY_RUNTIME_FILES)
     if(QT_FOUND)
         if(QT_DEPLOY_LIBRARY)
-            package_copy_binary_from_target(QT)
+            cm_package_copy_binary_from_target(QT)
             qt_copy_necessary_binary_from_target()
         else()
-            add_data_target("${PROJECT_PATH_CMAKE_TEMPLATE}/qt_in.conf"
-                Name "qt.conf" GENERATE
-            )
+            qt_copy_configuration_file()
         endif()
     endif()
 endmacro()
@@ -517,9 +606,9 @@ macro(QT_INSTALL_NECESSARY_BINARIES)
     cm_message_help("Optional:")
     cm_message_help("[SubPath]    -> Sub path of output directory.")
 
-    # Parse options.
-    set(oneValueArgs SubPath)
-    cmake_parse_arguments(QT_INSTALL_NECESSARY_BINARIES "" "${oneValueArgs}" "" ${ARGN})
+    # Parse _options.
+    set(_oneValueArgs SubPath)
+    cmake_parse_arguments(QT_INSTALL_NECESSARY_BINARIES "" "${_oneValueArgs}" "" ${ARGN})
 
     if(NOT_USED AND QT_FOUND AND QT_DEPLOY_LIBRARY AND WIN32)
         foreach(Bin ${QT_NECESSARY_BINARY_BIN})
@@ -530,20 +619,20 @@ macro(QT_INSTALL_NECESSARY_BINARIES)
         foreach(Plugin ${QT_NECESSARY_BINARY_PLUGINS})
             # Find whether the file is a debug.
             string(REGEX MATCH "d.dll" DebugFound ${Plugin})
-            get_filename_component(Path ${Plugin} PATH)
+            get_filename_component(_path ${Plugin} PATH)
             if(DebugFound)
-                install(FILES "${QT_HOME}/plugins/${Plugin}" DESTINATION "${PROJECT_PATH_INSTALL}${QT_INSTALL_NECESSARY_BINARIES_SubPath}/${Path}" CONFIGURATIONS Debug)
+                install(FILES "${QT_HOME}/plugins/${Plugin}" DESTINATION "${PROJECT_PATH_INSTALL}${QT_INSTALL_NECESSARY_BINARIES_SubPath}/${_path}" CONFIGURATIONS Debug)
             else()
-                install(FILES "${QT_HOME}/plugins/${Plugin}" DESTINATION "${PROJECT_PATH_INSTALL}${QT_INSTALL_NECESSARY_BINARIES_SubPath}/${Path}" CONFIGURATIONS Release)
+                install(FILES "${QT_HOME}/plugins/${Plugin}" DESTINATION "${PROJECT_PATH_INSTALL}${QT_INSTALL_NECESSARY_BINARIES_SubPath}/${_path}" CONFIGURATIONS Release)
             endif()
-            cm_message_verbose(STATUS "Install [${QT_HOME}/plugins/${Plugin}] to ${PROJECT_PATH_INSTALL}${QT_INSTALL_NECESSARY_BINARIES_SubPath}/${Path}.")
-            unset(Path)
+            cm_message_verbose(STATUS "Install [${QT_HOME}/plugins/${Plugin}] to ${PROJECT_PATH_INSTALL}${QT_INSTALL_NECESSARY_BINARIES_SubPath}/${_path}.")
+            unset(_path)
             unset(DebugFound)
         endforeach()
     endif()
 
     # Clean up.
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
     unset(QT_INSTALL_NECESSARY_BINARIES_SubPath)
 
     cm_message_footer(QT_INSTALL_NECESSARY_BINARIES)
