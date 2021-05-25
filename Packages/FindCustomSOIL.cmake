@@ -23,27 +23,27 @@
 # ************************************************************
 # Start package
 cm_message_header( SOIL )
-package_begin( SOIL )
-package_create_home_path( SOIL SOIL_ROOT )
+cm_package_begin( SOIL )
+cm_package_create_home_path( SOIL SOIL_ROOT )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( SOIL_PREFIX_PATH ${SOIL_HOME} )
-package_create_search_path_include( SOIL )
-package_create_search_path_library( SOIL )
+cm_package_create_search_path_include( SOIL )
+cm_package_create_search_path_library( SOIL )
 package_create_search_path_plugin( SOIL )
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set( SOIL_LIBRARY_NAMES "SOIL" )
-package_create_debug_names( SOIL_LIBRARY_NAMES )
+cm_package_create_debug_names( SOIL_LIBRARY_NAMES )
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed( SOIL_PREFIX_PATH
+cm_package_clear_if_changed( SOIL_PREFIX_PATH
     SOIL_LIBRARY_DEBUG
     SOIL_LIBRARY_RELEASE
     SOIL_PATH_INCLUDE
@@ -51,17 +51,17 @@ package_clear_if_changed( SOIL_PREFIX_PATH
 
 
 # ************************************************************
-# Find paths
-package_find_path( SOIL_PATH_INCLUDE "SOIL.h" "${SOIL_SEARCH_PATH_INCLUDE}" "soil" )
-package_find_library( SOIL_LIBRARY_DEBUG "${SOIL_LIBRARY_NAMES_DEBUG}" "${SOIL_SEARCH_PATH_LIBRARY}" "debug" )
-package_find_library( SOIL_LIBRARY_RELEASE "${SOIL_LIBRARY_NAMES}" "${SOIL_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel" )
-package_make_library( SOIL_LIBRARY SOIL_LIBRARY_DEBUG SOIL_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path( SOIL_PATH_INCLUDE "SOIL.h" "${SOIL_SEARCH_PATH_INCLUDE}" "soil" )
+cm_package_find_library( SOIL_LIBRARY_DEBUG "${SOIL_LIBRARY_NAMES_DEBUG}" "${SOIL_SEARCH_PATH_LIBRARY}" "debug" )
+cm_package_find_library( SOIL_LIBRARY_RELEASE "${SOIL_LIBRARY_NAMES}" "${SOIL_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel" )
+cm_package_make_library( SOIL_LIBRARY SOIL_LIBRARY_DEBUG SOIL_LIBRARY_RELEASE )
 
 
 # ************************************************************
-# Finalize package
-package_validate( SOIL )
-package_add_parent_dir( SOIL )
-package_end( SOIL )
+# Finalize Package
+cm_package_validate( SOIL )
+cm_package_include_options( SOIL )
+cm_package_end( SOIL )
 cm_message_footer( SOIL )
 

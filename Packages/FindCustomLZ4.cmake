@@ -21,73 +21,78 @@
 
 
 # ************************************************************
-# Start package
-cm_message_header( LZ4 )
-package_begin( LZ4 )
-package_create_home_path( LZ4 LZ4_ROOT )
+# Start Package
+# ************************************************************
+cm_message_header(LZ4)
+cm_package_begin(LZ4)
+cm_package_create_home_path(LZ4 LZ4_ROOT)
 
 
 # ************************************************************
-# Create search path
-set( LZ4_PREFIX_PATH ${LZ4_HOME} )
-package_create_search_path_include( LZ4 )
-package_create_search_path_library( LZ4 )
+# Create Search Path
+# ************************************************************
+set(LZ4_PREFIX_PATH ${LZ4_HOME})
+cm_package_create_search_path_include(LZ4)
+cm_package_create_search_path_library(LZ4)
 
 
 # ************************************************************
-# Create search name
-set( LZ4_LIBRARY_NAMES "lz4" )
-package_create_debug_names( LZ4_LIBRARY_NAMES )
+# Create Search Name
+set(LZ4_LIBRARY_NAMES "lz4")
+cm_package_create_debug_names(LZ4_LIBRARY_NAMES)
 
 
 # ************************************************************
 # Clear
-if( WIN32 )
-	package_clear_if_changed( LZ4_PREFIX_PATH
-		LZ4_BINARY_RELEASE
-		LZ4_BINARY_DEBUG
-		LZ4_LIBRARY_DEBUG
-		LZ4_LIBRARY_RELEASE
-		LZ4_PATH_INCLUDE
-	)
-else()
-	package_clear_if_changed( LZ4_PREFIX_PATH
-		LZ4_LIBRARY_DEBUG
-		LZ4_LIBRARY_RELEASE
-		LZ4_PATH_INCLUDE
-	)
+# ************************************************************
+set(_clear
+    LZ4_LIBRARY_DEBUG
+    LZ4_LIBRARY_RELEASE
+    LZ4_PATH_INCLUDE
+)
+if(WIN32)
+    list(APPEND _clear
+        LZ4_BINARY_RELEASE
+        LZ4_BINARY_DEBUG
+    )
+endif()
+cm_package_clear_if_changed(LZ4_PREFIX_PATH ${_clear})
+unset(_clear)
+
+
+# ************************************************************
+# Find Paths
+# ************************************************************
+cm_package_find_path(LZ4_PATH_INCLUDE "lz4.h" "${LZ4_SEARCH_PATH_INCLUDE}" "")
+cm_package_find_library(LZ4_LIBRARY_DEBUG "${LZ4_LIBRARY_NAMES_DEBUG}" "${LZ4_SEARCH_PATH_LIBRARY}" "")
+cm_package_find_library(LZ4_LIBRARY_RELEASE "${LZ4_LIBRARY_NAMES}" "${LZ4_SEARCH_PATH_LIBRARY}" "")
+cm_package_make_library(LZ4_LIBRARY LZ4_LIBRARY_DEBUG LZ4_LIBRARY_RELEASE)
+
+
+# ************************************************************
+# Find Binaries on Windows
+# ************************************************************
+if(WIN32)
+    set(LZ4_BINARY_NAMES "lz4")
+    cm_package_create_release_binary_names(LZ4_BINARY_NAMES)
+    cm_package_create_debug_binary_names(LZ4_BINARY_NAMES)
+    cm_package_create_search_path_binary(LZ4)
+
+    set(LZ4_SEARCH_BINARIES
+        ${LZ4_SEARCH_PATH_BINARY}
+        ${LZ4_SEARCH_PATH_LIBRARY}
+    )
+
+    cm_package_find_file(LZ4_BINARY_DEBUG "${LZ4_BINARY_NAMES_DEBUG}" "${LZ4_SEARCH_BINARIES}" "")
+    cm_package_find_file(LZ4_BINARY_RELEASE "${LZ4_BINARY_NAMES_RELEASE}" "${LZ4_SEARCH_BINARIES}" "")
 endif()
 
 
 # ************************************************************
-# Find paths
-package_find_path( LZ4_PATH_INCLUDE "lz4.h" "${LZ4_SEARCH_PATH_INCLUDE}" "" )
-package_find_library( LZ4_LIBRARY_DEBUG "${LZ4_LIBRARY_NAMES_DEBUG}" "${LZ4_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( LZ4_LIBRARY_RELEASE "${LZ4_LIBRARY_NAMES}" "${LZ4_SEARCH_PATH_LIBRARY}" "release"  )
-package_make_library( LZ4_LIBRARY LZ4_LIBRARY_DEBUG LZ4_LIBRARY_RELEASE )
-
-
+# Finalize Package
 # ************************************************************
-# Find binaries on Windows
-if( WIN32 )
-	set( LZ4_BINARY_NAMES "lz4" )
-	package_create_release_binary_names( LZ4_BINARY_NAMES )
-	package_create_debug_binary_names( LZ4_BINARY_NAMES )
-	package_create_search_path_binary( LZ4 )
+cm_package_validate(LZ4)
+cm_package_include_options(LZ4)
+cm_package_end(LZ4)
+cm_message_footer(LZ4)
 
-	set( LZ4_SEARCH_BINARIES
-		${LZ4_SEARCH_PATH_BINARY}
-		${LZ4_SEARCH_PATH_LIBRARY}
-	)
-
-	package_find_file( LZ4_BINARY_DEBUG "${LZ4_BINARY_NAMES_DEBUG}" "${LZ4_SEARCH_BINARIES}" "debug" )
-	package_find_file( LZ4_BINARY_RELEASE "${LZ4_BINARY_NAMES_RELEASE}" "${LZ4_SEARCH_BINARIES}" "release" )
-endif()
-
-
-# ************************************************************
-# Finalize package
-package_validate( LZ4 )
-package_add_parent_dir( LZ4 )
-package_end( LZ4 )
-cm_message_footer( LZ4 )

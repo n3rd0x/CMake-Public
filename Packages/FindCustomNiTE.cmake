@@ -22,30 +22,30 @@
 # ************************************************************
 # Start package
 cm_message_header( NiTE )
-package_begin( NiTE )
-package_create_home_path( NiTE NiTE_ROOT )
+cm_package_begin( NiTE )
+cm_package_create_home_path( NiTE NiTE_ROOT )
 
 
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( NiTE_PREFIX_PATH ${NiTE_HOME} )
-package_create_search_path_binary( NiTE )
-package_create_search_path_include( NiTE )
-package_create_search_path_library( NiTE )
+cm_package_create_search_path_binary( NiTE )
+cm_package_create_search_path_include( NiTE )
+cm_package_create_search_path_library( NiTE )
 
 
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 # Set default version 2.
 if( NOT DEFINED NiTE_VERSION OR NiTE_VERSION STREQUAL "")
     set( NiTE_VERSION "2" CACHE STRING "Set NiTE version." )
 endif()
 set( NiTE_LIBRARY_NAMES "NiTE${NiTE_VERSION}" )
-package_create_debug_names( NiTE_LIBRARY_NAMES )
+cm_package_create_debug_names( NiTE_LIBRARY_NAMES )
 
 
 
@@ -69,7 +69,7 @@ if( WIN32 )
 endif()
 
 foreach( VAR ${NiTE_CLEAR_TRIGGER} )
-    package_clear_if_changed( ${VAR}
+    cm_package_clear_if_changed( ${VAR}
         ${NiTE_CLEAR_COMPONENTS}
     )
 endforeach()
@@ -78,11 +78,11 @@ endforeach()
 
 
 # ************************************************************
-# Find paths
-package_find_path( NiTE_PATH_INCLUDE "NiTE.h" "${NiTE_SEARCH_PATH_INCLUDE}" "" )
-package_find_library( NiTE_LIBRARY_DEBUG "${NiTE_LIBRARY_NAMES_DEBUG}" "${NiTE_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( NiTE_LIBRARY_RELEASE "${NiTE_LIBRARY_NAMES}" "${NiTE_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
-package_make_library( NiTE_LIBRARY NiTE_LIBRARY_DEBUG NiTE_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path( NiTE_PATH_INCLUDE "NiTE.h" "${NiTE_SEARCH_PATH_INCLUDE}" "" )
+cm_package_find_library( NiTE_LIBRARY_DEBUG "${NiTE_LIBRARY_NAMES_DEBUG}" "${NiTE_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( NiTE_LIBRARY_RELEASE "${NiTE_LIBRARY_NAMES}" "${NiTE_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
+cm_package_make_library( NiTE_LIBRARY NiTE_LIBRARY_DEBUG NiTE_LIBRARY_RELEASE )
 
 
 
@@ -92,7 +92,7 @@ package_make_library( NiTE_LIBRARY NiTE_LIBRARY_DEBUG NiTE_LIBRARY_RELEASE )
 if( WIN32 )
     # 2014-06-14 TST
     # We will handle this partially manually.
-    package_find_path( NiTE_PATH_REDIST "NiTE${NiTE_VERSION}.dll" "${NiTE_SEARCH_PATH_BINARY}" "" )
+    cm_package_find_path( NiTE_PATH_REDIST "NiTE${NiTE_VERSION}.dll" "${NiTE_SEARCH_PATH_BINARY}" "" )
     if( NiTE_PATH_REDIST )
         # Main redistribution.
         set( NiTE_MAIN_REDIST
@@ -113,7 +113,7 @@ endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate( NiTE )
-package_end( NiTE )
+# Finalize Package
+cm_package_validate( NiTE )
+cm_package_end( NiTE )
 cm_message_footer( NiTE )

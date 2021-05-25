@@ -23,8 +23,8 @@
 # ************************************************************
 # Start package
 cm_message_header(TINYXML2)
-package_begin(TINYXML2)
-package_create_home_path(TINYXML2 TINYXML2_ROOT)
+cm_package_begin(TINYXML2)
+cm_package_create_home_path(TINYXML2 TINYXML2_ROOT)
 
 
 # ************************************************************
@@ -33,27 +33,27 @@ option(TINYXML2_USE_STATIC "Flag to use static library." OFF)
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(TINYXML2_PREFIX_PATH ${TINYXML2_HOME})
-package_create_search_path_include(TINYXML2)
-package_create_search_path_library(TINYXML2)
+cm_package_create_search_path_include(TINYXML2)
+cm_package_create_search_path_library(TINYXML2)
 package_create_search_path_plugin(TINYXML2)
-package_create_search_path_binary(TINYXML2)
+cm_package_create_search_path_binary(TINYXML2)
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set(TINYXML2_LIBRARY_SHARED_NAMES "tinyxml2")
-package_create_debug_names(TINYXML2_LIBRARY_SHARED_NAMES)
+cm_package_create_debug_names(TINYXML2_LIBRARY_SHARED_NAMES)
 
 set(TINYXML2_LIBRARY_STATIC_NAMES "${TINYXML2_LIBRARY_SHARED_NAMES}")
-package_create_statical_names(TINYXML2_LIBRARY_STATIC_NAMES)
-package_create_debug_names(TINYXML2_LIBRARY_STATIC_NAMES)
+cm_package_create_statical_names(TINYXML2_LIBRARY_STATIC_NAMES)
+cm_package_create_debug_names(TINYXML2_LIBRARY_STATIC_NAMES)
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed(TINYXML2_PREFIX_PATH
+cm_package_clear_if_changed(TINYXML2_PREFIX_PATH
     TINYXML2_BINARY_DEBUG
     TINYXML2_BINARY_RELEASE
     TINYXML2_LIBRARY_DEBUG_SHARED
@@ -65,38 +65,38 @@ package_clear_if_changed(TINYXML2_PREFIX_PATH
 
 
 # ************************************************************
-# Find paths
-package_find_path(TINYXML2_PATH_INCLUDE "tinyxml2.h" "${TINYXML2_SEARCH_PATH_INCLUDE}" "tinyxml2")
+# Find Paths
+cm_package_find_path(TINYXML2_PATH_INCLUDE "tinyxml2.h" "${TINYXML2_SEARCH_PATH_INCLUDE}" "tinyxml2")
 
 # Shared libraries.
-package_find_library(
+cm_package_find_library(
     TINYXML2_LIBRARY_DEBUG_SHARED
     "${TINYXML2_LIBRARY_SHARED_NAMES_DEBUG}"
     "${TINYXML2_SEARCH_PATH_LIBRARY}"
     "debug"
 )
-package_find_library(
+cm_package_find_library(
     TINYXML2_LIBRARY_RELEASE_SHARED
     "${TINYXML2_LIBRARY_SHARED_NAMES}"
     "${TINYXML2_SEARCH_PATH_LIBRARY}"
     "release;relwithdebinfo;minsizerel"
 )
-package_make_library(TINYXML2_LIBRARY_SHARED TINYXML2_LIBRARY_DEBUG_SHARED TINYXML2_LIBRARY_RELEASE_SHARED)
+cm_package_make_library(TINYXML2_LIBRARY_SHARED TINYXML2_LIBRARY_DEBUG_SHARED TINYXML2_LIBRARY_RELEASE_SHARED)
 
 # Static libraries.
-package_find_library(
+cm_package_find_library(
     TINYXML2_LIBRARY_DEBUG_STATIC
     "${TINYXML2_LIBRARY_STATIC_NAMES_DEBUG}"
     "${TINYXML2_SEARCH_PATH_LIBRARY}"
     "debug"
 )
-package_find_library(
+cm_package_find_library(
     TINYXML2_LIBRARY_RELEASE_STATIC
     "${TINYXML2_LIBRARY_STATIC_NAMES}"
     "${TINYXML2_SEARCH_PATH_LIBRARY}"
     "release;relwithdebinfo;minsizerel"
 )
-package_make_library(TINYXML2_LIBRARY_STATIC TINYXML2_LIBRARY_DEBUG_STATIC TINYXML2_LIBRARY_RELEASE_STATIC)
+cm_package_make_library(TINYXML2_LIBRARY_STATIC TINYXML2_LIBRARY_DEBUG_STATIC TINYXML2_LIBRARY_RELEASE_STATIC)
 
 # Make set.
 if(TINYXML2_LIBRARY_SHARED AND TINYXML2_LIBRARY_STATIC)
@@ -122,21 +122,21 @@ endif()
 if(WIN32)
     if(TINYXML2_LIBRARY_SHARED)
         set(TINYXML2_BINARY_NAMES "tinyxml2")
-        package_create_release_binary_names(TINYXML2_BINARY_NAMES)
-        package_create_debug_binary_names(TINYXML2_BINARY_NAMES)
+        cm_package_create_release_binary_names(TINYXML2_BINARY_NAMES)
+        cm_package_create_debug_binary_names(TINYXML2_BINARY_NAMES)
 
         set(TINYXML2_SEARCH_BINARIES
             ${TINYXML2_SEARCH_PATH_BINARY}
             ${TINYXML2_SEARCH_PATH_LIBRARY}
        )
 
-        package_find_file(
+        cm_package_find_file(
             TINYXML2_BINARY_DEBUG
             "${TINYXML2_BINARY_NAMES_DEBUG}"
             "${TINYXML2_SEARCH_BINARIES}"
             "debug"
        )
-        package_find_file(
+        cm_package_find_file(
             TINYXML2_BINARY_RELEASE
             "${TINYXML2_BINARY_NAMES_RELEASE}"
             "${TINYXML2_SEARCH_BINARIES}"
@@ -148,8 +148,8 @@ endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate(TINYXML2)
-package_add_parent_dir(TINYXML2 ADD_PARENT)
-package_end(TINYXML2)
+# Finalize Package
+cm_package_validate(TINYXML2)
+cm_package_include_options(TINYXML2)
+cm_package_end(TINYXML2)
 cm_message_footer(TINYXML2)

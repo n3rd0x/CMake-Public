@@ -23,27 +23,27 @@
 # ************************************************************
 # Start package
 cm_message_header(GDAL)
-package_begin(GDAL)
-package_create_home_path(GDAL GDAL_ROOT)
+cm_package_begin(GDAL)
+cm_package_create_home_path(GDAL GDAL_ROOT)
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(GDAL_PREFIX_PATH ${GDAL_HOME})
-package_create_search_path_include(GDAL)
-package_create_search_path_library(GDAL)
+cm_package_create_search_path_include(GDAL)
+cm_package_create_search_path_library(GDAL)
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set(GDAL_LIBRARY_NAMES "gdal_i")
-package_create_debug_names(GDAL_LIBRARY_NAMES)
+cm_package_create_debug_names(GDAL_LIBRARY_NAMES)
 
 
 # ************************************************************
 # Clear
 if(WIN32)
-	package_clear_if_changed(GDAL_PREFIX_PATH
+	cm_package_clear_if_changed(GDAL_PREFIX_PATH
 		GDAL_BINARY_RELEASE
 		GDAL_BINARY_DEBUG
 		GDAL_LIBRARY_DEBUG
@@ -51,7 +51,7 @@ if(WIN32)
 		GDAL_PATH_INCLUDE
 	)
 else()
-	package_clear_if_changed(GDAL_PREFIX_PATH
+	cm_package_clear_if_changed(GDAL_PREFIX_PATH
 		GDAL_LIBRARY_DEBUG
 		GDAL_LIBRARY_RELEASE
 		GDAL_PATH_INCLUDE
@@ -60,34 +60,34 @@ endif()
 
 
 # ************************************************************
-# Find paths
-package_find_path(GDAL_PATH_INCLUDE "gdal.h" "${GDAL_SEARCH_PATH_INCLUDE}" "gdal" )
-package_find_library(GDAL_LIBRARY_DEBUG "${GDAL_LIBRARY_NAMES_DEBUG}" "${GDAL_SEARCH_PATH_LIBRARY}" "debug")
-package_find_library(GDAL_LIBRARY_RELEASE "${GDAL_LIBRARY_NAMES}" "${GDAL_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(GDAL_LIBRARY GDAL_LIBRARY_DEBUG GDAL_LIBRARY_RELEASE)
+# Find Paths
+cm_package_find_path(GDAL_PATH_INCLUDE "gdal.h" "${GDAL_SEARCH_PATH_INCLUDE}" "gdal" )
+cm_package_find_library(GDAL_LIBRARY_DEBUG "${GDAL_LIBRARY_NAMES_DEBUG}" "${GDAL_SEARCH_PATH_LIBRARY}" "debug")
+cm_package_find_library(GDAL_LIBRARY_RELEASE "${GDAL_LIBRARY_NAMES}" "${GDAL_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_make_library(GDAL_LIBRARY GDAL_LIBRARY_DEBUG GDAL_LIBRARY_RELEASE)
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if(WIN32)
     set( GDAL_BINARY_NAMES "gdal" )
-	package_create_release_binary_names(GDAL_BINARY_NAMES)
-	package_create_debug_binary_names(GDAL_BINARY_NAMES)
-	package_create_search_path_binary(GDAL)
+	cm_package_create_release_binary_names(GDAL_BINARY_NAMES)
+	cm_package_create_debug_binary_names(GDAL_BINARY_NAMES)
+	cm_package_create_search_path_binary(GDAL)
 
 	set(GDAL_SEARCH_BINARIES
 		${GDAL_SEARCH_PATH_BINARY}
 		${GDAL_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file(GDAL_BINARY_DEBUG "${GDAL_BINARY_NAMES_DEBUG}" "${GDAL_SEARCH_BINARIES}" "debug")
-	package_find_file(GDAL_BINARY_RELEASE "${GDAL_BINARY_NAMES_RELEASE}" "${GDAL_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+	cm_package_find_file(GDAL_BINARY_DEBUG "${GDAL_BINARY_NAMES_DEBUG}" "${GDAL_SEARCH_BINARIES}" "debug")
+	cm_package_find_file(GDAL_BINARY_RELEASE "${GDAL_BINARY_NAMES_RELEASE}" "${GDAL_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate(GDAL)
-package_add_parent_dir(GDAL)
-package_end(GDAL )
+# Finalize Package
+cm_package_validate(GDAL)
+cm_package_include_options(GDAL)
+cm_package_end(GDAL )
 cm_message_footer(GDAL)

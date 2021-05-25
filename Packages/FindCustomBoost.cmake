@@ -23,10 +23,10 @@
 # ************************************************************
 # Start package
 cm_message_header(Boost)
-package_begin(Boost)
+cm_package_begin(Boost)
 
 # Find the Boost path.
-package_get_environment_path(Boost BOOST_ROOT)
+cm_package_get_environment_path(Boost BOOST_ROOT)
 if(Boost_ENV_BOOST_ROOT)
     set(BOOST_ROOT "${Boost_ENV_BOOST_ROOT}" CACHE PATH "Path to Boost directory.")
 else()
@@ -46,13 +46,13 @@ endforeach()
 
 
 # Reset if necessary.
-package_clear_if_changed(BOOST_ROOT
+cm_package_clear_if_changed(BOOST_ROOT
     Boost_INCLUDE_DIR
 )
-package_clear_if_changed(Boost_USE_STATIC_LIBS
+cm_package_clear_if_changed(Boost_USE_STATIC_LIBS
     Boost_INCLUDE_DIR
 )
-package_clear_if_changed(Boost_COMPONENTS
+cm_package_clear_if_changed(Boost_COMPONENTS
     Boost_INCLUDE_DIR
 )
 
@@ -66,14 +66,14 @@ link_directories(${Boost_LIBRARY_DIRS})
 # ************************************************************
 # TODO: 2013-08-26 TST
 # This hasn't been testet!
-# Find binaries on Windows
+# Find Binaries on Windows
 if( WIN32 )
 	# For each founded component, copy binary is neccessary
 	if( NOT Boost_USE_STATIC_LIBS )
-		# Create search paths
+		# Create Search Paths
 		set( Boost_PREFIX_PATH ${BOOST_ROOT} )
-		package_create_search_path_binary( Boost )
-		package_create_search_path_library( Boost )
+		cm_package_create_search_path_binary( Boost )
+		cm_package_create_search_path_library( Boost )
 		set( Boost_SEARCH_PATH_BINARIES
 			${Boost_SEARCH_PATH_BINARY}
 			${Boost_SEARCH_PATH_LIBRARY}
@@ -100,13 +100,13 @@ if( WIN32 )
 				if( Boost_${COMPONENT}_LIBRARY_DEBUG )
 					get_filename_component( debug_file ${Boost_${COMPONENT}_LIBRARY_DEBUG} NAME_WE )
 					set( filename "${debug_file}.dll" )
-					package_find_file( Boost_${COMPONENT}_BINARY_DEBUG "${filename}" "${Boost_SEARCH_PATH_BINARIES}" "debug" )
+					cm_package_find_file( Boost_${COMPONENT}_BINARY_DEBUG "${filename}" "${Boost_SEARCH_PATH_BINARIES}" "debug" )
 				endif()
 
 				if( Boost_${COMPONENT}_LIBRARY_RELEASE )
 					get_filename_component( release_file ${Boost_${COMPONENT}_LIBRARY_RELEASE} NAME_WE )
 					set( filename "${release_file}.dll" )
-					package_find_file( Boost_${COMPONENT}_BINARY_RELEASE "${filename}" "${Boost_SEARCH_PATH_BINARIES}" "release;relwithdebinfo;minsizerel" )
+					cm_package_find_file( Boost_${COMPONENT}_BINARY_RELEASE "${filename}" "${Boost_SEARCH_PATH_BINARIES}" "release;relwithdebinfo;minsizerel" )
 				endif()
 
 				if( Boost_${COMPONENT}_BINARY_DEBUG )
@@ -126,7 +126,7 @@ endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate(Boost)
-package_end(Boost)
+# Finalize Package
+cm_package_validate(Boost)
+cm_package_end(Boost)
 cm_message_footer(Boost)

@@ -24,30 +24,30 @@
 # Start package
 # ************************************************************
 cm_message_header(OIS)
-package_begin(OIS)
-package_create_home_path(OIS OIS_ROOT)
+cm_package_begin(OIS)
+cm_package_create_home_path(OIS OIS_ROOT)
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 # ************************************************************
 set(OIS_PREFIX_PATH ${OIS_HOME})
-package_create_search_path_include(OIS)
-package_create_search_path_library(OIS)
+cm_package_create_search_path_include(OIS)
+cm_package_create_search_path_library(OIS)
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 # ************************************************************
 set(OIS_LIBRARY_NAMES "OIS")
-package_create_debug_names(OIS_LIBRARY_NAMES)
+cm_package_create_debug_names(OIS_LIBRARY_NAMES)
 
 
 # ************************************************************
 # Clear
 # ************************************************************
 if(WIN32)
-    package_clear_if_changed(OIS_PREFIX_PATH
+    cm_package_clear_if_changed(OIS_PREFIX_PATH
         OIS_BINARY_RELEASE
         OIS_BINARY_DEBUG
         OIS_LIBRARY_RELEASE
@@ -56,7 +56,7 @@ if(WIN32)
         OIS_FOUND
     )
 else()
-    package_clear_if_changed(OIS_PREFIX_PATH
+    cm_package_clear_if_changed(OIS_PREFIX_PATH
         OIS_LIBRARY_RELEASE
         OIS_LIBRARY_DEBUG
         OIS_PATH_INCLUDE
@@ -66,38 +66,38 @@ endif()
 
 
 # ************************************************************
-# Find paths
+# Find Paths
 # ************************************************************
-package_find_path(OIS_PATH_INCLUDE "OIS.h" "${OIS_SEARCH_PATH_INCLUDE}" "OIS;Ois;ois")
-package_find_library(OIS_LIBRARY_DEBUG "${OIS_LIBRARY_NAMES_DEBUG}" "${OIS_SEARCH_PATH_LIBRARY}" "debug")
-package_find_library(OIS_LIBRARY_RELEASE "${OIS_LIBRARY_NAMES}" "${OIS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(OIS_LIBRARY OIS_LIBRARY_DEBUG OIS_LIBRARY_RELEASE)
+cm_package_find_path(OIS_PATH_INCLUDE "OIS.h" "${OIS_SEARCH_PATH_INCLUDE}" "OIS;Ois;ois")
+cm_package_find_library(OIS_LIBRARY_DEBUG "${OIS_LIBRARY_NAMES_DEBUG}" "${OIS_SEARCH_PATH_LIBRARY}" "debug")
+cm_package_find_library(OIS_LIBRARY_RELEASE "${OIS_LIBRARY_NAMES}" "${OIS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_make_library(OIS_LIBRARY OIS_LIBRARY_DEBUG OIS_LIBRARY_RELEASE)
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 # ************************************************************
 if(WIN32)
     set(OIS_BINARY_NAMES "OIS")
-    package_create_release_binary_names(OIS_BINARY_NAMES)
-    package_create_debug_binary_names(OIS_BINARY_NAMES)
-    package_create_search_path_binary(OIS)
+    cm_package_create_release_binary_names(OIS_BINARY_NAMES)
+    cm_package_create_debug_binary_names(OIS_BINARY_NAMES)
+    cm_package_create_search_path_binary(OIS)
 
     set(OIS_SEARCH_BINARIES
         ${OIS_SEARCH_PATH_BINARY}
         ${OIS_SEARCH_PATH_LIBRARY}
     )
 
-    package_find_file(OIS_BINARY_DEBUG "${OIS_BINARY_NAMES_DEBUG}" "${OIS_SEARCH_BINARIES}" "debug")
-    package_find_file(OIS_BINARY_RELEASE "${OIS_BINARY_NAMES_RELEASE}" "${OIS_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+    cm_package_find_file(OIS_BINARY_DEBUG "${OIS_BINARY_NAMES_DEBUG}" "${OIS_SEARCH_BINARIES}" "debug")
+    cm_package_find_file(OIS_BINARY_RELEASE "${OIS_BINARY_NAMES_RELEASE}" "${OIS_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
 
 
 # ************************************************************
-# Finalize package
+# Finalize Package
 # ************************************************************
-package_validate(OIS)
-package_add_parent_dir(OIS ADD_PARENT)
-package_end(OIS)
+cm_package_validate(OIS)
+cm_package_include_options(OIS)
+cm_package_end(OIS)
 cm_message_footer(OIS)
 

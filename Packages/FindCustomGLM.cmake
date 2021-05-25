@@ -23,8 +23,8 @@
 # ************************************************************
 # Start package
 cm_message_header(GLM)
-package_begin(GLM)
-package_create_home_path(GLM GLM_ROOT)
+cm_package_begin(GLM)
+cm_package_create_home_path(GLM GLM_ROOT)
 
 
 
@@ -45,16 +45,16 @@ endif()
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(GLM_PREFIX_PATH ${GLM_HOME})
-package_create_search_path_include(GLM)
+cm_package_create_search_path_include(GLM)
 
 
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed(GLM_PREFIX_PATH
+cm_package_clear_if_changed(GLM_PREFIX_PATH
     GLM_PATH_INCLUDE
 )
 
@@ -62,19 +62,19 @@ package_clear_if_changed(GLM_PREFIX_PATH
 
 
 # ************************************************************
-# Find paths
-package_find_path(GLM_PATH_INCLUDE "glm.hpp" "${GLM_SEARCH_PATH_INCLUDE}" "GLM")
+# Find Paths
+cm_package_find_path(GLM_PATH_INCLUDE "glm.hpp" "${GLM_SEARCH_PATH_INCLUDE}" "GLM")
 
 
 
 
 # ************************************************************
-# Finalize package
+# Finalize Package
 if(GLM_PATH_INCLUDE)
     cm_message_status(STATUS "The GLM library is located...")
     set(GLM_FOUND TRUE)
     set(GLM_INCLUDE_DIR "${GLM_PATH_INCLUDE}")
-    package_add_parent_dir(GLM ADD_PARENT)
+    cm_package_include_options(GLM)
 else()
     cm_message_status("" "Failed to locate the GLM library.")
     set(GLM_FOUND FALSE)

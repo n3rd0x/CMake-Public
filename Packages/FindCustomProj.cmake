@@ -23,8 +23,8 @@
 # ************************************************************
 # Start package
 cm_message_header( PROJ )
-package_begin( PROJ )
-package_create_home_path( PROJ PROJ_ROOT )
+cm_package_begin( PROJ )
+cm_package_create_home_path( PROJ PROJ_ROOT )
 
 
 # ************************************************************
@@ -33,26 +33,26 @@ option( PROJ_USE_STATIC_LIBRARY OFF "Flag to use static library" )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( PROJ_PREFIX_PATH ${PROJ_HOME} )
-package_create_search_path_include( PROJ )
-package_create_search_path_library( PROJ )
+cm_package_create_search_path_include( PROJ )
+cm_package_create_search_path_library( PROJ )
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 if( PROJ_USE_STATIC_LIBRARY )
     set( PROJ_LIBRARY_NAMES "proj" )
 else()
     set( PROJ_LIBRARY_NAMES "proj_i" "proj" )
 endif()
-package_create_debug_names( PROJ_LIBRARY_NAMES )
+cm_package_create_debug_names( PROJ_LIBRARY_NAMES )
 
 
 # ************************************************************
 # Clear
 if( WIN32 )
-	package_clear_if_changed( PROJ_PREFIX_PATH
+	cm_package_clear_if_changed( PROJ_PREFIX_PATH
 		PROJ_BINARY_RELEASE
 		PROJ_BINARY_DEBUG
 		PROJ_LIBRARY_DEBUG
@@ -60,7 +60,7 @@ if( WIN32 )
 		PROJ_PATH_INCLUDE
 	)
 else()
-	package_clear_if_changed( PROJ_USE_STATIC_LIBRARY
+	cm_package_clear_if_changed( PROJ_USE_STATIC_LIBRARY
 		PROJ_LIBRARY_DEBUG
 		PROJ_LIBRARY_RELEASE
 		PROJ_PATH_INCLUDE
@@ -69,15 +69,15 @@ endif()
 
 
 # ************************************************************
-# Find paths
-package_find_path( PROJ_PATH_INCLUDE "proj_api.h" "${PROJ_SEARCH_PATH_INCLUDE}" "" )
-package_find_library( PROJ_LIBRARY_DEBUG "${PROJ_LIBRARY_NAMES_DEBUG}" "${PROJ_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( PROJ_LIBRARY_RELEASE "${PROJ_LIBRARY_NAMES}" "${PROJ_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
-package_make_library( PROJ_LIBRARY PROJ_LIBRARY_DEBUG PROJ_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path( PROJ_PATH_INCLUDE "proj_api.h" "${PROJ_SEARCH_PATH_INCLUDE}" "" )
+cm_package_find_library( PROJ_LIBRARY_DEBUG "${PROJ_LIBRARY_NAMES_DEBUG}" "${PROJ_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( PROJ_LIBRARY_RELEASE "${PROJ_LIBRARY_NAMES}" "${PROJ_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
+cm_package_make_library( PROJ_LIBRARY PROJ_LIBRARY_DEBUG PROJ_LIBRARY_RELEASE )
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if( WIN32 AND NOT PROJ_USE_STATIC_LIBRARY )
     string( REGEX MATCH "proj_i" DYNAMIC_DEBUG_FOUND ${PROJ_LIBRARY_DEBUG} )
     string( REGEX MATCH "proj_i" DYNAMIC_RELEASE_FOUND ${PROJ_LIBRARY_RELEASE} )
@@ -86,17 +86,17 @@ if( WIN32 AND NOT PROJ_USE_STATIC_LIBRARY )
         cm_message_verbose( STATUS "Searching for dynamic library." )
 
         set( PROJ_BINARY_NAMES "proj" )
-        package_create_release_binary_names( PROJ_BINARY_NAMES )
-        package_create_debug_binary_names( PROJ_BINARY_NAMES )
-        package_create_search_path_binary( PROJ )
+        cm_package_create_release_binary_names( PROJ_BINARY_NAMES )
+        cm_package_create_debug_binary_names( PROJ_BINARY_NAMES )
+        cm_package_create_search_path_binary( PROJ )
 
         set( PROJ_SEARCH_BINARIES
             ${PROJ_SEARCH_PATH_BINARY}
             ${PROJ_SEARCH_PATH_LIBRARY}
         )
 
-        package_find_file( PROJ_BINARY_DEBUG "${PROJ_BINARY_NAMES_DEBUG}" "${PROJ_SEARCH_BINARIES}" "debug" )
-        package_find_file( PROJ_BINARY_RELEASE "${PROJ_BINARY_NAMES_RELEASE}" "${PROJ_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
+        cm_package_find_file( PROJ_BINARY_DEBUG "${PROJ_BINARY_NAMES_DEBUG}" "${PROJ_SEARCH_BINARIES}" "debug" )
+        cm_package_find_file( PROJ_BINARY_RELEASE "${PROJ_BINARY_NAMES_RELEASE}" "${PROJ_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
     endif()
 
 	unset( DYNAMIC_DEBUG_FOUND )
@@ -105,8 +105,8 @@ endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate( PROJ )
-package_add_parent_dir( PROJ ADD_PARENT )
-package_end( PROJ )
+# Finalize Package
+cm_package_validate( PROJ )
+cm_package_include_options( PROJ ADD_PARENT )
+cm_package_end( PROJ )
 cm_message_footer( PROJ )

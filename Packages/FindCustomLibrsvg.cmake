@@ -24,8 +24,8 @@
 # Start Package
 # ************************************************************
 cm_message_header(RSVG)
-package_begin(RSVG)
-package_create_home_path(RSVG RSVG_ROOT)
+cm_package_begin(RSVG)
+cm_package_create_home_path(RSVG RSVG_ROOT)
 
 
 
@@ -44,8 +44,8 @@ set_property(CACHE RSVG_VERSION PROPERTY STRINGS "2")
 # Create Search Paths
 # ************************************************************
 set(RSVG_PREFIX_PATH ${RSVG_HOME})
-package_create_search_path_include(RSVG)
-package_create_search_path_library(RSVG)
+cm_package_create_search_path_include(RSVG)
+cm_package_create_search_path_library(RSVG)
 
 set(RSVG_INCLUDE_SEARCH_SUFFIX "librsvg")
 if(RSVG_VERSION STREQUAL "2")
@@ -61,9 +61,9 @@ endif()
 set(RSVG_LIBRARY_NAMES "rsvg-${RSVG_VERSION}")
 if(RSVG_PRIORITY_STATICAL)
     cm_message_verbose(STATUS "Prioritu search statical library.")
-    package_create_statical_names(RSVG_LIBRARY_NAMES)
+    cm_package_create_statical_names(RSVG_LIBRARY_NAMES)
 endif()
-package_create_debug_names(RSVG_LIBRARY_NAMES)
+cm_package_create_debug_names(RSVG_LIBRARY_NAMES)
 
 
 
@@ -82,13 +82,13 @@ set(RSVG_CLEAR_IF_CHANGED
 )
 foreach(VAR ${RSVG_CLEAR_IF_CHANGED})
     if(WIN32 AND NOT RSVG_PRIORITY_STATICAL)
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             RSVG_BINARY_DEBUG
             RSVG_BINARY_RELEASE
             ${RSVG_COMMON_VARIABLES}
         )
     else()
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             ${RSVG_COMMON_VARIABLES}
         )
         unset(RSVG_BINARY_DEBUG CACHE)
@@ -103,10 +103,10 @@ endforeach()
 # Find Paths and Libraries
 # ************************************************************
 package_statical_priority(RSVG)
-package_find_path(RSVG_PATH_INCLUDE "rsvg.h" "${RSVG_SEARCH_PATH_INCLUDE}" "${RSVG_INCLUDE_SEARCH_SUFFIX}" )
-package_find_library(RSVG_LIBRARY_DEBUG "${RSVG_LIBRARY_NAMES_DEBUG}" "${RSVG_SEARCH_PATH_LIBRARY}" "debug")
-package_find_library(RSVG_LIBRARY_RELEASE "${RSVG_LIBRARY_NAMES}" "${RSVG_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(RSVG_LIBRARY RSVG_LIBRARY_DEBUG RSVG_LIBRARY_RELEASE)
+cm_package_find_path(RSVG_PATH_INCLUDE "rsvg.h" "${RSVG_SEARCH_PATH_INCLUDE}" "${RSVG_INCLUDE_SEARCH_SUFFIX}" )
+cm_package_find_library(RSVG_LIBRARY_DEBUG "${RSVG_LIBRARY_NAMES_DEBUG}" "${RSVG_SEARCH_PATH_LIBRARY}" "debug")
+cm_package_find_library(RSVG_LIBRARY_RELEASE "${RSVG_LIBRARY_NAMES}" "${RSVG_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_make_library(RSVG_LIBRARY RSVG_LIBRARY_DEBUG RSVG_LIBRARY_RELEASE)
 
 
 
@@ -116,17 +116,17 @@ package_make_library(RSVG_LIBRARY RSVG_LIBRARY_DEBUG RSVG_LIBRARY_RELEASE)
 # ************************************************************
 if(WIN32 AND NOT RSVG_ENABLE_STATICAL)
 	set(RSVG_BINARY_NAMES "librsvg")
-    package_create_debug_binary_names(RSVG_BINARY_NAMES)
-	package_create_release_binary_names(RSVG_BINARY_NAMES)
-	package_create_search_path_binary(RSVG)
+    cm_package_create_debug_binary_names(RSVG_BINARY_NAMES)
+	cm_package_create_release_binary_names(RSVG_BINARY_NAMES)
+	cm_package_create_search_path_binary(RSVG)
 
 	set(RSVG_SEARCH_BINARIES
 		${RSVG_SEARCH_PATH_BINARY}
 		${RSVG_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file(RSVG_BINARY_DEBUG "${RSVG_BINARY_NAMES_DEBUG}" "${RSVG_SEARCH_BINARIES}" "debug")
-	package_find_file(RSVG_BINARY_RELEASE "${RSVG_BINARY_NAMES_RELEASE}" "${RSVG_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+	cm_package_find_file(RSVG_BINARY_DEBUG "${RSVG_BINARY_NAMES_DEBUG}" "${RSVG_SEARCH_BINARIES}" "debug")
+	cm_package_find_file(RSVG_BINARY_RELEASE "${RSVG_BINARY_NAMES_RELEASE}" "${RSVG_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
 
 
@@ -136,7 +136,7 @@ endif()
 # Finalize Package
 # ************************************************************
 package_statical_default()
-package_validate(RSVG)
-package_add_parent_dir(RSVG ADD_PARENT)
-package_end(RSVG)
+cm_package_validate(RSVG)
+cm_package_include_options(RSVG)
+cm_package_end(RSVG)
 cm_message_footer(RSVG)

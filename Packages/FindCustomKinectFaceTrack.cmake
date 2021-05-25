@@ -24,8 +24,8 @@
 cm_message_header( KINECT_FACETRACK )
 
 if( WIN32 )
-	package_begin( KINECT_FACETRACK )
-	package_create_home_path( KINECT_FACETRACK FTSDK_DIR )
+	cm_package_begin( KINECT_FACETRACK )
+	cm_package_create_home_path( KINECT_FACETRACK FTSDK_DIR )
 
 	# Check whether we are going to compile for x64Bit systems.
 	string( REGEX MATCH "Win64" x64_FOUND ${CMAKE_GENERATOR} )
@@ -41,20 +41,20 @@ if( WIN32 )
 
 
 	# ************************************************************
-	# Create search path
+	# Create Search Path
 	set( KINECT_FACETRACK_PREFIX_PATH ${KINECT_FACETRACK_HOME} )
-	package_create_search_path_include( KINECT_FACETRACK )
-	package_create_search_path_library( KINECT_FACETRACK )
+	cm_package_create_search_path_include( KINECT_FACETRACK )
+	cm_package_create_search_path_library( KINECT_FACETRACK )
 
 
 	# ************************************************************
-	# Create search name
+	# Create Search Name
 	set( KINECT_FACETRACK_LIBRARY_NAMES "FaceTrackLib" )
 
 
 	# ************************************************************
 	# Clear
-	package_clear_if_changed( KINECT_FACETRACK_PREFIX_PATH
+	cm_package_clear_if_changed( KINECT_FACETRACK_PREFIX_PATH
 		KINECT_FACETRACK_PATH_INCLUDE
 		KINECT_FACETRACK_LIBRARY_DEBUG
 		KINECT_FACETRACK_LIBRARY_RELEASE
@@ -64,18 +64,18 @@ if( WIN32 )
 
 
 	# ************************************************************
-	# Find paths
-	package_find_path( KINECT_FACETRACK_PATH_INCLUDE "FaceTrackLib.h" "${KINECT_FACETRACK_SEARCH_PATH_INCLUDE}" "" )
-	package_find_library( KINECT_FACETRACK_LIBRARY_DEBUG "${KINECT_FACETRACK_LIBRARY_NAMES}" "${KINECT_FACETRACK_SEARCH_PATH_LIBRARY}" "${PATH_SUFFIX}" )
-	package_find_library( KINECT_FACETRACK_LIBRARY_RELEASE "${KINECT_FACETRACK_LIBRARY_NAMES}" "${KINECT_FACETRACK_SEARCH_PATH_LIBRARY}" "${PATH_SUFFIX}" )
-	package_make_library( KINECT_FACETRACK_LIBRARY KINECT_FACETRACK_LIBRARY_DEBUG KINECT_FACETRACK_LIBRARY_RELEASE )
+	# Find Paths
+	cm_package_find_path( KINECT_FACETRACK_PATH_INCLUDE "FaceTrackLib.h" "${KINECT_FACETRACK_SEARCH_PATH_INCLUDE}" "" )
+	cm_package_find_library( KINECT_FACETRACK_LIBRARY_DEBUG "${KINECT_FACETRACK_LIBRARY_NAMES}" "${KINECT_FACETRACK_SEARCH_PATH_LIBRARY}" "${PATH_SUFFIX}" )
+	cm_package_find_library( KINECT_FACETRACK_LIBRARY_RELEASE "${KINECT_FACETRACK_LIBRARY_NAMES}" "${KINECT_FACETRACK_SEARCH_PATH_LIBRARY}" "${PATH_SUFFIX}" )
+	cm_package_make_library( KINECT_FACETRACK_LIBRARY KINECT_FACETRACK_LIBRARY_DEBUG KINECT_FACETRACK_LIBRARY_RELEASE )
 
 
 	# ************************************************************
-	# Find binaries on Windows
+	# Find Binaries on Windows
 	if( WIN32 )
-		package_find_file( KINECT_FACETRACK_BINARY_TRACKLIB "FaceTrackLib.dll" "${KINECT_FACETRACK_HOME}/redist" "${PATH_SUFFIX}" )
-		package_find_file( KINECT_FACETRACK_BINARY_TRACKDATA "FaceTrackData.dll" "${KINECT_FACETRACK_HOME}/redist" "${PATH_SUFFIX}" )
+		cm_package_find_file( KINECT_FACETRACK_BINARY_TRACKLIB "FaceTrackLib.dll" "${KINECT_FACETRACK_HOME}/redist" "${PATH_SUFFIX}" )
+		cm_package_find_file( KINECT_FACETRACK_BINARY_TRACKDATA "FaceTrackData.dll" "${KINECT_FACETRACK_HOME}/redist" "${PATH_SUFFIX}" )
 
 		if( KINECT_FACETRACK_BINARY_TRACKLIB )
 			set( KINECT_FACETRACK_BINARY_DEBUG ${KINECT_FACETRACK_BINARY_TRACKLIB} )
@@ -90,10 +90,10 @@ if( WIN32 )
 
 
 	# ************************************************************
-	# Finalize package
-	package_validate( KINECT_FACETRACK )
-	package_add_parent_dir( KINECT_FACETRACK )
-	package_end( KINECT_FACETRACK )
+	# Finalize Package
+	cm_package_validate( KINECT_FACETRACK )
+	cm_package_include_options( KINECT_FACETRACK )
+	cm_package_end( KINECT_FACETRACK )
 else()
 	cm_message_status( SEND_ERROR "This only works in Microsoft Windows." )
 endif()

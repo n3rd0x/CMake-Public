@@ -24,8 +24,8 @@
 # Start Package
 # ************************************************************
 cm_message_header(CAUDIO)
-package_begin(CAUDIO)
-package_create_home_path(CAUDIO CAUDIO_ROOT)
+cm_package_begin(CAUDIO)
+cm_package_create_home_path(CAUDIO CAUDIO_ROOT)
 
 
 
@@ -34,8 +34,8 @@ package_create_home_path(CAUDIO CAUDIO_ROOT)
 # Create Search Paths
 # ************************************************************
 set(CAUDIO_PREFIX_PATH ${CAUDIO_HOME})
-package_create_search_path_include(CAUDIO)
-package_create_search_path_library(CAUDIO)
+cm_package_create_search_path_include(CAUDIO)
+cm_package_create_search_path_library(CAUDIO)
 
 
 
@@ -44,7 +44,7 @@ package_create_search_path_library(CAUDIO)
 # Create Search Name
 # ************************************************************
 set(CAUDIO_LIBRARY_NAMES "cAudio")
-package_create_debug_names(CAUDIO_LIBRARY_NAMES)
+cm_package_create_debug_names(CAUDIO_LIBRARY_NAMES)
 
 
 
@@ -62,13 +62,13 @@ set(CAUDIO_CLEAR_IF_CHANGED
 )
 foreach(VAR ${CAUDIO_CLEAR_IF_CHANGED})
     if(WIN32)
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             CAUDIO_BINARY_DEBUG
             CAUDIO_BINARY_RELEASE
             ${CAUDIO_COMMON_VARIABLES}
         )
     else()
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             ${CAUDIO_COMMON_VARIABLES}
         )
         unset(CAUDIO_BINARY_DEBUG CACHE)
@@ -83,10 +83,10 @@ endforeach()
 # Find Paths and Libraries
 # ************************************************************
 package_statical_priority(CAUDIO)
-package_find_path(CAUDIO_PATH_INCLUDE "cAudio/cAudio.h" "${CAUDIO_SEARCH_PATH_INCLUDE}" "${CAUDIO_INCLUDE_SEARCH_SUFFIX}" )
-package_find_library(CAUDIO_LIBRARY_DEBUG "${CAUDIO_LIBRARY_NAMES_DEBUG}" "${CAUDIO_SEARCH_PATH_LIBRARY}" "debug")
-package_find_library(CAUDIO_LIBRARY_RELEASE "${CAUDIO_LIBRARY_NAMES}" "${CAUDIO_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(CAUDIO_LIBRARY CAUDIO_LIBRARY_DEBUG CAUDIO_LIBRARY_RELEASE)
+cm_package_find_path(CAUDIO_PATH_INCLUDE "cAudio/cAudio.h" "${CAUDIO_SEARCH_PATH_INCLUDE}" "${CAUDIO_INCLUDE_SEARCH_SUFFIX}" )
+cm_package_find_library(CAUDIO_LIBRARY_DEBUG "${CAUDIO_LIBRARY_NAMES_DEBUG}" "${CAUDIO_SEARCH_PATH_LIBRARY}" "debug")
+cm_package_find_library(CAUDIO_LIBRARY_RELEASE "${CAUDIO_LIBRARY_NAMES}" "${CAUDIO_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_make_library(CAUDIO_LIBRARY CAUDIO_LIBRARY_DEBUG CAUDIO_LIBRARY_RELEASE)
 
 
 
@@ -96,17 +96,17 @@ package_make_library(CAUDIO_LIBRARY CAUDIO_LIBRARY_DEBUG CAUDIO_LIBRARY_RELEASE)
 # ************************************************************
 if(WIN32 AND NOT CAUDIO_ENABLE_STATICAL)
 	set(CAUDIO_BINARY_NAMES "libCAUDIO")
-    package_create_debug_binary_names(CAUDIO_BINARY_NAMES)
-	package_create_release_binary_names(CAUDIO_BINARY_NAMES)
-	package_create_search_path_binary(CAUDIO)
+    cm_package_create_debug_binary_names(CAUDIO_BINARY_NAMES)
+	cm_package_create_release_binary_names(CAUDIO_BINARY_NAMES)
+	cm_package_create_search_path_binary(CAUDIO)
 
 	set(CAUDIO_SEARCH_BINARIES
 		${CAUDIO_SEARCH_PATH_BINARY}
 		${CAUDIO_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file(CAUDIO_BINARY_DEBUG "${CAUDIO_BINARY_NAMES_DEBUG}" "${CAUDIO_SEARCH_BINARIES}" "debug")
-	package_find_file(CAUDIO_BINARY_RELEASE "${CAUDIO_BINARY_NAMES_RELEASE}" "${CAUDIO_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+	cm_package_find_file(CAUDIO_BINARY_DEBUG "${CAUDIO_BINARY_NAMES_DEBUG}" "${CAUDIO_SEARCH_BINARIES}" "debug")
+	cm_package_find_file(CAUDIO_BINARY_RELEASE "${CAUDIO_BINARY_NAMES_RELEASE}" "${CAUDIO_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
 
 
@@ -115,7 +115,7 @@ endif()
 # ************************************************************
 # Finalize Package
 # ************************************************************
-package_validate(CAUDIO)
-package_add_parent_dir(CAUDIO ADD_PARENT)
-package_end(CAUDIO)
+cm_package_validate(CAUDIO)
+cm_package_include_options(CAUDIO)
+cm_package_end(CAUDIO)
 cm_message_footer(CAUDIO)

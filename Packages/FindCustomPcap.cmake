@@ -24,18 +24,18 @@
 # Start package
 # ************************************************************
 cm_message_header(PCAP)
-package_begin(PCAP)
-package_create_home_path(PCAP PCAP_ROOT)
+cm_package_begin(PCAP)
+cm_package_create_home_path(PCAP PCAP_ROOT)
 
 
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 # ************************************************************
 set(PCAP_PREFIX_PATH ${PCAP_HOME})
-package_create_search_path_include(PCAP)
-package_create_search_path_library(PCAP)
+cm_package_create_search_path_include(PCAP)
+cm_package_create_search_path_library(PCAP)
 
 
 
@@ -43,7 +43,7 @@ package_create_search_path_library(PCAP)
 # ************************************************************
 # Clear
 # ************************************************************
-package_clear_if_changed(PCAP_HOME
+cm_package_clear_if_changed(PCAP_HOME
     PCAP_FOUND
     PCAP_PATH_INCLUDE
     PCAP_LIBRARY_DEBUG
@@ -54,10 +54,10 @@ package_clear_if_changed(PCAP_HOME
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 # ************************************************************
 set(PCAP_LIBRARY_NAMES "pcap")
-package_create_debug_names(PCAP_LIBRARY_NAMES)
+cm_package_create_debug_names(PCAP_LIBRARY_NAMES)
 
 
 
@@ -65,18 +65,18 @@ package_create_debug_names(PCAP_LIBRARY_NAMES)
 # ************************************************************
 # Find path and file
 # ************************************************************
-package_find_path(PCAP_PATH_INCLUDE "pcap.h" "${PCAP_SEARCH_PATH_INCLUDE}" "pcap")
-package_find_library(PCAP_LIBRARY_DEBUG "${PCAP_LIBRARY_NAMES_DEBUG}" "${PCAP_SEARCH_PATH_LIBRARY}" "debug" )
-package_find_library(PCAP_LIBRARY_RELEASE "${PCAP_LIBRARY_NAMES}" "${PCAP_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(PCAP_LIBRARY PCAP_LIBRARY_DEBUG PCAP_LIBRARY_RELEASE)
+cm_package_find_path(PCAP_PATH_INCLUDE "pcap.h" "${PCAP_SEARCH_PATH_INCLUDE}" "pcap")
+cm_package_find_library(PCAP_LIBRARY_DEBUG "${PCAP_LIBRARY_NAMES_DEBUG}" "${PCAP_SEARCH_PATH_LIBRARY}" "debug" )
+cm_package_find_library(PCAP_LIBRARY_RELEASE "${PCAP_LIBRARY_NAMES}" "${PCAP_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_make_library(PCAP_LIBRARY PCAP_LIBRARY_DEBUG PCAP_LIBRARY_RELEASE)
 
 
 
 # ************************************************************
-# Finalize package
+# Finalize Package
 # ************************************************************
-package_validate(PCAP)
-package_add_parent_dir(PCAP ADD_PARENT)
-package_end(PCAP)
+cm_package_validate(PCAP)
+cm_package_include_options(PCAP)
+cm_package_end(PCAP)
 cm_message_footer(PCAP)
 

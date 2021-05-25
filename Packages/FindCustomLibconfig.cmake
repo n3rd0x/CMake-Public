@@ -24,27 +24,27 @@
 # ************************************************************
 # Start package
 cm_message_header( LIBCONFIG )
-package_begin( LIBCONFIG )
-package_create_home_path( LIBCONFIG LIBCONFIG_ROOT )
+cm_package_begin( LIBCONFIG )
+cm_package_create_home_path( LIBCONFIG LIBCONFIG_ROOT )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( LIBCONFIG_PREFIX_PATH ${LIBCONFIG_HOME} )
-package_create_search_path_include( LIBCONFIG )
-package_create_search_path_library( LIBCONFIG )
+cm_package_create_search_path_include( LIBCONFIG )
+cm_package_create_search_path_library( LIBCONFIG )
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set( LIBCONFIG_LIBRARY_NAMES "libconfig" )
-package_create_debug_names( LIBCONFIG_LIBRARY_NAMES )
+cm_package_create_debug_names( LIBCONFIG_LIBRARY_NAMES )
 
 
 # ************************************************************
 # Clear
 if( WIN32 )
-	package_clear_if_changed( LIBCONFIG_PREFIX_PATH
+	cm_package_clear_if_changed( LIBCONFIG_PREFIX_PATH
 		LIBCONFIG_BINARY_RELEASE
 		LIBCONFIG_BINARY_DEBUG
 		LIBCONFIG_LIBRARY_DEBUG
@@ -52,7 +52,7 @@ if( WIN32 )
 		LIBCONFIG_PATH_INCLUDE
 	)
 else()
-	package_clear_if_changed( LIBCONFIG_PREFIX_PATH
+	cm_package_clear_if_changed( LIBCONFIG_PREFIX_PATH
 		LIBCONFIG_LIBRARY_DEBUG
 		LIBCONFIG_LIBRARY_RELEASE
 		LIBCONFIG_PATH_INCLUDE
@@ -61,34 +61,34 @@ endif()
 
 
 # ************************************************************
-# Find paths
-package_find_path( LIBCONFIG_PATH_INCLUDE "libconfig.h" "${LIBCONFIG_SEARCH_PATH_INCLUDE}" "libconfig" )
-package_find_library( LIBCONFIG_LIBRARY_DEBUG "${LIBCONFIG_LIBRARY_NAMES_DEBUG}" "${LIBCONFIG_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( LIBCONFIG_LIBRARY_RELEASE "${LIBCONFIG_LIBRARY_NAMES}" "${LIBCONFIG_SEARCH_PATH_LIBRARY}" "release"  )
-package_make_library( LIBCONFIG_LIBRARY LIBCONFIG_LIBRARY_DEBUG LIBCONFIG_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path( LIBCONFIG_PATH_INCLUDE "libconfig.h" "${LIBCONFIG_SEARCH_PATH_INCLUDE}" "libconfig" )
+cm_package_find_library( LIBCONFIG_LIBRARY_DEBUG "${LIBCONFIG_LIBRARY_NAMES_DEBUG}" "${LIBCONFIG_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( LIBCONFIG_LIBRARY_RELEASE "${LIBCONFIG_LIBRARY_NAMES}" "${LIBCONFIG_SEARCH_PATH_LIBRARY}" "release"  )
+cm_package_make_library( LIBCONFIG_LIBRARY LIBCONFIG_LIBRARY_DEBUG LIBCONFIG_LIBRARY_RELEASE )
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if( WIN32 )
 	set( LIBCONFIG_BINARY_NAMES "libconfig" )
-	package_create_release_binary_names( LIBCONFIG_BINARY_NAMES )
-	package_create_debug_binary_names( LIBCONFIG_BINARY_NAMES )
-	package_create_search_path_binary( LIBCONFIG )
+	cm_package_create_release_binary_names( LIBCONFIG_BINARY_NAMES )
+	cm_package_create_debug_binary_names( LIBCONFIG_BINARY_NAMES )
+	cm_package_create_search_path_binary( LIBCONFIG )
 
 	set( LIBCONFIG_SEARCH_BINARIES
 		${LIBCONFIG_SEARCH_PATH_BINARY}
 		${LIBCONFIG_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file( LIBCONFIG_BINARY_DEBUG "${LIBCONFIG_BINARY_NAMES_DEBUG}" "${LIBCONFIG_SEARCH_BINARIES}" "debug" )
-	package_find_file( LIBCONFIG_BINARY_RELEASE "${LIBCONFIG_BINARY_NAMES_RELEASE}" "${LIBCONFIG_SEARCH_BINARIES}" "release" )
+	cm_package_find_file( LIBCONFIG_BINARY_DEBUG "${LIBCONFIG_BINARY_NAMES_DEBUG}" "${LIBCONFIG_SEARCH_BINARIES}" "debug" )
+	cm_package_find_file( LIBCONFIG_BINARY_RELEASE "${LIBCONFIG_BINARY_NAMES_RELEASE}" "${LIBCONFIG_SEARCH_BINARIES}" "release" )
 endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate( LIBCONFIG )
-package_add_parent_dir( LIBCONFIG )
-package_end( LIBCONFIG )
+# Finalize Package
+cm_package_validate( LIBCONFIG )
+cm_package_include_options( LIBCONFIG )
+cm_package_end( LIBCONFIG )
 cm_message_footer( LIBCONFIG )

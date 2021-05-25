@@ -23,8 +23,8 @@
 # ************************************************************
 # Start package
 cm_message_header(Vulkan)
-package_begin(Vulkan)
-package_create_home_path(Vulkan Vulkan_ROOT)
+cm_package_begin(Vulkan)
+cm_package_create_home_path(Vulkan Vulkan_ROOT)
 
 # Notice.
 cm_message_status("" "NB! Version 0.18.2")
@@ -37,11 +37,11 @@ option(Vulkan_STATIC_LIB "Enable statically linking." FALSE)
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(Vulkan_PREFIX_PATH ${Vulkan_HOME})
-package_create_search_path_include(Vulkan)
-package_create_search_path_library(Vulkan)
-package_create_search_path_binary(Vulkan)
+cm_package_create_search_path_include(Vulkan)
+cm_package_create_search_path_library(Vulkan)
+cm_package_create_search_path_binary(Vulkan)
 
 
 
@@ -53,7 +53,7 @@ if(Vulkan_STATIC_LIB)
 else()
     set(Vulkan_LIBRARY_NAMES "libMoltenVK.dylib")
 endif()
-#package_create_debug_names(Vulkan_LIBRARY_NAMES)
+#cm_package_create_debug_names(Vulkan_LIBRARY_NAMES)
 
 
 
@@ -70,7 +70,7 @@ set(Vulkan_CLEAR_IF_CHANGED
     Vulkan_STATIC_LIB
 )
 foreach(Var ${Vulkan_CLEAR_IF_CHANGED})
-    package_clear_if_changed(${Var}
+    cm_package_clear_if_changed(${Var}
         Vulkan_BINARY_DEBUG
         Vulkan_BINARY_RELEASE
         ${Vulkan_COMMON_VARIABLES}
@@ -83,15 +83,15 @@ endforeach()
 
 # ************************************************************
 # Find path and header file
-package_find_path(Vulkan_PATH_INCLUDE "vulkan/vulkan.h" "${Vulkan_SEARCH_PATH_INCLUDE}" "")
+cm_package_find_path(Vulkan_PATH_INCLUDE "vulkan/vulkan.h" "${Vulkan_SEARCH_PATH_INCLUDE}" "")
 if(Vulkan_STATIC_LIB)
-    package_find_file(Vulkan_LIBRARY_DEBUG "${Vulkan_LIBRARY_NAMES}" "${Vulkan_SEARCH_PATH_LIBRARY};${Vulkan_SEARCH_PATH_BINARY}" "debug;macOS")
-    package_find_file(Vulkan_LIBRARY_RELEASE "${Vulkan_LIBRARY_NAMES}" "${Vulkan_SEARCH_PATH_LIBRARY};${Vulkan_SEARCH_PATH_BINARY}" "release;relwithdebinfo;minsizerel;macOS")
+    cm_package_find_file(Vulkan_LIBRARY_DEBUG "${Vulkan_LIBRARY_NAMES}" "${Vulkan_SEARCH_PATH_LIBRARY};${Vulkan_SEARCH_PATH_BINARY}" "debug;macOS")
+    cm_package_find_file(Vulkan_LIBRARY_RELEASE "${Vulkan_LIBRARY_NAMES}" "${Vulkan_SEARCH_PATH_LIBRARY};${Vulkan_SEARCH_PATH_BINARY}" "release;relwithdebinfo;minsizerel;macOS")
 else()
-    package_find_library(Vulkan_LIBRARY_DEBUG "${Vulkan_LIBRARY_NAMES}" "${Vulkan_SEARCH_PATH_LIBRARY};${Vulkan_SEARCH_PATH_BINARY}" "debug;macOS")
-    package_find_library(Vulkan_LIBRARY_RELEASE "${Vulkan_LIBRARY_NAMES}" "${Vulkan_SEARCH_PATH_LIBRARY};${Vulkan_SEARCH_PATH_BINARY}" "release;relwithdebinfo;minsizerel;macOS")
+    cm_package_find_library(Vulkan_LIBRARY_DEBUG "${Vulkan_LIBRARY_NAMES}" "${Vulkan_SEARCH_PATH_LIBRARY};${Vulkan_SEARCH_PATH_BINARY}" "debug;macOS")
+    cm_package_find_library(Vulkan_LIBRARY_RELEASE "${Vulkan_LIBRARY_NAMES}" "${Vulkan_SEARCH_PATH_LIBRARY};${Vulkan_SEARCH_PATH_BINARY}" "release;relwithdebinfo;minsizerel;macOS")
 endif()
-package_make_library(Vulkan_LIBRARY Vulkan_LIBRARY_DEBUG Vulkan_LIBRARY_RELEASE)
+cm_package_make_library(Vulkan_LIBRARY Vulkan_LIBRARY_DEBUG Vulkan_LIBRARY_RELEASE)
 
 
 
@@ -108,9 +108,9 @@ endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate(Vulkan)
-package_add_parent_dir(Vulkan ADD_PARENT)
-package_end(Vulkan)
+# Finalize Package
+cm_package_validate(Vulkan)
+cm_package_include_options(Vulkan)
+cm_package_end(Vulkan)
 cm_message_footer(Vulkan)
 

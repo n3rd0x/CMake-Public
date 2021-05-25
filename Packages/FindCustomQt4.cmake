@@ -22,24 +22,24 @@
 # ************************************************************
 # Start package
 cm_message_header( QT )
-package_begin( QT )
-package_create_home_path( QT QT4_ROOT )
+cm_package_begin( QT )
+cm_package_create_home_path( QT QT4_ROOT )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( QT_PREFIX_PATH ${QT_HOME} )
-package_create_search_path_binary( QT )
-package_create_search_path_include( QT )
-package_create_search_path_library( QT )
+cm_package_create_search_path_binary( QT )
+cm_package_create_search_path_include( QT )
+cm_package_create_search_path_library( QT )
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed( QT_PREFIX_PATH
+cm_package_clear_if_changed( QT_PREFIX_PATH
 	QT_QMAKE_EXECUTABLE
 )
-package_clear_if_changed( QT_COMPONENTS
+cm_package_clear_if_changed( QT_COMPONENTS
 	QT_QMAKE_EXECUTABLE
 )
 
@@ -48,8 +48,8 @@ package_clear_if_changed( QT_COMPONENTS
 # Find library
 # Find Qt based on the environment variable.
 if( NOT QT_QMAKE_EXECUTABLE )
-	package_find_file( QT_QMAKE_EXECUTABLE "qmake.exe" "${QT_SEARCH_PATH_BINARY}" "" )
-    #package_get_environment_path( QT QT4_DIR )
+	cm_package_find_file( QT_QMAKE_EXECUTABLE "qmake.exe" "${QT_SEARCH_PATH_BINARY}" "" )
+    #cm_package_get_environment_path( QT QT4_DIR )
     #find_file( QT_QMAKE_EXECUTABLE NAMES "qmake.exe" HINTS ${QT_ENV_QT4_DIR} PATH_SUFFIXES "bin" NO_DEFAULT_PATH )
 endif()
 
@@ -83,7 +83,7 @@ endif()
 
 
 # ************************************************************
-# Finalize package
+# Finalize Package
 if( QT_FOUND )
 	cm_message_status( STATUS "The Qt4 library is located." )
 else()

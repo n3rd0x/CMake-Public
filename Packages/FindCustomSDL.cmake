@@ -23,8 +23,8 @@
 # ************************************************************
 # Start package
 cm_message_header(SDL)
-package_begin(SDL)
-package_create_home_path(SDL SDL_ROOT)
+cm_package_begin(SDL)
+cm_package_create_home_path(SDL SDL_ROOT)
 
 # Select version.
 set(SDL_VERSION "2" CACHE STRING "Select SDL version.")
@@ -34,25 +34,25 @@ cm_message_status(STATUS "Current SDL version: ${SDL_VERSION}")
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(SDL_PREFIX_PATH ${SDL_HOME})
-package_create_search_path_include(SDL)
-package_create_search_path_library(SDL)
+cm_package_create_search_path_include(SDL)
+cm_package_create_search_path_library(SDL)
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set(SDL_LIBRARY_NAME_COMMON "SDL${SDL_VERSION}")
 set(SDL_LIBRARY_NAME_IMAGE "SDL${SDL_VERSION}_image")
 set(SDL_LIBRARY_NAME_MAIN "SDL${SDL_VERSION}main")
-package_create_debug_names(SDL_LIBRARY_NAME_COMMON)
-package_create_debug_names(SDL_LIBRARY_NAME_IMAGE)
-package_create_debug_names(SDL_LIBRARY_NAME_MAIN)
+cm_package_create_debug_names(SDL_LIBRARY_NAME_COMMON)
+cm_package_create_debug_names(SDL_LIBRARY_NAME_IMAGE)
+cm_package_create_debug_names(SDL_LIBRARY_NAME_MAIN)
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed(SDL_PREFIX_PATH
+cm_package_clear_if_changed(SDL_PREFIX_PATH
     SDL_BINARY_DEBUG
     SDL_BINARY_RELEASE
     SDL_BINARY_IMAGE_DEBUG
@@ -68,53 +68,53 @@ package_clear_if_changed(SDL_PREFIX_PATH
 
 
 # ************************************************************
-# Find paths
-package_find_path(SDL_PATH_INCLUDE "SDL.h" "${SDL_SEARCH_PATH_INCLUDE}" "SDL2")
+# Find Paths
+cm_package_find_path(SDL_PATH_INCLUDE "SDL.h" "${SDL_SEARCH_PATH_INCLUDE}" "SDL2")
 
 # Common library.
-package_find_library(
+cm_package_find_library(
     SDL_LIBRARY_COMMON_DEBUG
     "${SDL_LIBRARY_NAME_COMMON_DEBUG}"
     "${SDL_SEARCH_PATH_LIBRARY}"
     "debug"
 )
-package_find_library(
+cm_package_find_library(
     SDL_LIBRARY_COMMON_RELEASE
     "${SDL_LIBRARY_NAME_COMMON}"
     "${SDL_SEARCH_PATH_LIBRARY}"
     "release"
 )
-package_make_library(SDL_LIBRARY_COMMON SDL_LIBRARY_COMMON_DEBUG SDL_LIBRARY_COMMON_RELEASE)
+cm_package_make_library(SDL_LIBRARY_COMMON SDL_LIBRARY_COMMON_DEBUG SDL_LIBRARY_COMMON_RELEASE)
 
 # Image library.
-package_find_library(
+cm_package_find_library(
     SDL_LIBRARY_IMAGE_DEBUG
     "${SDL_LIBRARY_NAME_IMAGE_DEBUG}"
     "${SDL_SEARCH_PATH_LIBRARY}"
     "debug"
 )
-package_find_library(
+cm_package_find_library(
     SDL_LIBRARY_IMAGE_RELEASE
     "${SDL_LIBRARY_NAME_IMAGE}"
     "${SDL_SEARCH_PATH_LIBRARY}"
     "release"
 )
-package_make_library(SDL_LIBRARY_IMAGE SDL_LIBRARY_IMAGE_DEBUG SDL_LIBRARY_IMAGE_RELEASE)
+cm_package_make_library(SDL_LIBRARY_IMAGE SDL_LIBRARY_IMAGE_DEBUG SDL_LIBRARY_IMAGE_RELEASE)
 
 # Main library.
-package_find_library(
+cm_package_find_library(
     SDL_LIBRARY_MAIN_DEBUG
     "${SDL_LIBRARY_NAME_MAIN_DEBUG}"
     "${SDL_SEARCH_PATH_LIBRARY}"
     "debug"
 )
-package_find_library(
+cm_package_find_library(
     SDL_LIBRARY_MAIN_RELEASE
     "${SDL_LIBRARY_NAME_MAIN}"
     "${SDL_SEARCH_PATH_LIBRARY}"
     "release"
 )
-package_make_library(SDL_LIBRARY_MAIN SDL_LIBRARY_MAIN_DEBUG SDL_LIBRARY_MAIN_RELEASE)
+cm_package_make_library(SDL_LIBRARY_MAIN SDL_LIBRARY_MAIN_DEBUG SDL_LIBRARY_MAIN_RELEASE)
 
 # Make set.
 if(SDL_LIBRARY_COMMON AND SDL_LIBRARY_MAIN)
@@ -131,28 +131,28 @@ endif()
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if( WIN32 )
     set(SDL_BINARY_NAMES "SDL${SDL_VERSION}")
-    package_create_release_binary_names(SDL_BINARY_NAMES)
-    package_create_debug_binary_names(SDL_BINARY_NAMES)
-    package_create_search_path_binary(SDL)
+    cm_package_create_release_binary_names(SDL_BINARY_NAMES)
+    cm_package_create_debug_binary_names(SDL_BINARY_NAMES)
+    cm_package_create_search_path_binary(SDL)
 
     set(SDL_SEARCH_BINARIES
         ${SDL_SEARCH_PATH_BINARY}
         ${SDL_SEARCH_PATH_LIBRARY}
     )
 
-    package_find_file(SDL_BINARY_DEBUG "${SDL_BINARY_NAMES_DEBUG}" "${SDL_SEARCH_BINARIES}" "debug")
-    package_find_file(SDL_BINARY_RELEASE "${SDL_BINARY_NAMES_RELEASE}" "${SDL_SEARCH_BINARIES}" "release")
+    cm_package_find_file(SDL_BINARY_DEBUG "${SDL_BINARY_NAMES_DEBUG}" "${SDL_SEARCH_BINARIES}" "debug")
+    cm_package_find_file(SDL_BINARY_RELEASE "${SDL_BINARY_NAMES_RELEASE}" "${SDL_SEARCH_BINARIES}" "release")
 
     # Extensions.
     if(SDL_LIBRARY_IMAGE)
         set(SDL_IMAGE_BINARY_NAMES "SDL${SDL_VERSION}_image")
-        package_create_release_binary_names(SDL_IMAGE_BINARY_NAMES)
-        package_create_debug_binary_names(SDL_IMAGE_BINARY_NAMES)
-        package_find_file(SDL_IMAGE_BINARY_DEBUG "${SDL_IMAGE_BINARY_NAMES_DEBUG}" "${SDL_SEARCH_BINARIES}" "debug")
-        package_find_file(SDL_IMAGE_BINARY_RELEASE "${SDL_IMAGE_BINARY_NAMES_RELEASE}" "${SDL_SEARCH_BINARIES}" "release")
+        cm_package_create_release_binary_names(SDL_IMAGE_BINARY_NAMES)
+        cm_package_create_debug_binary_names(SDL_IMAGE_BINARY_NAMES)
+        cm_package_find_file(SDL_IMAGE_BINARY_DEBUG "${SDL_IMAGE_BINARY_NAMES_DEBUG}" "${SDL_SEARCH_BINARIES}" "debug")
+        cm_package_find_file(SDL_IMAGE_BINARY_RELEASE "${SDL_IMAGE_BINARY_NAMES_RELEASE}" "${SDL_SEARCH_BINARIES}" "release")
 
         # Add dependencies.
         set(SDL_IMAGE_DEPS
@@ -164,12 +164,12 @@ if( WIN32 )
         )
 
         foreach(VAR ${SDL_IMAGE_DEPS})
-            package_find_file(SDL_${VAR}_IMAGE_BINARY_DEBUG "${VAR}" "${SDL_SEARCH_BINARIES}" "debug")
+            cm_package_find_file(SDL_${VAR}_IMAGE_BINARY_DEBUG "${VAR}" "${SDL_SEARCH_BINARIES}" "debug")
             if(SDL_${VAR}_IMAGE_BINARY_DEBUG)
                 set(SDL_IMAGE_BINARY_DEBUG ${SDL_IMAGE_BINARY_DEBUG} ${SDL_${VAR}_IMAGE_BINARY_DEBUG})
             endif()
 
-            package_find_file(SDL_${VAR}_IMAGE_BINARY_RELEASE "${VAR}" "${SDL_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+            cm_package_find_file(SDL_${VAR}_IMAGE_BINARY_RELEASE "${VAR}" "${SDL_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
             if(SDL_${VAR}_IMAGE_BINARY_RELEASE )
                 set(SDL_IMAGE_BINARY_RELEASE ${SDL_IMAGE_BINARY_RELEASE} ${SDL_${VAR}_IMAGE_BINARY_RELEASE})
             endif()
@@ -182,8 +182,8 @@ endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate(SDL)
-package_add_parent_dir(SDL)
-package_end(SDL)
+# Finalize Package
+cm_package_validate(SDL)
+cm_package_include_options(SDL)
+cm_package_end(SDL)
 cm_message_footer(SDL)

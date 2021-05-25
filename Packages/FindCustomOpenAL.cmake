@@ -23,16 +23,16 @@
 # ************************************************************
 # Start package
 cm_message_header(OPENAL)
-package_begin(OPENAL)
+cm_package_begin(OPENAL)
 
 # Use official package.
 find_package(OPENAL)
 
 
 # ************************************************************
-# Finalize package
+# Finalize Package
 if(OPENAL_FOUND)
     set(OPENAL_LIBRARIES ${OPENAL_LIBRARY})
 endif()
-package_end(OPENAL)
+cm_package_end(OPENAL)
 cm_message_footer(OPENAL)

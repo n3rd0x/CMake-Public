@@ -23,32 +23,32 @@
 # ************************************************************
 # Start package
 cm_message_header(CAIRO)
-package_begin(CAIRO)
-package_create_home_path(CAIRO CAIRO_ROOT)
+cm_package_begin(CAIRO)
+cm_package_create_home_path(CAIRO CAIRO_ROOT)
 
 
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(CAIRO_PREFIX_PATH ${CAIRO_HOME})
-package_create_search_path_include(CAIRO)
-package_create_search_path_library(CAIRO)
+cm_package_create_search_path_include(CAIRO)
+cm_package_create_search_path_library(CAIRO)
 
 
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set(CAIRO_LIBRARY_NAMES "cairo")
-package_create_debug_names(CAIRO_LIBRARY_NAMES)
+cm_package_create_debug_names(CAIRO_LIBRARY_NAMES)
 
 
 
 # ************************************************************
 # Clear
 if(WIN32)
-	package_clear_if_changed(CAIRO_PREFIX_PATH
+	cm_package_clear_if_changed(CAIRO_PREFIX_PATH
 		CAIRO_BINARY_RELEASE
 		CAIRO_BINARY_DEBUG
 		CAIRO_LIBRARY_DEBUG
@@ -56,7 +56,7 @@ if(WIN32)
 		CAIRO_PATH_INCLUDE
 	)
 else()
-	package_clear_if_changed(CAIRO_PREFIX_PATH
+	cm_package_clear_if_changed(CAIRO_PREFIX_PATH
 		CAIRO_LIBRARY_DEBUG
 		CAIRO_LIBRARY_RELEASE
 		CAIRO_PATH_INCLUDE
@@ -67,17 +67,17 @@ endif()
 
 
 # ************************************************************
-# Find paths
-package_find_path(CAIRO_PATH_INCLUDE "cairo.h" "${CAIRO_SEARCH_PATH_INCLUDE}" "cairo")
-package_find_library(CAIRO_LIBRARY_DEBUG "${CAIRO_LIBRARY_NAMES_DEBUG}" "${CAIRO_SEARCH_PATH_LIBRARY}" "debug" )
-package_find_library(CAIRO_LIBRARY_RELEASE "${CAIRO_LIBRARY_NAMES}" "${CAIRO_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel" )
-package_make_library(CAIRO_LIBRARY CAIRO_LIBRARY_DEBUG CAIRO_LIBRARY_RELEASE)
+# Find Paths
+cm_package_find_path(CAIRO_PATH_INCLUDE "cairo.h" "${CAIRO_SEARCH_PATH_INCLUDE}" "cairo")
+cm_package_find_library(CAIRO_LIBRARY_DEBUG "${CAIRO_LIBRARY_NAMES_DEBUG}" "${CAIRO_SEARCH_PATH_LIBRARY}" "debug" )
+cm_package_find_library(CAIRO_LIBRARY_RELEASE "${CAIRO_LIBRARY_NAMES}" "${CAIRO_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel" )
+cm_package_make_library(CAIRO_LIBRARY CAIRO_LIBRARY_DEBUG CAIRO_LIBRARY_RELEASE)
 
 
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if(WIN32)
 	set(CAIRO_DEPENDENCY
 		"freetype6.dll"
@@ -87,26 +87,26 @@ if(WIN32)
 		"zlib1.dll"
 	)
     set(CAIRO_BINARY_NAMES "libcairo-2")
-	package_create_release_binary_names(CAIRO_BINARY_NAMES)
-	package_create_debug_binary_names(CAIRO_BINARY_NAMES)
-	package_create_search_path_binary(CAIRO)
+	cm_package_create_release_binary_names(CAIRO_BINARY_NAMES)
+	cm_package_create_debug_binary_names(CAIRO_BINARY_NAMES)
+	cm_package_create_search_path_binary(CAIRO)
 
 	set(CAIRO_SEARCH_BINARIES
 		${CAIRO_SEARCH_PATH_BINARY}
 		${CAIRO_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file(CAIRO_BINARY_DEBUG "${CAIRO_BINARY_NAMES_DEBUG}" "${CAIRO_SEARCH_BINARIES}" "debug")
-	package_find_file(CAIRO_BINARY_RELEASE "${CAIRO_BINARY_NAMES_RELEASE}" "${CAIRO_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+	cm_package_find_file(CAIRO_BINARY_DEBUG "${CAIRO_BINARY_NAMES_DEBUG}" "${CAIRO_SEARCH_BINARIES}" "debug")
+	cm_package_find_file(CAIRO_BINARY_RELEASE "${CAIRO_BINARY_NAMES_RELEASE}" "${CAIRO_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 
     # Find dependencies.
     foreach(VAR ${CAIRO_DEPENDENCY})
-        package_find_file(CAIRO_${VAR}_BINARY_DEBUG "${VAR}" "${CAIRO_SEARCH_BINARIES}" "debug")
+        cm_package_find_file(CAIRO_${VAR}_BINARY_DEBUG "${VAR}" "${CAIRO_SEARCH_BINARIES}" "debug")
         if(CAIRO_${VAR}_BINARY_DEBUG)
             set(CAIRO_BINARY_DEBUG ${CAIRO_BINARY_DEBUG} ${CAIRO_${VAR}_BINARY_DEBUG})
         endif()
 
-        package_find_file(CAIRO_${VAR}_BINARY_RELEASE "${VAR}" "${CAIRO_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+        cm_package_find_file(CAIRO_${VAR}_BINARY_RELEASE "${VAR}" "${CAIRO_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
         if(CAIRO_${VAR}_BINARY_RELEASE)
             set(CAIRO_BINARY_RELEASE ${CAIRO_BINARY_RELEASE} ${CAIRO_${VAR}_BINARY_RELEASE})
         endif()
@@ -119,8 +119,8 @@ endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate(CAIRO)
-package_add_parent_dir(CAIRO ADD_PARENT)
-package_end(CAIRO)
+# Finalize Package
+cm_package_validate(CAIRO)
+cm_package_include_options(CAIRO)
+cm_package_end(CAIRO)
 cm_message_footer(CAIRO)

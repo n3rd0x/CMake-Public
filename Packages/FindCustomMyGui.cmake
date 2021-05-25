@@ -23,29 +23,29 @@
 # ************************************************************
 # Start package
 cm_message_header( MYGUI )
-package_begin( MYGUI )
-package_create_home_path( MYGUI MYGUI_ROOT )
+cm_package_begin( MYGUI )
+cm_package_create_home_path( MYGUI MYGUI_ROOT )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( MYGUI_PREFIX_PATH ${MYGUI_HOME} )
-package_create_search_path_include( MYGUI )
+cm_package_create_search_path_include( MYGUI )
 package_create_search_path_media( MYGUI )
-package_create_search_path_library( MYGUI )
+cm_package_create_search_path_library( MYGUI )
 
 
 # ************************************************************
 # Define library name
 set( MYGUI_LIBRARY_ENGINE_NAMES "MyGUIEngine" )
 set( MYGUI_LIBRARY_PLATFORM_NAMES "MyGUI.OgrePlatform" )
-package_create_debug_names( MYGUI_LIBRARY_ENGINE_NAMES )
-package_create_debug_names( MYGUI_LIBRARY_PLATFORM_NAMES )
+cm_package_create_debug_names( MYGUI_LIBRARY_ENGINE_NAMES )
+cm_package_create_debug_names( MYGUI_LIBRARY_PLATFORM_NAMES )
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed( MYGUI_PREFIX_PATH
+cm_package_clear_if_changed( MYGUI_PREFIX_PATH
     MYGUI_LIBRARY_ENGINE_RELEASE
     MYGUI_LIBRARY_ENGINE_DEBUG
     MYGUI_LIBRARY_PLATFORM_RELEASE
@@ -57,46 +57,46 @@ package_clear_if_changed( MYGUI_PREFIX_PATH
 
 # ************************************************************
 # Find path and header file
-package_find_path( MYGUI_PATH_INCLUDE "MyGUI.h" "${MYGUI_SEARCH_PATH_INCLUDE}" "MYGUI;MyGui;mygui" )
+cm_package_find_path( MYGUI_PATH_INCLUDE "MyGUI.h" "${MYGUI_SEARCH_PATH_INCLUDE}" "MYGUI;MyGui;mygui" )
 
-package_find_library( MYGUI_LIBRARY_ENGINE_DEBUG "${MYGUI_LIBRARY_ENGINE_NAMES_DEBUG}" "${MYGUI_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( MYGUI_LIBRARY_ENGINE_RELEASE "${MYGUI_LIBRARY_ENGINE_NAMES}" "${MYGUI_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
+cm_package_find_library( MYGUI_LIBRARY_ENGINE_DEBUG "${MYGUI_LIBRARY_ENGINE_NAMES_DEBUG}" "${MYGUI_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( MYGUI_LIBRARY_ENGINE_RELEASE "${MYGUI_LIBRARY_ENGINE_NAMES}" "${MYGUI_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
 
-package_find_library( MYGUI_LIBRARY_PLATFORM_DEBUG "${MYGUI_LIBRARY_PLATFORM_NAMES_DEBUG}" "${MYGUI_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( MYGUI_LIBRARY_PLATFORM_RELEASE "${MYGUI_LIBRARY_PLATFORM_NAMES}" "${MYGUI_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
+cm_package_find_library( MYGUI_LIBRARY_PLATFORM_DEBUG "${MYGUI_LIBRARY_PLATFORM_NAMES_DEBUG}" "${MYGUI_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( MYGUI_LIBRARY_PLATFORM_RELEASE "${MYGUI_LIBRARY_PLATFORM_NAMES}" "${MYGUI_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
 
 
 # ************************************************************
 # Make library set
-package_make_library( MYGUI_LIBRARY_ENGINE MYGUI_LIBRARY_ENGINE_DEBUG MYGUI_LIBRARY_ENGINE_RELEASE )
-package_make_library( MYGUI_LIBRARY_PLATFORM MYGUI_LIBRARY_PLATFORM_DEBUG MYGUI_LIBRARY_PLATFORM_RELEASE )
+cm_package_make_library( MYGUI_LIBRARY_ENGINE MYGUI_LIBRARY_ENGINE_DEBUG MYGUI_LIBRARY_ENGINE_RELEASE )
+cm_package_make_library( MYGUI_LIBRARY_PLATFORM MYGUI_LIBRARY_PLATFORM_DEBUG MYGUI_LIBRARY_PLATFORM_RELEASE )
 
 
 # ************************************************************
 # Locate media path
-package_find_path( MYGUI_PATH_MEDIA "MyGUI_Pointers.png" "${MYGUI_HOME};${MYGUI_SEARCH_PATH_MEDIA}" "Media/MyGUI_Media;share/MYGUI/Media/MyGUI_Media" )
+cm_package_find_path( MYGUI_PATH_MEDIA "MyGUI_Pointers.png" "${MYGUI_HOME};${MYGUI_SEARCH_PATH_MEDIA}" "Media/MyGUI_Media;share/MYGUI/Media/MyGUI_Media" )
 
 
 # ************************************************************
 # Find binaries
 if( WIN32 )
 	set( MYGUI_BINARY_NAMES "MyGUIEngine" )
-	package_create_release_binary_names( MYGUI_BINARY_NAMES )
-	package_create_debug_binary_names( MYGUI_BINARY_NAMES )
-	package_create_search_path_binary( MYGUI )
+	cm_package_create_release_binary_names( MYGUI_BINARY_NAMES )
+	cm_package_create_debug_binary_names( MYGUI_BINARY_NAMES )
+	cm_package_create_search_path_binary( MYGUI )
 
 	set( MYGUI_SEARCH_BINARIES
 		${MYGUI_SEARCH_PATH_BINARY}
 		${MYGUI_SEARCH_PATH_LIBRARY}
 	)
 
-	package_clear_if_changed( MYGUI_PREFIX_PATH
+	cm_package_clear_if_changed( MYGUI_PREFIX_PATH
 		MYGUI_BINARY_RELEASE
 		MYGUI_BINARY_DEBUG
 	)
 
-	package_find_file( MYGUI_BINARY_DEBUG "${MYGUI_BINARY_NAMES_DEBUG}" "${MYGUI_SEARCH_BINARIES}" "debug" )
-	package_find_file( MYGUI_BINARY_RELEASE "${MYGUI_BINARY_NAMES_RELEASE}" "${MYGUI_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
+	cm_package_find_file( MYGUI_BINARY_DEBUG "${MYGUI_BINARY_NAMES_DEBUG}" "${MYGUI_SEARCH_BINARIES}" "debug" )
+	cm_package_find_file( MYGUI_BINARY_RELEASE "${MYGUI_BINARY_NAMES_RELEASE}" "${MYGUI_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
 endif()
 
 
@@ -112,8 +112,8 @@ endif()
 
 
 # ************************************************************
-# Finalize package
-package_add_parent_dir( MYGUI )
-package_end( MYGUI )
+# Finalize Package
+cm_package_include_options( MYGUI )
+cm_package_end( MYGUI )
 cm_message_footer( MYGUI )
 

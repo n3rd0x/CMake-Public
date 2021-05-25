@@ -24,18 +24,18 @@
 # Start package
 # ************************************************************
 cm_message_header(ZEROMQ)
-package_begin(ZEROMQ)
-package_create_home_path(ZEROMQ ZEROMQ_ROOT)
+cm_package_begin(ZEROMQ)
+cm_package_create_home_path(ZEROMQ ZEROMQ_ROOT)
 
 
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 # ************************************************************
 set(ZEROMQ_PREFIX_PATH ${ZEROMQ_HOME})
-package_create_search_path_include(ZEROMQ)
-package_create_search_path_library(ZEROMQ)
+cm_package_create_search_path_include(ZEROMQ)
+cm_package_create_search_path_library(ZEROMQ)
 
 
 
@@ -43,7 +43,7 @@ package_create_search_path_library(ZEROMQ)
 # ************************************************************
 # Clear
 # ************************************************************
-package_clear_if_changed(ZEROMQ_HOME
+cm_package_clear_if_changed(ZEROMQ_HOME
     ZEROMQ_FOUND
     ZEROMQ_PATH_INCLUDE
     ZEROMQ_LIBRARY_DEBUG
@@ -54,10 +54,10 @@ package_clear_if_changed(ZEROMQ_HOME
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 # ************************************************************
 set(ZEROMQ_LIBRARY_NAMES "zmq")
-package_create_debug_names(ZEROMQ_LIBRARY_NAMES)
+cm_package_create_debug_names(ZEROMQ_LIBRARY_NAMES)
 
 
 
@@ -65,18 +65,18 @@ package_create_debug_names(ZEROMQ_LIBRARY_NAMES)
 # ************************************************************
 # Find path and file
 # ************************************************************
-package_find_path(ZEROMQ_PATH_INCLUDE "zmq.h" "${ZEROMQ_SEARCH_PATH_INCLUDE}" "zmq")
-package_find_library(ZEROMQ_LIBRARY_DEBUG "${ZEROMQ_LIBRARY_NAMES_DEBUG}" "${ZEROMQ_SEARCH_PATH_LIBRARY}" "debug" )
-package_find_library(ZEROMQ_LIBRARY_RELEASE "${ZEROMQ_LIBRARY_NAMES}" "${ZEROMQ_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(ZEROMQ_LIBRARY ZEROMQ_LIBRARY_DEBUG ZEROMQ_LIBRARY_RELEASE)
+cm_package_find_path(ZEROMQ_PATH_INCLUDE "zmq.h" "${ZEROMQ_SEARCH_PATH_INCLUDE}" "zmq")
+cm_package_find_library(ZEROMQ_LIBRARY_DEBUG "${ZEROMQ_LIBRARY_NAMES_DEBUG}" "${ZEROMQ_SEARCH_PATH_LIBRARY}" "debug" )
+cm_package_find_library(ZEROMQ_LIBRARY_RELEASE "${ZEROMQ_LIBRARY_NAMES}" "${ZEROMQ_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_make_library(ZEROMQ_LIBRARY ZEROMQ_LIBRARY_DEBUG ZEROMQ_LIBRARY_RELEASE)
 
 
 
 # ************************************************************
-# Finalize package
+# Finalize Package
 # ************************************************************
-package_validate(ZEROMQ)
-package_add_parent_dir(ZEROMQ)
-package_end(ZEROMQ)
+cm_package_validate(ZEROMQ)
+cm_package_include_options(ZEROMQ)
+cm_package_end(ZEROMQ)
 cm_message_footer(ZEROMQ)
 

@@ -23,26 +23,26 @@
 # ************************************************************
 # Start package
 cm_message_header( OculusSdk )
-package_begin( OculusSdk )
-package_create_home_path( OculusSdk OculusSdk_ROOT )
+cm_package_begin( OculusSdk )
+cm_package_create_home_path( OculusSdk OculusSdk_ROOT )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( OculusSdk_PREFIX_PATH ${OculusSdk_HOME} )
-package_create_search_path_include( OculusSdk )
-package_create_search_path_library( OculusSdk )
+cm_package_create_search_path_include( OculusSdk )
+cm_package_create_search_path_library( OculusSdk )
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set( OculusSdk_LIBRARY_NAMES "libovr" )
-package_create_debug_names( OculusSdk_LIBRARY_NAMES )
+cm_package_create_debug_names( OculusSdk_LIBRARY_NAMES )
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed( OculusSdk_PREFIX_PATH
+cm_package_clear_if_changed( OculusSdk_PREFIX_PATH
     OculusSdk_LIBRARY_DEBUG
     OculusSdk_LIBRARY_RELEASE
     OculusSdk_PATH_INCLUDE
@@ -50,17 +50,17 @@ package_clear_if_changed( OculusSdk_PREFIX_PATH
 
 
 # ************************************************************
-# Find paths
-package_find_path( OculusSdk_PATH_INCLUDE "OVR.h" "${OculusSdk_SEARCH_PATH_INCLUDE}" "" )
-package_find_library( OculusSdk_LIBRARY_DEBUG "${OculusSdk_LIBRARY_NAMES_DEBUG}" "${OculusSdk_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( OculusSdk_LIBRARY_RELEASE "${OculusSdk_LIBRARY_NAMES}" "${OculusSdk_SEARCH_PATH_LIBRARY}" "release"  )
-package_make_library( OculusSdk_LIBRARY OculusSdk_LIBRARY_DEBUG OculusSdk_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path( OculusSdk_PATH_INCLUDE "OVR.h" "${OculusSdk_SEARCH_PATH_INCLUDE}" "" )
+cm_package_find_library( OculusSdk_LIBRARY_DEBUG "${OculusSdk_LIBRARY_NAMES_DEBUG}" "${OculusSdk_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( OculusSdk_LIBRARY_RELEASE "${OculusSdk_LIBRARY_NAMES}" "${OculusSdk_SEARCH_PATH_LIBRARY}" "release"  )
+cm_package_make_library( OculusSdk_LIBRARY OculusSdk_LIBRARY_DEBUG OculusSdk_LIBRARY_RELEASE )
 
 
 # ************************************************************
-# Finalize package
-package_validate( OculusSdk )
-package_add_parent_dir( OculusSdk )
-package_end( OculusSdk )
+# Finalize Package
+cm_package_validate( OculusSdk )
+cm_package_include_options( OculusSdk )
+cm_package_end( OculusSdk )
 cm_message_footer( OculusSdk )
 

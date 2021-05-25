@@ -23,27 +23,27 @@
 # ************************************************************
 # Start package
 cm_message_header(BOX2D)
-package_begin(BOX2D)
-package_create_home_path(BOX2D BOX2D_ROOT)
+cm_package_begin(BOX2D)
+cm_package_create_home_path(BOX2D BOX2D_ROOT)
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(BOX2D_PREFIX_PATH ${BOX2D_HOME})
-package_create_search_path_include(BOX2D)
-package_create_search_path_library(BOX2D)
+cm_package_create_search_path_include(BOX2D)
+cm_package_create_search_path_library(BOX2D)
 
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set(BOX2D_LIBRARY_NAMES "Box2D" )
-package_create_debug_names(BOX2D_LIBRARY_NAMES)
+cm_package_create_debug_names(BOX2D_LIBRARY_NAMES)
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed(BOX2D_PREFIX_PATH
+cm_package_clear_if_changed(BOX2D_PREFIX_PATH
     BOX2D_LIBRARY_DEBUG
     BOX2D_LIBRARY_RELEASE
     BOX2D_PATH_INCLUDE
@@ -51,16 +51,16 @@ package_clear_if_changed(BOX2D_PREFIX_PATH
 
 
 # ************************************************************
-# Find paths
-package_find_path(BOX2D_PATH_INCLUDE "Box2D.h" "${BOX2D_SEARCH_PATH_INCLUDE}" "Box2D")
-package_find_library(BOX2D_LIBRARY_DEBUG "${BOX2D_LIBRARY_NAMES_DEBUG}" "${BOX2D_SEARCH_PATH_LIBRARY}" "debug")
-package_find_library(BOX2D_LIBRARY_RELEASE "${BOX2D_LIBRARY_NAMES}" "${BOX2D_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(BOX2D_LIBRARY BOX2D_LIBRARY_DEBUG BOX2D_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path(BOX2D_PATH_INCLUDE "Box2D.h" "${BOX2D_SEARCH_PATH_INCLUDE}" "Box2D")
+cm_package_find_library(BOX2D_LIBRARY_DEBUG "${BOX2D_LIBRARY_NAMES_DEBUG}" "${BOX2D_SEARCH_PATH_LIBRARY}" "debug")
+cm_package_find_library(BOX2D_LIBRARY_RELEASE "${BOX2D_LIBRARY_NAMES}" "${BOX2D_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_make_library(BOX2D_LIBRARY BOX2D_LIBRARY_DEBUG BOX2D_LIBRARY_RELEASE )
 
 
 # ************************************************************
-# Finalize package
-package_validate(BOX2D)
-package_add_parent_dir(BOX2D)
-package_end(BOX2D)
+# Finalize Package
+cm_package_validate(BOX2D)
+cm_package_include_options(BOX2D)
+cm_package_end(BOX2D)
 cm_message_footer(BOX2D)

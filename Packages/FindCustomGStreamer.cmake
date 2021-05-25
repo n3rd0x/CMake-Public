@@ -23,26 +23,26 @@
 # ************************************************************
 # Start package
 cm_message_header(GSTREAMER)
-package_begin(GSTREAMER)
-package_create_home_path(GSTREAMER GSTREAMER_ROOT)
+cm_package_begin(GSTREAMER)
+cm_package_create_home_path(GSTREAMER GSTREAMER_ROOT)
 
 
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set(GSTREAMER_PREFIX_NAMES "GStreamer" "gstreamer-1.0")
 set(GSTREAMER_LIBRARY_NAMES "${GSTREAMER_PREFIX_NAMES}")
-package_create_debug_names(GSTREAMER_LIBRARY_NAMES)
+cm_package_create_debug_names(GSTREAMER_LIBRARY_NAMES)
 
 
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(GSTREAMER_PREFIX_PATH ${GSTREAMER_HOME})
-package_create_search_path_include(GSTREAMER)
-package_create_search_path_library(GSTREAMER)
+cm_package_create_search_path_include(GSTREAMER)
+cm_package_create_search_path_library(GSTREAMER)
 
 
 
@@ -54,7 +54,7 @@ set(GSTREAMER_CLEAR_IF_CHANGED
 )
 foreach(VAR ${GSTREAMER_CLEAR_IF_CHANGED})
     if(WIN32)
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             GSTREAMER_LIBRARY_DEBUG
             GSTREAMER_LIBRARY_RELEASE
             GSTREAMER_PATH_INCLUDE
@@ -62,7 +62,7 @@ foreach(VAR ${GSTREAMER_CLEAR_IF_CHANGED})
             GSTREAMER_BINARY_DEBUG
         )
     else()
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             GSTREAMER_LIBRARY_DEBUG
             GSTREAMER_LIBRARY_RELEASE
             GSTREAMER_PATH_INCLUDE
@@ -74,19 +74,19 @@ endforeach()
 
 
 # ************************************************************
-# Find paths
-package_find_path(GSTREAMER_PATH_INCLUDE "gst/gst.h" "${GSTREAMER_SEARCH_PATH_INCLUDE}" "gstreamer-1.0")
-package_find_library(GSTREAMER_LIBRARY_DEBUG "${GSTREAMER_LIBRARY_NAMES_DEBUG}" "${GSTREAMER_SEARCH_PATH_LIBRARY}" "debug")
-package_find_library(GSTREAMER_LIBRARY_RELEASE "${GSTREAMER_LIBRARY_NAMES}" "${GSTREAMER_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(GSTREAMER_LIBRARY GSTREAMER_LIBRARY_DEBUG GSTREAMER_LIBRARY_RELEASE)
+# Find Paths
+cm_package_find_path(GSTREAMER_PATH_INCLUDE "gst/gst.h" "${GSTREAMER_SEARCH_PATH_INCLUDE}" "gstreamer-1.0")
+cm_package_find_library(GSTREAMER_LIBRARY_DEBUG "${GSTREAMER_LIBRARY_NAMES_DEBUG}" "${GSTREAMER_SEARCH_PATH_LIBRARY}" "debug")
+cm_package_find_library(GSTREAMER_LIBRARY_RELEASE "${GSTREAMER_LIBRARY_NAMES}" "${GSTREAMER_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_make_library(GSTREAMER_LIBRARY GSTREAMER_LIBRARY_DEBUG GSTREAMER_LIBRARY_RELEASE)
 
 
 
 
 # ************************************************************
-# Finalize package
-package_validate(GSTREAMER)
-package_add_parent_dir(GSTREAMER ADD_PARENT)
-package_end(GSTREAMER)
+# Finalize Package
+cm_package_validate(GSTREAMER)
+cm_package_include_options(GSTREAMER)
+cm_package_end(GSTREAMER)
 cm_message_footer(GSTREAMER)
 

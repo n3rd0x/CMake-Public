@@ -23,26 +23,26 @@
 # ************************************************************
 # Start package
 cm_message_header( JSONCPP )
-package_begin( JSONCPP )
-package_create_home_path( JSONCPP JSONCPP_ROOT )
+cm_package_begin( JSONCPP )
+cm_package_create_home_path( JSONCPP JSONCPP_ROOT )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( JSONCPP_PREFIX_PATH ${JSONCPP_HOME} )
-package_create_search_path_include( JSONCPP )
-package_create_search_path_library( JSONCPP )
+cm_package_create_search_path_include( JSONCPP )
+cm_package_create_search_path_library( JSONCPP )
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set( JSONCPP_LIBRARY_NAMES "jsoncpp" )
-package_create_debug_names( JSONCPP_LIBRARY_NAMES )
+cm_package_create_debug_names( JSONCPP_LIBRARY_NAMES )
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed( JSONCPP_PREFIX_PATH
+cm_package_clear_if_changed( JSONCPP_PREFIX_PATH
     JSONCPP_LIBRARY_DEBUG
     JSONCPP_LIBRARY_RELEASE
     JSONCPP_PATH_INCLUDE
@@ -50,16 +50,16 @@ package_clear_if_changed( JSONCPP_PREFIX_PATH
 
 
 # ************************************************************
-# Find paths
-package_find_path( JSONCPP_PATH_INCLUDE "json.h" "${JSONCPP_SEARCH_PATH_INCLUDE}" "json" )
-package_find_library( JSONCPP_LIBRARY_DEBUG "${JSONCPP_LIBRARY_NAMES_DEBUG}" "${JSONCPP_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( JSONCPP_LIBRARY_RELEASE "${JSONCPP_LIBRARY_NAMES}" "${JSONCPP_SEARCH_PATH_LIBRARY}" "release"  )
-package_make_library( JSONCPP_LIBRARY JSONCPP_LIBRARY_DEBUG JSONCPP_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path( JSONCPP_PATH_INCLUDE "json.h" "${JSONCPP_SEARCH_PATH_INCLUDE}" "json" )
+cm_package_find_library( JSONCPP_LIBRARY_DEBUG "${JSONCPP_LIBRARY_NAMES_DEBUG}" "${JSONCPP_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( JSONCPP_LIBRARY_RELEASE "${JSONCPP_LIBRARY_NAMES}" "${JSONCPP_SEARCH_PATH_LIBRARY}" "release"  )
+cm_package_make_library( JSONCPP_LIBRARY JSONCPP_LIBRARY_DEBUG JSONCPP_LIBRARY_RELEASE )
 
 
 # ************************************************************
-# Finalize package
-package_validate( JSONCPP )
-package_add_parent_dir(JSONCPP ADD_PARENT)
-package_end( JSONCPP )
+# Finalize Package
+cm_package_validate( JSONCPP )
+cm_package_include_options(JSONCPP)
+cm_package_end( JSONCPP )
 cm_message_footer( JSONCPP )

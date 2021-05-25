@@ -23,8 +23,8 @@
 # ************************************************************
 # Start package
 cm_message_header(GLFW)
-package_begin(GLFW)
-package_create_home_path(GLFW GLFW_ROOT)
+cm_package_begin(GLFW)
+cm_package_create_home_path(GLFW GLFW_ROOT)
 
 
 # ************************************************************
@@ -66,17 +66,17 @@ option(GLFW_ENABLE_STATICAL "Flag for using static library." OFF)
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(GLFW_PREFIX_PATH ${GLFW_HOME})
-package_create_search_path_include(GLFW)
-package_create_search_path_library(GLFW)
+cm_package_create_search_path_include(GLFW)
+cm_package_create_search_path_library(GLFW)
 #set( GLFW_SEARCH_PATH_LIBRARY "{$GLFW_SEARCH_PATH_LIBRARY}" "${GLFW_HOME}/${GLEW_PATH_SUFFIX}" )
 
 
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 if(GLFW_ENABLE_STATICAL )
     set(GLFW_LIBRARY_NAMES "glfw${GLFW_VERSION}")
 else()
@@ -86,7 +86,7 @@ else()
         set(GLFW_LIBRARY_NAMES "glfw")
     endif()
 endif()
-package_create_debug_names(GLFW_LIBRARY_NAMES)
+cm_package_create_debug_names(GLFW_LIBRARY_NAMES)
 
 
 
@@ -104,7 +104,7 @@ set(GLFW_CLEAR_IF_CHANGED
 )
 foreach(VAR ${GLFW_CLEAR_IF_CHANGED})
     if(WIN32)
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             GLFW_LIBRARY_DEBUG
             GLFW_LIBRARY_RELEASE
             GLFW_PATH_INCLUDE
@@ -112,7 +112,7 @@ foreach(VAR ${GLFW_CLEAR_IF_CHANGED})
             GLFW_BINARY_DEBUG
         )
     else()
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             GLFW_LIBRARY_DEBUG
             GLFW_LIBRARY_RELEASE
             GLFW_PATH_INCLUDE
@@ -124,40 +124,40 @@ endforeach()
 
 
 # ************************************************************
-# Find paths
-package_find_path(GLFW_PATH_INCLUDE "glfw${GLFW_VERSION}.h" "${GLFW_SEARCH_PATH_INCLUDE}" "GL")
-package_find_library(GLFW_LIBRARY_DEBUG "${GLFW_LIBRARY_NAMES_DEBUG}" "${GLFW_SEARCH_PATH_LIBRARY}" "debug")
-package_find_library(GLFW_LIBRARY_RELEASE "${GLFW_LIBRARY_NAMES}" "${GLFW_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(GLFW_LIBRARY GLFW_LIBRARY_DEBUG GLFW_LIBRARY_RELEASE)
+# Find Paths
+cm_package_find_path(GLFW_PATH_INCLUDE "glfw${GLFW_VERSION}.h" "${GLFW_SEARCH_PATH_INCLUDE}" "GL")
+cm_package_find_library(GLFW_LIBRARY_DEBUG "${GLFW_LIBRARY_NAMES_DEBUG}" "${GLFW_SEARCH_PATH_LIBRARY}" "debug")
+cm_package_find_library(GLFW_LIBRARY_RELEASE "${GLFW_LIBRARY_NAMES}" "${GLFW_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_make_library(GLFW_LIBRARY GLFW_LIBRARY_DEBUG GLFW_LIBRARY_RELEASE)
 
 
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if(WIN32)
     set(GLFW_BINARY_NAMES "glfw${GLFW_VERSION}")
-	package_create_release_binary_names(GLFW_BINARY_NAMES)
-	package_create_debug_binary_names(GLFW_BINARY_NAMES)
-	package_create_search_path_binary(GLFW)
+	cm_package_create_release_binary_names(GLFW_BINARY_NAMES)
+	cm_package_create_debug_binary_names(GLFW_BINARY_NAMES)
+	cm_package_create_search_path_binary(GLFW)
 
 	set(GLFW_SEARCH_BINARIES
 		${GLFW_SEARCH_PATH_BINARY}
 		${GLFW_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file(GLFW_BINARY_DEBUG "${GLFW_BINARY_NAMES_DEBUG}" "${GLFW_SEARCH_BINARIES}" "debug")
-	package_find_file(GLFW_BINARY_RELEASE "${GLFW_BINARY_NAMES_RELEASE}" "${GLFW_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+	cm_package_find_file(GLFW_BINARY_DEBUG "${GLFW_BINARY_NAMES_DEBUG}" "${GLFW_SEARCH_BINARIES}" "debug")
+	cm_package_find_file(GLFW_BINARY_RELEASE "${GLFW_BINARY_NAMES_RELEASE}" "${GLFW_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
 
 
 
 
 # ************************************************************
-# Finalize package
-package_validate(GLFW)
-package_add_parent_dir(GLFW ADD_PARENT)
-package_end(GLFW)
+# Finalize Package
+cm_package_validate(GLFW)
+cm_package_include_options(GLFW)
+cm_package_end(GLFW)
 cm_message_footer(GLFW)
 
 

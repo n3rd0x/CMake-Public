@@ -24,18 +24,18 @@
 # Start package
 # ************************************************************
 cm_message_header(PCAPPLUSPLUS)
-package_begin(PCAPPLUSPLUS)
-package_create_home_path(PCAPPLUSPLUS PCAPPLUSPLUS_ROOT)
+cm_package_begin(PCAPPLUSPLUS)
+cm_package_create_home_path(PCAPPLUSPLUS PCAPPLUSPLUS_ROOT)
 
 
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 # ************************************************************
 set(PCAPPLUSPLUS_PREFIX_PATH ${PCAPPLUSPLUS_HOME})
-package_create_search_path_include(PCAPPLUSPLUS)
-package_create_search_path_library(PCAPPLUSPLUS)
+cm_package_create_search_path_include(PCAPPLUSPLUS)
+cm_package_create_search_path_library(PCAPPLUSPLUS)
 
 
 
@@ -43,7 +43,7 @@ package_create_search_path_library(PCAPPLUSPLUS)
 # ************************************************************
 # Clear
 # ************************************************************
-package_clear_if_changed(PCAPPLUSPLUS_HOME
+cm_package_clear_if_changed(PCAPPLUSPLUS_HOME
     PCAPPLUSPLUS_FOUND
     PCAPPLUSPLUS_PATH_INCLUDE
     PCAPPLUSPLUS_LIBRARY_DEBUG
@@ -60,14 +60,14 @@ package_clear_if_changed(PCAPPLUSPLUS_HOME
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 # ************************************************************
 set(PCAPPLUSPLUS_COMMON_LIBRARY_NAMES "Common++")
 set(PCAPPLUSPLUS_PACKET_LIBRARY_NAMES "Packet++")
 set(PCAPPLUSPLUS_PCAP_LIBRARY_NAMES "Pcap++")
-package_create_debug_names(PCAPPLUSPLUS_COMMON_LIBRARY_NAMES)
-package_create_debug_names(PCAPPLUSPLUS_PACKET_LIBRARY_NAMES)
-package_create_debug_names(PCAPPLUSPLUS_PCAP_LIBRARY_NAMES)
+cm_package_create_debug_names(PCAPPLUSPLUS_COMMON_LIBRARY_NAMES)
+cm_package_create_debug_names(PCAPPLUSPLUS_PACKET_LIBRARY_NAMES)
+cm_package_create_debug_names(PCAPPLUSPLUS_PCAP_LIBRARY_NAMES)
 
 
 
@@ -75,13 +75,13 @@ package_create_debug_names(PCAPPLUSPLUS_PCAP_LIBRARY_NAMES)
 # ************************************************************
 # Find path and file
 # ************************************************************
-package_find_path(PCAPPLUSPLUS_PATH_INCLUDE "Packet.h" "${PCAPPLUSPLUS_SEARCH_PATH_INCLUDE}" "pcapplusplus")
-package_find_library(PCAPPLUSPLUS_COMMON_LIBRARY_DEBUG "${PCAPPLUSPLUS_COMMON_LIBRARY_NAMES_DEBUG}" "${PCAPPLUSPLUS_SEARCH_PATH_LIBRARY}" "debug" )
-package_find_library(PCAPPLUSPLUS_COMMON_LIBRARY_RELEASE "${PCAPPLUSPLUS_COMMON_LIBRARY_NAMES}" "${PCAPPLUSPLUS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_find_library(PCAPPLUSPLUS_PACKET_LIBRARY_DEBUG "${PCAPPLUSPLUS_PACKET_LIBRARY_NAMES_DEBUG}" "${PCAPPLUSPLUS_SEARCH_PATH_LIBRARY}" "debug" )
-package_find_library(PCAPPLUSPLUS_PACKET_LIBRARY_RELEASE "${PCAPPLUSPLUS_PACKET_LIBRARY_NAMES}" "${PCAPPLUSPLUS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_find_library(PCAPPLUSPLUS_PCAP_LIBRARY_DEBUG "${PCAPPLUSPLUS_PCAP_LIBRARY_NAMES_DEBUG}" "${PCAPPLUSPLUS_SEARCH_PATH_LIBRARY}" "debug" )
-package_find_library(PCAPPLUSPLUS_PCAP_LIBRARY_RELEASE "${PCAPPLUSPLUS_PCAP_LIBRARY_NAMES}" "${PCAPPLUSPLUS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_find_path(PCAPPLUSPLUS_PATH_INCLUDE "Packet.h" "${PCAPPLUSPLUS_SEARCH_PATH_INCLUDE}" "pcapplusplus")
+cm_package_find_library(PCAPPLUSPLUS_COMMON_LIBRARY_DEBUG "${PCAPPLUSPLUS_COMMON_LIBRARY_NAMES_DEBUG}" "${PCAPPLUSPLUS_SEARCH_PATH_LIBRARY}" "debug" )
+cm_package_find_library(PCAPPLUSPLUS_COMMON_LIBRARY_RELEASE "${PCAPPLUSPLUS_COMMON_LIBRARY_NAMES}" "${PCAPPLUSPLUS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_find_library(PCAPPLUSPLUS_PACKET_LIBRARY_DEBUG "${PCAPPLUSPLUS_PACKET_LIBRARY_NAMES_DEBUG}" "${PCAPPLUSPLUS_SEARCH_PATH_LIBRARY}" "debug" )
+cm_package_find_library(PCAPPLUSPLUS_PACKET_LIBRARY_RELEASE "${PCAPPLUSPLUS_PACKET_LIBRARY_NAMES}" "${PCAPPLUSPLUS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_find_library(PCAPPLUSPLUS_PCAP_LIBRARY_DEBUG "${PCAPPLUSPLUS_PCAP_LIBRARY_NAMES_DEBUG}" "${PCAPPLUSPLUS_SEARCH_PATH_LIBRARY}" "debug" )
+cm_package_find_library(PCAPPLUSPLUS_PCAP_LIBRARY_RELEASE "${PCAPPLUSPLUS_PCAP_LIBRARY_NAMES}" "${PCAPPLUSPLUS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
 
 set(PCAPPLUSPLUS_LIBRARY_DEBUG
     "${PCAPPLUSPLUS_COMMON_LIBRARY_DEBUG}"
@@ -93,15 +93,15 @@ set(PCAPPLUSPLUS_LIBRARY_RELEASE
     "${PCAPPLUSPLUS_PACKET_LIBRARY_RELEASE}"
     "${PCAPPLUSPLUS_PCAP_LIBRARY_RELEASE}"
 )
-package_make_library(PCAPPLUSPLUS_LIBRARY PCAPPLUSPLUS_LIBRARY_DEBUG PCAPPLUSPLUS_LIBRARY_RELEASE)
+cm_package_make_library(PCAPPLUSPLUS_LIBRARY PCAPPLUSPLUS_LIBRARY_DEBUG PCAPPLUSPLUS_LIBRARY_RELEASE)
 
 
 
 # ************************************************************
-# Finalize package
+# Finalize Package
 # ************************************************************
-package_validate(PCAPPLUSPLUS)
-package_add_parent_dir(PCAPPLUSPLUS ADD_PARENT)
-package_end(PCAPPLUSPLUS)
+cm_package_validate(PCAPPLUSPLUS)
+cm_package_include_options(PCAPPLUSPLUS)
+cm_package_end(PCAPPLUSPLUS)
 cm_message_footer(PCAPPLUSPLUS)
 

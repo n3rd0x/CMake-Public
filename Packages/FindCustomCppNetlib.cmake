@@ -22,20 +22,20 @@
 # ************************************************************
 # Start package
 cm_message_header( CPPNETLIB )
-package_begin( CPPNETLIB )
-package_create_home_path( CPPNETLIB CPPNETLIB_ROOT )
+cm_package_begin( CPPNETLIB )
+cm_package_create_home_path( CPPNETLIB CPPNETLIB_ROOT )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( CPPNETLIB_PREFIX_PATH ${CPPNETLIB_HOME} )
-package_create_search_path_include( CPPNETLIB )
-package_create_search_path_library( CPPNETLIB )
+cm_package_create_search_path_include( CPPNETLIB )
+cm_package_create_search_path_library( CPPNETLIB )
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed( CPPNETLIB_PREFIX_PATH
+cm_package_clear_if_changed( CPPNETLIB_PREFIX_PATH
     CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_DEBUG
     CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_RELEASE
     CPPNETLIB_LIBRARY_SERVER_PARSERS_DEBUG
@@ -47,35 +47,35 @@ package_clear_if_changed( CPPNETLIB_PREFIX_PATH
 
 
 # ************************************************************
-# Find paths
-package_find_path( CPPNETLIB_PATH_INCLUDE "boost/network.hpp" "${CPPNETLIB_SEARCH_PATH_INCLUDE}" "" )
+# Find Paths
+cm_package_find_path( CPPNETLIB_PATH_INCLUDE "boost/network.hpp" "${CPPNETLIB_SEARCH_PATH_INCLUDE}" "" )
 
 
 # ************************************************************
 # Find "Client Connections"
 set( CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_NAMES "cppnetlib-client-connections" )
-package_create_debug_names( CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_NAMES )
-package_find_library( CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_DEBUG "${CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_NAMES_DEBUG}" "${CPPNETLIB_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_RELEASE "${CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_NAMES}" "${CPPNETLIB_SEARCH_PATH_LIBRARY}" "release"  )
-package_make_library( CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_DEBUG CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_RELEASE )
+cm_package_create_debug_names( CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_NAMES )
+cm_package_find_library( CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_DEBUG "${CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_NAMES_DEBUG}" "${CPPNETLIB_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_RELEASE "${CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_NAMES}" "${CPPNETLIB_SEARCH_PATH_LIBRARY}" "release"  )
+cm_package_make_library( CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_DEBUG CPPNETLIB_LIBRARY_CLIENT_CONNECTIONS_RELEASE )
 
 
 # ************************************************************
 # Find "Server Parsers"
 set( CPPNETLIB_LIBRARY_SERVER_PARSERS_NAMES "cppnetlib-server-parsers" )
-package_create_debug_names( CPPNETLIB_LIBRARY_SERVER_PARSERS_NAMES )
-package_find_library( CPPNETLIB_LIBRARY_SERVER_PARSERS_DEBUG "${CPPNETLIB_LIBRARY_SERVER_PARSERS_NAMES_DEBUG}" "${CPPNETLIB_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( CPPNETLIB_LIBRARY_SERVER_PARSERS_RELEASE "${CPPNETLIB_LIBRARY_SERVER_PARSERS_NAMES}" "${CPPNETLIB_SEARCH_PATH_LIBRARY}" "release"  )
-package_make_library( CPPNETLIB_LIBRARY_SERVER_PARSERS CPPNETLIB_LIBRARY_SERVER_PARSERS_DEBUG CPPNETLIB_LIBRARY_SERVER_PARSERS_RELEASE )
+cm_package_create_debug_names( CPPNETLIB_LIBRARY_SERVER_PARSERS_NAMES )
+cm_package_find_library( CPPNETLIB_LIBRARY_SERVER_PARSERS_DEBUG "${CPPNETLIB_LIBRARY_SERVER_PARSERS_NAMES_DEBUG}" "${CPPNETLIB_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( CPPNETLIB_LIBRARY_SERVER_PARSERS_RELEASE "${CPPNETLIB_LIBRARY_SERVER_PARSERS_NAMES}" "${CPPNETLIB_SEARCH_PATH_LIBRARY}" "release"  )
+cm_package_make_library( CPPNETLIB_LIBRARY_SERVER_PARSERS CPPNETLIB_LIBRARY_SERVER_PARSERS_DEBUG CPPNETLIB_LIBRARY_SERVER_PARSERS_RELEASE )
 
 
 # ************************************************************
 # Find "URI"
 set( CPPNETLIB_LIBRARY_URI_NAMES "cppnetlib-uri" )
-package_create_debug_names( CPPNETLIB_LIBRARY_URI_NAMES )
-package_find_library( CPPNETLIB_LIBRARY_URI_DEBUG "${CPPNETLIB_LIBRARY_URI_NAMES_DEBUG}" "${CPPNETLIB_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( CPPNETLIB_LIBRARY_URI_RELEASE "${CPPNETLIB_LIBRARY_URI_NAMES}" "${CPPNETLIB_SEARCH_PATH_LIBRARY}" "release"  )
-package_make_library( CPPNETLIB_LIBRARY_URI CPPNETLIB_LIBRARY_URI_DEBUG CPPNETLIB_LIBRARY_URI_RELEASE )
+cm_package_create_debug_names( CPPNETLIB_LIBRARY_URI_NAMES )
+cm_package_find_library( CPPNETLIB_LIBRARY_URI_DEBUG "${CPPNETLIB_LIBRARY_URI_NAMES_DEBUG}" "${CPPNETLIB_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( CPPNETLIB_LIBRARY_URI_RELEASE "${CPPNETLIB_LIBRARY_URI_NAMES}" "${CPPNETLIB_SEARCH_PATH_LIBRARY}" "release"  )
+cm_package_make_library( CPPNETLIB_LIBRARY_URI CPPNETLIB_LIBRARY_URI_DEBUG CPPNETLIB_LIBRARY_URI_RELEASE )
 
 
 # Verify all three sub-libraries.
@@ -89,8 +89,8 @@ endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate( CPPNETLIB )
-package_end( CPPNETLIB )
+# Finalize Package
+cm_package_validate( CPPNETLIB )
+cm_package_end( CPPNETLIB )
 cm_message_footer( CPPNETLIB )
 

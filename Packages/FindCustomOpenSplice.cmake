@@ -24,8 +24,8 @@
 # Start Package
 # ************************************************************
 cm_message_header(OPENSPLICE)
-package_begin(OPENSPLICE)
-package_create_home_path(OPENSPLICE OPENSPLICE_ROOT)
+cm_package_begin(OPENSPLICE)
+cm_package_create_home_path(OPENSPLICE OPENSPLICE_ROOT)
 
 
 
@@ -34,8 +34,8 @@ package_create_home_path(OPENSPLICE OPENSPLICE_ROOT)
 # Create Search Path
 # ************************************************************
 set(OPENSPLICE_PREFIX_PATH ${OPENSPLICE_HOME})
-package_create_search_path_include(OPENSPLICE)
-package_create_search_path_library(OPENSPLICE)
+cm_package_create_search_path_include(OPENSPLICE)
+cm_package_create_search_path_library(OPENSPLICE)
 #package_append_paths(OPENSPLICE_SEARCH_PATH_INCLUDE "sys")
 
 
@@ -54,7 +54,7 @@ set(OPENSPLICE_DCPSSACPP_LIBRARY_NAMES "dcpssacpp")
 # ************************************************************
 # Clear
 # ************************************************************
-package_clear_if_changed(OPENSPLICE_HOME
+cm_package_clear_if_changed(OPENSPLICE_HOME
     OPENSPLICE_PATH_INCLUDE
     OPENSPLICE_DDSKERNEL_LIBRARY_DEBUG
     OPENSPLICE_DDSKERNEL_LIBRARY_RELEASE
@@ -69,30 +69,30 @@ package_clear_if_changed(OPENSPLICE_HOME
 # ************************************************************
 # Find Paths
 # ************************************************************
-package_find_path(OPENSPLICE_PATH_INCLUDE "dcps" "${OPENSPLICE_SEARCH_PATH_INCLUDE}" "")
+cm_package_find_path(OPENSPLICE_PATH_INCLUDE "dcps" "${OPENSPLICE_SEARCH_PATH_INCLUDE}" "")
 
 
 # --------------------
 # DDSKERNEL
 # --------------------
-package_find_library(OPENSPLICE_DDSKERNEL_LIBRARY_DEBUG "${OPENSPLICE_DDSKERNEL_LIBRARY_NAMES}" "${OPENSPLICE_SEARCH_PATH_LIBRARY}" "")
-package_find_library(OPENSPLICE_DDSKERNEL_LIBRARY_RELEASE "${OPENSPLICE_DDSKERNEL_LIBRARY_NAMES}" "${OPENSPLICE_SEARCH_PATH_LIBRARY}" "")
+cm_package_find_library(OPENSPLICE_DDSKERNEL_LIBRARY_DEBUG "${OPENSPLICE_DDSKERNEL_LIBRARY_NAMES}" "${OPENSPLICE_SEARCH_PATH_LIBRARY}" "")
+cm_package_find_library(OPENSPLICE_DDSKERNEL_LIBRARY_RELEASE "${OPENSPLICE_DDSKERNEL_LIBRARY_NAMES}" "${OPENSPLICE_SEARCH_PATH_LIBRARY}" "")
 
 
 # --------------------
 # DCPSSACPP
 # --------------------
-package_find_path(OPENSPLICE_DCPSSACPP_PATH_INCLUDE "dds_dcps.h" "${OPENSPLICE_SEARCH_PATH_INCLUDE}" "dcps/C++/SACPP")
-package_find_library(OPENSPLICE_DCPSSACPP_LIBRARY_DEBUG "${OPENSPLICE_DCPSSACPP_LIBRARY_NAMES}" "${OPENSPLICE_SEARCH_PATH_LIBRARY}" "")
-package_find_library(OPENSPLICE_DCPSSACPP_LIBRARY_RELEASE "${OPENSPLICE_DCPSSACPP_LIBRARY_NAMES}" "${OPENSPLICE_SEARCH_PATH_LIBRARY}" "")
+cm_package_find_path(OPENSPLICE_DCPSSACPP_PATH_INCLUDE "dds_dcps.h" "${OPENSPLICE_SEARCH_PATH_INCLUDE}" "dcps/C++/SACPP")
+cm_package_find_library(OPENSPLICE_DCPSSACPP_LIBRARY_DEBUG "${OPENSPLICE_DCPSSACPP_LIBRARY_NAMES}" "${OPENSPLICE_SEARCH_PATH_LIBRARY}" "")
+cm_package_find_library(OPENSPLICE_DCPSSACPP_LIBRARY_RELEASE "${OPENSPLICE_DCPSSACPP_LIBRARY_NAMES}" "${OPENSPLICE_SEARCH_PATH_LIBRARY}" "")
 
 
 
 # ************************************************************
 # Make Library Set
 # ************************************************************
-package_make_library(OPENSPLICE_DDSKERNEL_LIBRARIES OPENSPLICE_DDSKERNEL_LIBRARY_DEBUG OPENSPLICE_DDSKERNEL_LIBRARY_RELEASE)
-package_make_library(OPENSPLICE_DCPSSACPP_LIBRARIES OPENSPLICE_DCPSSACPP_LIBRARY_DEBUG OPENSPLICE_DCPSSACPP_LIBRARY_RELEASE)
+cm_package_make_library(OPENSPLICE_DDSKERNEL_LIBRARIES OPENSPLICE_DDSKERNEL_LIBRARY_DEBUG OPENSPLICE_DDSKERNEL_LIBRARY_RELEASE)
+cm_package_make_library(OPENSPLICE_DCPSSACPP_LIBRARIES OPENSPLICE_DCPSSACPP_LIBRARY_DEBUG OPENSPLICE_DCPSSACPP_LIBRARY_RELEASE)
 
 
 
@@ -123,5 +123,5 @@ endif()
 # ************************************************************
 # Finalize Package
 # ************************************************************
-package_end(OPENSPLICE)
+cm_package_end(OPENSPLICE)
 cm_message_footer(OPENSPLICE)

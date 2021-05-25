@@ -24,8 +24,8 @@
 # Start package
 # ************************************************************
 cm_message_header(SENTIMASK)
-package_begin(SENTIMASK)
-package_create_home_path(SENTIMASK SENTIMASK_ROOT)
+cm_package_begin(SENTIMASK)
+cm_package_create_home_path(SENTIMASK SENTIMASK_ROOT)
 
 
 
@@ -35,11 +35,11 @@ package_create_home_path(SENTIMASK SENTIMASK_ROOT)
 macro(SENTIMASK_FIND_COMPONENT_BINARY COMPONENT NAME SUFFIX)
     set(SENTIMASK_${COMPONENT}_BINARY_NAMES "${NAME}")
 
-    package_create_debug_binary_names(SENTIMASK_${COMPONENT}_BINARY_NAMES)
-    package_create_release_binary_names(SENTIMASK_${COMPONENT}_BINARY_NAMES)
+    cm_package_create_debug_binary_names(SENTIMASK_${COMPONENT}_BINARY_NAMES)
+    cm_package_create_release_binary_names(SENTIMASK_${COMPONENT}_BINARY_NAMES)
 
-    package_find_file(SENTIMASK_${COMPONENT}_BINARY_DEBUG "${SENTIMASK_${COMPONENT}_BINARY_NAMES}" "${SENTIMASK_SEARCH_BINARIES}" "${SUFFIX}")
-    package_find_file(SENTIMASK_${COMPONENT}_BINARY_RELEASE "${SENTIMASK_${COMPONENT}_BINARY_NAMES}" "${SENTIMASK_SEARCH_BINARIES}" "${SUFFIX}")
+    cm_package_find_file(SENTIMASK_${COMPONENT}_BINARY_DEBUG "${SENTIMASK_${COMPONENT}_BINARY_NAMES}" "${SENTIMASK_SEARCH_BINARIES}" "${SUFFIX}")
+    cm_package_find_file(SENTIMASK_${COMPONENT}_BINARY_RELEASE "${SENTIMASK_${COMPONENT}_BINARY_NAMES}" "${SENTIMASK_SEARCH_BINARIES}" "${SUFFIX}")
 
     if(SENTIMASK_${COMPONENT}_BINARY_DEBUG)
         list(APPEND SENTIMASK_BINARY_DEBUG ${SENTIMASK_${COMPONENT}_BINARY_DEBUG})
@@ -56,12 +56,12 @@ endmacro()
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 # ************************************************************
 set(SENTIMASK_PREFIX_PATH ${SENTIMASK_HOME})
-package_create_search_path_binary(SENTIMASK)
-package_create_search_path_include(SENTIMASK)
-package_create_search_path_library(SENTIMASK)
+cm_package_create_search_path_binary(SENTIMASK)
+cm_package_create_search_path_include(SENTIMASK)
+cm_package_create_search_path_library(SENTIMASK)
 package_create_search_path_plugin(SENTIMASK)
 if(APPLE)
     list(APPEND SENTIMASK_SEARCH_PATH_LIBRARY "${SENTIMASK_HOME}/Frameworks")
@@ -73,7 +73,7 @@ endif()
 # ************************************************************
 # Clear
 # ************************************************************
-package_clear_if_changed(SENTIMASK_HOME
+cm_package_clear_if_changed(SENTIMASK_HOME
     SENTIMASK_FOUND
     SENTIMASK_PATH_INCLUDE
     SENTIMASK_SENTIMASK_BINARY_DEBUG
@@ -98,7 +98,7 @@ package_clear_if_changed(SENTIMASK_HOME
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 # ************************************************************
 if(APPLE)
     set(SENTIMASK_LIBRARY_NAMES "SentiMask")
@@ -119,11 +119,11 @@ endif()
 # ************************************************************
 # Find path and file
 # ************************************************************
-package_find_path(SENTIMASK_PATH_INCLUDE "NCore.h" "${SENTIMASK_SEARCH_PATH_INCLUDE}" "")
-package_find_library(SENTIMASK_LIBRARY_DEBUG "${SENTIMASK_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
-package_find_library(SENTIMASK_LIBRARY_RELEASE "${SENTIMASK_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
-package_make_library(SENTIMASK_LIBRARY SENTIMASK_LIBRARY_DEBUG SENTIMASK_LIBRARY_RELEASE)
-package_find_path(SENTIMASK_PATH_DATA "FacesDetect45.ndf" "${SENTIMASK_SEARCH_PATH_BINARY}" "Data")
+cm_package_find_path(SENTIMASK_PATH_INCLUDE "NCore.h" "${SENTIMASK_SEARCH_PATH_INCLUDE}" "")
+cm_package_find_library(SENTIMASK_LIBRARY_DEBUG "${SENTIMASK_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
+cm_package_find_library(SENTIMASK_LIBRARY_RELEASE "${SENTIMASK_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
+cm_package_make_library(SENTIMASK_LIBRARY SENTIMASK_LIBRARY_DEBUG SENTIMASK_LIBRARY_RELEASE)
+cm_package_find_path(SENTIMASK_PATH_DATA "FacesDetect45.ndf" "${SENTIMASK_SEARCH_PATH_BINARY}" "Data")
 if(SENTIMASK_PATH_DATA)
     add_data_target("${SENTIMASK_PATH_DATA}/FacesDetect45.ndf" SubPath "/data")
     add_data_target("${SENTIMASK_PATH_DATA}/FacesDetectSegmentsFeaturePointsTrack.ndf" SubPath "/data")
@@ -135,26 +135,26 @@ endif()
 # ************************************************************
 # Search the components
 # ************************************************************
-package_find_library(SENTIMASK_NCORE_LIBRARY_DEBUG "${SENTIMASK_NCORE_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
-package_find_library(SENTIMASK_NCORE_LIBRARY_RELEASE "${SENTIMASK_NCORE_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
-package_make_library(SENTIMASK_NCORE_LIBRARY SENTIMASK_NCORE_LIBRARY_DEBUG SENTIMASK_NCORE_LIBRARY_RELEASE)
+cm_package_find_library(SENTIMASK_NCORE_LIBRARY_DEBUG "${SENTIMASK_NCORE_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
+cm_package_find_library(SENTIMASK_NCORE_LIBRARY_RELEASE "${SENTIMASK_NCORE_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
+cm_package_make_library(SENTIMASK_NCORE_LIBRARY SENTIMASK_NCORE_LIBRARY_DEBUG SENTIMASK_NCORE_LIBRARY_RELEASE)
 set(SENTIMASK_NCORE_LIBRARIES ${SENTIMASK_NCORE_LIBRARY})
 
-package_find_library(SENTIMASK_NMEDIA_LIBRARY_DEBUG "${SENTIMASK_NMEDIA_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
-package_find_library(SENTIMASK_NMEDIA_LIBRARY_RELEASE "${SENTIMASK_NMEDIA_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
-package_make_library(SENTIMASK_NMEDIA_LIBRARY SENTIMASK_NMEDIA_LIBRARY_DEBUG SENTIMASK_NMEDIA_LIBRARY_RELEASE)
+cm_package_find_library(SENTIMASK_NMEDIA_LIBRARY_DEBUG "${SENTIMASK_NMEDIA_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
+cm_package_find_library(SENTIMASK_NMEDIA_LIBRARY_RELEASE "${SENTIMASK_NMEDIA_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
+cm_package_make_library(SENTIMASK_NMEDIA_LIBRARY SENTIMASK_NMEDIA_LIBRARY_DEBUG SENTIMASK_NMEDIA_LIBRARY_RELEASE)
 set(SENTIMASK_NMEDIA_LIBRARIES ${SENTIMASK_NMEDIA_LIBRARY})
 
-package_find_library(SENTIMASK_NLICENSING_LIBRARY_DEBUG "${SENTIMASK_NLICENSING_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
-package_find_library(SENTIMASK_NLICENSING_LIBRARY_RELEASE "${SENTIMASK_NLICENSING_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
-package_make_library(SENTIMASK_NLICENSING_LIBRARY SENTIMASK_NLICENSING_LIBRARY_DEBUG SENTIMASK_NLICENSING_LIBRARY_RELEASE)
+cm_package_find_library(SENTIMASK_NLICENSING_LIBRARY_DEBUG "${SENTIMASK_NLICENSING_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
+cm_package_find_library(SENTIMASK_NLICENSING_LIBRARY_RELEASE "${SENTIMASK_NLICENSING_LIBRARY_NAMES}" "${SENTIMASK_SEARCH_PATH_LIBRARY}" "${PathSuffix}")
+cm_package_make_library(SENTIMASK_NLICENSING_LIBRARY SENTIMASK_NLICENSING_LIBRARY_DEBUG SENTIMASK_NLICENSING_LIBRARY_RELEASE)
 set(SENTIMASK_NLICENSING_LIBRARIES ${SENTIMASK_NLICENSING_LIBRARY})
 
 
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 # ************************************************************
 if(WIN32)
     set(SENTIMASK_SEARCH_BINARIES
@@ -174,10 +174,10 @@ endif()
 
 
 # ************************************************************
-# Finalize package
+# Finalize Package
 # ************************************************************
-package_validate(SENTIMASK)
-package_add_parent_dir(SENTIMASK)
-package_end(SENTIMASK)
+cm_package_validate(SENTIMASK)
+cm_package_include_options(SENTIMASK)
+cm_package_end(SENTIMASK)
 cm_message_footer(SENTIMASK)
 

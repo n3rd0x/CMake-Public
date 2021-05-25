@@ -23,8 +23,8 @@
 # ************************************************************
 # Start package
 cm_message_header(SFML)
-package_begin(SFML)
-package_create_home_path(SFML SFML_ROOT)
+cm_package_begin(SFML)
+cm_package_create_home_path(SFML SFML_ROOT)
 
 
 # ************************************************************
@@ -43,7 +43,7 @@ find_package(SFML COMPONENTS ${CustomSFML_FIND_COMPONENTS})
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(SFML_PREFIX_PATH ${SFML_HOME})
 
 
@@ -74,7 +74,7 @@ set(SFML_CLEAR_IF_CHANGED
 
 # Clear.
 foreach(Var ${SFML_CLEAR_IF_CHANGED})
-    package_clear_if_changed(${Var}
+    cm_package_clear_if_changed(${Var}
         SFML_INCLUDE_DIR
         SFML_ROOT
         ${Modules}
@@ -84,7 +84,7 @@ endforeach()
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if(WIN32 AND NOT SFML_STATIC_LIBRARIES)
     if(SFML_INCLUDE_DIR)
         # Find version and append.
@@ -95,7 +95,7 @@ if(WIN32 AND NOT SFML_STATIC_LIBRARIES)
         STRING(REGEX REPLACE ".*#define SFML_VERSION_PATCH ([0-9]+).*" "\\1" SFML_VERSION_PATCH "${InputContents}")
 
         # Search path.
-        package_create_search_path_binary(SFML)
+        cm_package_create_search_path_binary(SFML)
         set(SFML_SEARCH_BINARIES
             ${SFML_SEARCH_PATH_BINARY}
             ${SSFML_SEARCH_PATH_LIBRARY}
@@ -105,19 +105,19 @@ if(WIN32 AND NOT SFML_STATIC_LIBRARIES)
         set(SFML_BINARY_RELEASE "")
         foreach(Var ${CustomSFML_FIND_COMPONENTS})
             set(SFML_BINARY_NAMES "sfml-${Var}")
-            package_create_debug_names(SFML_BINARY_NAMES)
+            cm_package_create_debug_names(SFML_BINARY_NAMES)
             package_append_names(SFML_BINARY_NAMES "-${SFML_VERSION_MAJOR}")
             package_append_names(SFML_BINARY_NAMES_DEBUG "-${SFML_VERSION_MAJOR}")
 
             # Create binary names.
 
-            package_create_release_binary_names(SFML_BINARY_NAMES)
+            cm_package_create_release_binary_names(SFML_BINARY_NAMES)
             package_create_binary_names(SFML_BINARY_NAMES_DEBUG)
 
             # Find binaries.
             string(TOUPPER ${Var} ComponentUpper)
-            package_find_file(SFML_${ComponentUpper}_BINARY_DEBUG "${SFML_BINARY_NAMES_DEBUG}" "${SFML_SEARCH_BINARIES}" "debug")
-            package_find_file(SFML_${ComponentUpper}_BINARY_RELEASE "${SFML_BINARY_NAMES_RELEASE}" "${SFML_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+            cm_package_find_file(SFML_${ComponentUpper}_BINARY_DEBUG "${SFML_BINARY_NAMES_DEBUG}" "${SFML_SEARCH_BINARIES}" "debug")
+            cm_package_find_file(SFML_${ComponentUpper}_BINARY_RELEASE "${SFML_BINARY_NAMES_RELEASE}" "${SFML_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 
             set(SFML_BINARY_DEBUG ${SFML_BINARY_DEBUG} "${SFML_${ComponentUpper}_BINARY_DEBUG}")
             set(SFML_BINARY_RELEASE ${SFML_BINARY_RELEASE} "${SFML_${ComponentUpper}_BINARY_RELEASE}")
@@ -132,8 +132,8 @@ endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate(SFML)
-package_add_parent_dir(SFML)
-package_end(SFML)
+# Finalize Package
+cm_package_validate(SFML)
+cm_package_include_options(SFML)
+cm_package_end(SFML)
 cm_message_footer(SFML)

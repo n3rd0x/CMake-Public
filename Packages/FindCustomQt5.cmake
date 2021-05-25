@@ -17,14 +17,16 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # ************************************************************
+# Website: https://www.qt.io
 
 
 # ************************************************************
-# Start package
+# Start Package
 # ************************************************************
 cm_message_header(QT)
-package_begin(QT)
-package_create_home_path(QT QT5_ROOT)
+cm_package_begin(QT)
+cm_package_create_home_path(QT QT5_ROOT)
+
 
 # Options.
 option(QT_ENABLE_AUTOMOC "Enable auto MOC." OFF)
@@ -37,39 +39,39 @@ option(QT_PLUGIN_ENABLE_SQL_DRIVER_SQLITE "Enable SQLite plug-in driver." OFF)
 
 # Set components.
 set(QT_AVAILABLE_COMPONENTS
-	Qt5
-	Qt5AxBase_DIR
-	Qt5AxContainer_DIR
-	Qt5AxServer_DIR
-	Qt5Concurrent_DIR
-	Qt5Core_DIR
-	Qt5Declarative_DIR
-	Qt5Designer_DIR
-	Qt5Gui_DIR
-	Qt5Help_DIR
-	Qt5LinguistTools_DIR
-	Qt5Multimedia_DIR
-	Qt5MultimediaWidgets_DIR
-	Qt5Network_DIR
-	Qt5OpenGL_DIR
-	Qt5OpenGLExtensions_DIR
-	Qt5PrintSupport_DIR
-	Qt5Qml_DIR
-	Qt5Quick_DIR
-	Qt5QuickTest_DIR
-	Qt5Script_DIR
-	Qt5ScriptTools_DIR
-	Qt5Sensors_DIR
-	Qt5SerialPort_DIR
-	Qt5Sql_DIR
-	Qt5Svg_DIR
-	Qt5Test_DIR
-	Qt5UiTools_DIR
-	Qt5WebKit_DIR
-	Qt5WebKitWidgets_DIR
-	Qt5Widgets_DIR
-	Qt5Xml_DIR
-	Qt5XmlPatterns_DIR
+    Qt5
+    Qt5AxBase_DIR
+    Qt5AxContainer_DIR
+    Qt5AxServer_DIR
+    Qt5Concurrent_DIR
+    Qt5Core_DIR
+    Qt5Declarative_DIR
+    Qt5Designer_DIR
+    Qt5Gui_DIR
+    Qt5Help_DIR
+    Qt5LinguistTools_DIR
+    Qt5Multimedia_DIR
+    Qt5MultimediaWidgets_DIR
+    Qt5Network_DIR
+    Qt5OpenGL_DIR
+    Qt5OpenGLExtensions_DIR
+    Qt5PrintSupport_DIR
+    Qt5Qml_DIR
+    Qt5Quick_DIR
+    Qt5QuickTest_DIR
+    Qt5Script_DIR
+    Qt5ScriptTools_DIR
+    Qt5Sensors_DIR
+    Qt5SerialPort_DIR
+    Qt5Sql_DIR
+    Qt5Svg_DIR
+    Qt5Test_DIR
+    Qt5UiTools_DIR
+    Qt5WebKit_DIR
+    Qt5WebKitWidgets_DIR
+    Qt5Widgets_DIR
+    Qt5Xml_DIR
+    Qt5XmlPatterns_DIR
 )
 
 # Component to skip to copy binaries, due the component doesn't
@@ -88,7 +90,7 @@ set(QT_CLEAR_IF_CHANGED
     QT_COMPONENTS
 )
 foreach(VAR ${QT_CLEAR_IF_CHANGED})
-    package_clear_if_changed(${VAR}
+    cm_package_clear_if_changed(${VAR}
         QT_PATH_BINARY
         QT_PATH_CMAKE
         QT_PATH_LIBRARY
@@ -100,12 +102,12 @@ endforeach()
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 # ************************************************************
 set(QT_PREFIX_PATH ${QT_HOME})
-package_create_search_path_include(QT)
-package_create_search_path_library(QT)
-#package_create_search_path_binary(QT)
+cm_package_create_search_path_include(QT)
+cm_package_create_search_path_library(QT)
+#cm_package_create_search_path_binary(QT)
 
 
 
@@ -115,11 +117,11 @@ package_create_search_path_library(QT)
 # ************************************************************
 set(QMake "qmake")
 set(QLibs "libQt5Core.so" "Qt5Core.lib" "QtCore.framework")
-create_executable_extension(QMake)
-package_find_path(QT_PATH_BINARY "${QMake}" "${QT_HOME}" "bin;qt5/bin")
-package_find_path(QT_PATH_CMAKE "Qt5" "${QT_SEARCH_PATH_LIBRARY}" "cmake")
-package_find_path(QT_PATH_LIBRARY "${QLibs}" "${QT_SEARCH_PATH_LIBRARY}" "lib")
-package_find_path(QT_PATH_PLUGIN "platforms" "${QT_HOME}" "plugins;qt5/plugins")
+cm_create_executable_extension(QMake)
+cm_package_find_path(QT_PATH_BINARY "${QMake}" "${QT_HOME}" "bin;qt5/bin")
+cm_package_find_path(QT_PATH_CMAKE "Qt5" "${QT_SEARCH_PATH_LIBRARY}" "cmake")
+cm_package_find_path(QT_PATH_LIBRARY "${QLibs}" "${QT_SEARCH_PATH_LIBRARY}" "lib")
+cm_package_find_path(QT_PATH_PLUGIN "platforms" "${QT_HOME}" "plugins;qt5/plugins")
 
 # Add the directory to the CMake search path.
 set(CMAKE_PREFIX_PATH ${QT_PATH_CMAKE})
@@ -166,11 +168,11 @@ set(QT_BINARY_RELEASE "")
 
 # Find the packages based on defined components.
 if(QT_COMPONENTS)
-	foreach(Component ${QT_COMPONENTS})
-		find_package("${Component}")
+    foreach(Component ${QT_COMPONENTS})
+        find_package("${Component}")
 
-		if(NOT APPLE)
-			# Find out whether we will skip adding the binary component.
+        if(NOT APPLE)
+            # Find out whether we will skip adding the binary component.
             set(AddComponent TRUE)
             foreach(SkipComponent ${QT_SKIP_BINARY_COMPONENT})
                 if(${SkipComponent} STREQUAL ${Component})
@@ -182,11 +184,11 @@ if(QT_COMPONENTS)
             if(AddComponent)
                 # Find files.
                 if(MSVC)
-                    package_find_file(QtDebugFile "${Component}d.dll" "${QT_PATH_BINARY}" "")
-                    package_find_file(QtReleaseFile "${Component}.dll" "${QT_PATH_BINARY}" "")
+                    cm_package_find_file(QtDebugFile "${Component}d.dll" "${QT_PATH_BINARY}" "")
+                    cm_package_find_file(QtReleaseFile "${Component}.dll" "${QT_PATH_BINARY}" "")
                 else()
-                    package_find_file(QtDebugFile "lib${Component}d.so" "${QT_PATH_LIBRARY}" "")
-                    package_find_file(QtReleaseFile "lib${Component}.so" "${QT_PATH_LIBRARY}" "")
+                    cm_package_find_file(QtDebugFile "lib${Component}d.so" "${QT_PATH_LIBRARY}" "")
+                    cm_package_find_file(QtReleaseFile "lib${Component}.so" "${QT_PATH_LIBRARY}" "")
                 endif()
 
                 # Set name.
@@ -215,10 +217,10 @@ if(QT_COMPONENTS)
                 list(APPEND QT_BINARY_DEBUG "${${Component}_LIBRARIES}")
             endif()
         endif()
-	endforeach()
+    endforeach()
 
-	if(QT_BINARY_DEBUG OR QT_BINARY_RELEASE)
-		set(QT_FOUND TRUE)
+    if(QT_BINARY_DEBUG OR QT_BINARY_RELEASE)
+        set(QT_FOUND TRUE)
         cm_message_debug(STATUS "Qt is located.")
 
         # Copy necessary binaries for both release and debug.
@@ -230,7 +232,7 @@ if(QT_COMPONENTS)
             if(UNIX)
                 set(PathSearchBinary ${QT_PATH_LIBRARY})
             endif()
-            generate_dynamic_extension(DynSuffix)
+            cm_generate_dynamic_extension(DynSuffix)
 
             # Automatic search for files.
             # set(SearchFiles
@@ -301,9 +303,9 @@ if(QT_COMPONENTS)
 
             unset(DynSuffix)
         endif()
-	endif()
+    endif()
 else()
-	cm_message_status("" "At least one of the Qt5 modules must be specified.")
+    cm_message_status("" "At least one of the Qt5 modules must be specified.")
 endif()
 
 
@@ -311,12 +313,12 @@ endif()
 
 
 # ************************************************************
-# Finalize package
+# Finalize Package
 # ************************************************************
 if(QT_FOUND)
-	cm_message_status(STATUS "The Qt5 library is located.")
+    cm_message_status(STATUS "The Qt5 library is located.")
 else()
-	cm_message_status("" "Failed to locate the Qt5 library.")
+    cm_message_status("" "Failed to locate the Qt5 library.")
 endif()
 cm_message_footer(QT)
 
@@ -375,7 +377,7 @@ macro(QT_COPY_NECESSARY_BINARY_FROM_TARGET)
 
 
     if(QT_FOUND AND QT_DEPLOY_LIBRARY)
-        generate_dynamic_extension(DynamicSuffix)
+        cm_generate_dynamic_extension(DynamicSuffix)
         #foreach(Var ${QtNecessaryBinaries})
         #    # Find whether the file is a debug.
         #    string(REGEX MATCH "d.${DynamicSuffix}" DebugFound ${Var})
@@ -406,8 +408,8 @@ macro(QT_COPY_NECESSARY_BINARY_FROM_TARGET)
 
         # Binary files.
         foreach(Var ${QtNecessaryBinaries})
-            package_find_file(QtDebugFile "${Var}d.${DynamicSuffix}" "${PathSearchBinary}" "")
-            package_find_file(QtReleaseFile "${Var}.${DynamicSuffix}" "${PathSearchBinary}" "")
+            cm_package_find_file(QtDebugFile "${Var}d.${DynamicSuffix}" "${PathSearchBinary}" "")
+            cm_package_find_file(QtReleaseFile "${Var}.${DynamicSuffix}" "${PathSearchBinary}" "")
 
             if(QtReleaseFile)
                 package_add_runtime_target("${QtReleaseFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}")
@@ -440,8 +442,8 @@ macro(QT_COPY_NECESSARY_BINARY_FROM_TARGET)
 
         # Plugin files.
         foreach(Var ${QtNecessaryPlugins})
-            package_find_file(QtDebugFile "${Var}d.${DynamicSuffix}" "${QT_PATH_PLUGIN}" "")
-            package_find_file(QtReleaseFile "${Var}.${DynamicSuffix}" "${QT_PATH_PLUGIN}" "")
+            cm_package_find_file(QtDebugFile "${Var}d.${DynamicSuffix}" "${QT_PATH_PLUGIN}" "")
+            cm_package_find_file(QtReleaseFile "${Var}.${DynamicSuffix}" "${QT_PATH_PLUGIN}" "")
 
             if(QtReleaseFile)
                 get_filename_component(Path ${Var} PATH)

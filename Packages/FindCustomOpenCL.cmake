@@ -22,8 +22,8 @@
 # ************************************************************
 # Start package
 cm_message_header( OPENCL )
-package_begin( OPENCL )
-package_create_home_path( OPENCL OPENCL_ROOT )
+cm_package_begin( OPENCL )
+cm_package_create_home_path( OPENCL OPENCL_ROOT )
 
 # Check whether we are going to compile for x64Bit systems.
 string( REGEX MATCH "Win64" x64_FOUND ${CMAKE_GENERATOR} )
@@ -37,21 +37,21 @@ unset( x64_FOUND )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( OPENCL_PREFIX_PATH ${OPENCL_HOME} )
-package_create_search_path_include( OPENCL )
-package_create_search_path_library( OPENCL )
+cm_package_create_search_path_include( OPENCL )
+cm_package_create_search_path_library( OPENCL )
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set( OPENCL_LIBRARY_NAMES "OpenCL" )
 
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed( OPENCL_PREFIX_PATH
+cm_package_clear_if_changed( OPENCL_PREFIX_PATH
     OPENCL_PATH_INCLUDE
     OPENCL_LIBRARY_DEBUG
     OPENCL_LIBRARY_RELEASE
@@ -61,22 +61,22 @@ package_clear_if_changed( OPENCL_PREFIX_PATH
 
 
 # ************************************************************
-# Find paths
-package_find_path( OPENCL_PATH_INCLUDE "cl.h" "${OPENCL_SEARCH_PATH_INCLUDE}" "CL" )
-package_find_library( OPENCL_LIBRARY_DEBUG "${OPENCL_LIBRARY_NAMES}" "${OPENCL_SEARCH_PATH_LIBRARY}" "${PATH_SUFFIX}" )
-package_find_library( OPENCL_LIBRARY_RELEASE "${OPENCL_LIBRARY_NAMES}" "${OPENCL_SEARCH_PATH_LIBRARY}" "${PATH_SUFFIX}" )
-package_make_library( OPENCL_LIBRARY OPENCL_LIBRARY_DEBUG OPENCL_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path( OPENCL_PATH_INCLUDE "cl.h" "${OPENCL_SEARCH_PATH_INCLUDE}" "CL" )
+cm_package_find_library( OPENCL_LIBRARY_DEBUG "${OPENCL_LIBRARY_NAMES}" "${OPENCL_SEARCH_PATH_LIBRARY}" "${PATH_SUFFIX}" )
+cm_package_find_library( OPENCL_LIBRARY_RELEASE "${OPENCL_LIBRARY_NAMES}" "${OPENCL_SEARCH_PATH_LIBRARY}" "${PATH_SUFFIX}" )
+cm_package_make_library( OPENCL_LIBRARY OPENCL_LIBRARY_DEBUG OPENCL_LIBRARY_RELEASE )
 
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 
 
 
 # ************************************************************
-# Finalize package
-package_validate( OPENCL )
-package_add_parent_dir( OPENCL )
-package_end( OPENCL )
+# Finalize Package
+cm_package_validate( OPENCL )
+cm_package_include_options( OPENCL )
+cm_package_end( OPENCL )
 cm_message_footer( OPENCL )

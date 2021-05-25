@@ -23,17 +23,17 @@
 # ************************************************************
 # Start package
 cm_message_header(ZLIB)
-package_begin(ZLIB)
-package_create_home_path(ZLIB ZLIB_ROOT)
+cm_package_begin(ZLIB)
+cm_package_create_home_path(ZLIB ZLIB_ROOT)
 
 
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(ZLIB_PREFIX_PATH ${ZLIB_HOME})
-package_create_search_path_include(ZLIB)
-package_create_search_path_library(ZLIB)
+cm_package_create_search_path_include(ZLIB)
+cm_package_create_search_path_library(ZLIB)
 
 
 
@@ -46,13 +46,13 @@ option(ZLIB_ENABLE_STATICAL "Flag for using statical library." ON)
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set(ZLIB_LIBRARY_NAMES "zlib")
 if(ZLIB_ENABLE_STATICAL)
     cm_message_verbose(STATUS "Enable statical library.")
-    package_create_statical_names(ZLIB_LIBRARY_NAMES)
+    cm_package_create_statical_names(ZLIB_LIBRARY_NAMES)
 endif()
-package_create_debug_names(ZLIB_LIBRARY_NAMES)
+cm_package_create_debug_names(ZLIB_LIBRARY_NAMES)
 
 
 
@@ -70,13 +70,13 @@ set(ZLIB_CLEAR_IF_CHANGED
 )
 foreach(VAR ${ZLIB_CLEAR_IF_CHANGED})
     if( WIN32 AND NOT ZLIB_ENABLE_STATICAL )
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             ZLIB_BINARY_DEBUG
             ZLIB_BINARY_RELEASE
             ${ZLIB_COMMON_VARIABLES}
         )
     else()
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             ${ZLIB_COMMON_VARIABLES}
         )
         unset(ZLIB_BINARY_DEBUG CACHE)
@@ -88,38 +88,38 @@ endforeach()
 
 
 # ************************************************************
-# Find paths
-package_find_path(ZLIB_PATH_INCLUDE "zlib.h" "${ZLIB_SEARCH_PATH_INCLUDE}" "" )
-package_find_library(ZLIB_LIBRARY_DEBUG "${ZLIB_LIBRARY_NAMES_DEBUG}" "${ZLIB_SEARCH_PATH_LIBRARY}" "debug")
-package_find_library(ZLIB_LIBRARY_RELEASE "${ZLIB_LIBRARY_NAMES}" "${ZLIB_SEARCH_PATH_LIBRARY}" "release")
-package_make_library(ZLIB_LIBRARY ZLIB_LIBRARY_DEBUG ZLIB_LIBRARY_RELEASE)
+# Find Paths
+cm_package_find_path(ZLIB_PATH_INCLUDE "zlib.h" "${ZLIB_SEARCH_PATH_INCLUDE}" "" )
+cm_package_find_library(ZLIB_LIBRARY_DEBUG "${ZLIB_LIBRARY_NAMES_DEBUG}" "${ZLIB_SEARCH_PATH_LIBRARY}" "debug")
+cm_package_find_library(ZLIB_LIBRARY_RELEASE "${ZLIB_LIBRARY_NAMES}" "${ZLIB_SEARCH_PATH_LIBRARY}" "release")
+cm_package_make_library(ZLIB_LIBRARY ZLIB_LIBRARY_DEBUG ZLIB_LIBRARY_RELEASE)
 
 
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if(WIN32 AND NOT ZLIB_ENABLE_STATICAL)
 	set(ZLIB_BINARY_NAMES "zlib")
-    package_create_debug_binary_names(ZLIB_BINARY_NAMES)
-	package_create_release_binary_names(ZLIB_BINARY_NAMES)
-	package_create_search_path_binary(ZLIB)
+    cm_package_create_debug_binary_names(ZLIB_BINARY_NAMES)
+	cm_package_create_release_binary_names(ZLIB_BINARY_NAMES)
+	cm_package_create_search_path_binary(ZLIB)
 
 	set(ZLIB_SEARCH_BINARIES
 		${ZLIB_SEARCH_PATH_BINARY}
 		${ZLIB_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file(ZLIB_BINARY_DEBUG "${ZLIB_BINARY_NAMES_DEBUG}" "${ZLIB_SEARCH_BINARIES}" "debug")
-	package_find_file(ZLIB_BINARY_RELEASE "${ZLIB_BINARY_NAMES_RELEASE}" "${ZLIB_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+	cm_package_find_file(ZLIB_BINARY_DEBUG "${ZLIB_BINARY_NAMES_DEBUG}" "${ZLIB_SEARCH_BINARIES}" "debug")
+	cm_package_find_file(ZLIB_BINARY_RELEASE "${ZLIB_BINARY_NAMES_RELEASE}" "${ZLIB_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
 
 
 
 
 # ************************************************************
-# Finalize package
-package_validate(ZLIB)
-package_add_parent_dir(ZLIB)
-package_end(ZLIB)
+# Finalize Package
+cm_package_validate(ZLIB)
+cm_package_include_options(ZLIB)
+cm_package_end(ZLIB)
 cm_message_footer(ZLIB)

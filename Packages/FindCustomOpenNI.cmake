@@ -22,30 +22,30 @@
 # ************************************************************
 # Start package
 cm_message_header( OPENNI )
-package_begin( OPENNI )
-package_create_home_path( OPENNI OPENNI_ROOT )
+cm_package_begin( OPENNI )
+cm_package_create_home_path( OPENNI OPENNI_ROOT )
 
 
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( OPENNI_PREFIX_PATH ${OPENNI_HOME} )
-package_create_search_path_binary( OPENNI )
-package_create_search_path_include( OPENNI )
-package_create_search_path_library( OPENNI )
+cm_package_create_search_path_binary( OPENNI )
+cm_package_create_search_path_include( OPENNI )
+cm_package_create_search_path_library( OPENNI )
 
 
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 # Set default version 2.
 if( NOT DEFINED OPENNI_VERSION OR OPENNI_VERSION STREQUAL "")
     set( OPENNI_VERSION "2" CACHE STRING "Set OpenNI version." )
 endif()
 set( OPENNI_LIBRARY_NAMES "OPENNI${OPENNI_VERSION}" )
-package_create_debug_names( OPENNI_LIBRARY_NAMES )
+cm_package_create_debug_names( OPENNI_LIBRARY_NAMES )
 
 
 
@@ -69,7 +69,7 @@ if( WIN32 )
 endif()
 
 foreach( VAR ${OPENNI_CLEAR_TRIGGER} )
-    package_clear_if_changed( ${VAR}
+    cm_package_clear_if_changed( ${VAR}
         ${OPENNI_CLEAR_COMPONENTS}
     )
 endforeach()
@@ -78,11 +78,11 @@ endforeach()
 
 
 # ************************************************************
-# Find paths
-package_find_path( OPENNI_PATH_INCLUDE "OpenNI.h" "${OPENNI_SEARCH_PATH_INCLUDE}" "" )
-package_find_library( OPENNI_LIBRARY_DEBUG "${OPENNI_LIBRARY_NAMES_DEBUG}" "${OPENNI_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( OPENNI_LIBRARY_RELEASE "${OPENNI_LIBRARY_NAMES}" "${OPENNI_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
-package_make_library( OPENNI_LIBRARY OPENNI_LIBRARY_DEBUG OPENNI_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path( OPENNI_PATH_INCLUDE "OpenNI.h" "${OPENNI_SEARCH_PATH_INCLUDE}" "" )
+cm_package_find_library( OPENNI_LIBRARY_DEBUG "${OPENNI_LIBRARY_NAMES_DEBUG}" "${OPENNI_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( OPENNI_LIBRARY_RELEASE "${OPENNI_LIBRARY_NAMES}" "${OPENNI_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
+cm_package_make_library( OPENNI_LIBRARY OPENNI_LIBRARY_DEBUG OPENNI_LIBRARY_RELEASE )
 
 
 
@@ -92,7 +92,7 @@ package_make_library( OPENNI_LIBRARY OPENNI_LIBRARY_DEBUG OPENNI_LIBRARY_RELEASE
 if( WIN32 )
     # 2014-06-14 TST
     # We will handle this partially manually.
-    package_find_path( OPENNI_PATH_REDIST "OpenNI${OPENNI_VERSION}.dll" "${OPENNI_SEARCH_PATH_BINARY}" "" )
+    cm_package_find_path( OPENNI_PATH_REDIST "OpenNI${OPENNI_VERSION}.dll" "${OPENNI_SEARCH_PATH_BINARY}" "" )
     if( OPENNI_PATH_REDIST )
         # Main redistribution.
         set( OPENNI_REDIST_MAIN
@@ -137,7 +137,7 @@ endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate( OPENNI )
-package_end( OPENNI )
+# Finalize Package
+cm_package_validate( OPENNI )
+cm_package_end( OPENNI )
 cm_message_footer( OPENNI )

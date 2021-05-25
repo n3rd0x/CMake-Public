@@ -23,17 +23,17 @@
 # ************************************************************
 # Start package
 cm_message_header(FREEGLUT)
-package_begin(FREEGLUT)
-package_create_home_path(FREEGLUT FREEGLUT_ROOT)
+cm_package_begin(FREEGLUT)
+cm_package_create_home_path(FREEGLUT FREEGLUT_ROOT)
 
 
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(FREEGLUT_PREFIX_PATH ${FREEGLUT_HOME})
-package_create_search_path_include(FREEGLUT)
-package_create_search_path_library(FREEGLUT)
+cm_package_create_search_path_include(FREEGLUT)
+cm_package_create_search_path_library(FREEGLUT)
 
 
 
@@ -46,12 +46,12 @@ option(FREEGLUT_ENABLE_STATIC "Flag for using statical library." OFF)
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set(FREEGLUT_LIBRARY_NAMES "freeglut")
 if(FREEGLUT_ENABLE_STATIC)
-    package_create_statical_names(FREEGLUT_LIBRARY_NAMES)
+    cm_package_create_statical_names(FREEGLUT_LIBRARY_NAMES)
 endif()
-package_create_debug_names(FREEGLUT_LIBRARY_NAMES)
+cm_package_create_debug_names(FREEGLUT_LIBRARY_NAMES)
 
 
 
@@ -64,7 +64,7 @@ set(FREEGLUT_CLEAR_IF_CHANGED
 )
 foreach(VAR ${FREEGLUT_CLEAR_IF_CHANGED})
     if(WIN32 AND NOT FREEGLUT_ENABLE_STATIC)
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             FREEGLUT_LIBRARY_DEBUG
             FREEGLUT_LIBRARY_RELEASE
             FREEGLUT_PATH_INCLUDE
@@ -72,7 +72,7 @@ foreach(VAR ${FREEGLUT_CLEAR_IF_CHANGED})
             FREEGLUT_BINARY_RELEASE
         )
     else()
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             FREEGLUT_LIBRARY_DEBUG
             FREEGLUT_LIBRARY_RELEASE
             FREEGLUT_PATH_INCLUDE
@@ -87,38 +87,38 @@ unset(VAR)
 
 
 # ************************************************************
-# Find paths
-package_find_path(FREEGLUT_PATH_INCLUDE "freeglut.h" "${FREEGLUT_SEARCH_PATH_INCLUDE}" "GL")
-package_find_library(FREEGLUT_LIBRARY_DEBUG "${FREEGLUT_LIBRARY_NAMES_DEBUG}" "${FREEGLUT_SEARCH_PATH_LIBRARY}" "debug")
-package_find_library(FREEGLUT_LIBRARY_RELEASE "${FREEGLUT_LIBRARY_NAMES}" "${FREEGLUT_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(FREEGLUT_LIBRARY FREEGLUT_LIBRARY_DEBUG FREEGLUT_LIBRARY_RELEASE)
+# Find Paths
+cm_package_find_path(FREEGLUT_PATH_INCLUDE "freeglut.h" "${FREEGLUT_SEARCH_PATH_INCLUDE}" "GL")
+cm_package_find_library(FREEGLUT_LIBRARY_DEBUG "${FREEGLUT_LIBRARY_NAMES_DEBUG}" "${FREEGLUT_SEARCH_PATH_LIBRARY}" "debug")
+cm_package_find_library(FREEGLUT_LIBRARY_RELEASE "${FREEGLUT_LIBRARY_NAMES}" "${FREEGLUT_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_make_library(FREEGLUT_LIBRARY FREEGLUT_LIBRARY_DEBUG FREEGLUT_LIBRARY_RELEASE)
 
 
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if(WIN32 AND NOT FREEGLUT_ENABLE_STATIC)
 	set(FREEGLUT_BINARY_NAMES "freeglut")
-	package_create_debug_binary_names(FREEGLUT_BINARY_NAMES)
-    package_create_release_binary_names(FREEGLUT_BINARY_NAMES)
-	package_create_search_path_binary(FREEGLUT)
+	cm_package_create_debug_binary_names(FREEGLUT_BINARY_NAMES)
+    cm_package_create_release_binary_names(FREEGLUT_BINARY_NAMES)
+	cm_package_create_search_path_binary(FREEGLUT)
 
 	set(FREEGLUT_SEARCH_BINARIES
 		${FREEGLUT_SEARCH_PATH_BINARY}
 		${FREEGLUT_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file(FREEGLUT_BINARY_DEBUG "${FREEGLUT_BINARY_NAMES_DEBUG}" "${FREEGLUT_SEARCH_BINARIES}" "debug")
-	package_find_file(FREEGLUT_BINARY_RELEASE "${FREEGLUT_BINARY_NAMES_RELEASE}" "${FREEGLUT_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+	cm_package_find_file(FREEGLUT_BINARY_DEBUG "${FREEGLUT_BINARY_NAMES_DEBUG}" "${FREEGLUT_SEARCH_BINARIES}" "debug")
+	cm_package_find_file(FREEGLUT_BINARY_RELEASE "${FREEGLUT_BINARY_NAMES_RELEASE}" "${FREEGLUT_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
 
 
 
 
 # ************************************************************
-# Finalize package
-package_validate(FREEGLUT)
-package_add_parent_dir(FREEGLUT ADD_PARENT)
-package_end(FREEGLUT)
+# Finalize Package
+cm_package_validate(FREEGLUT)
+cm_package_include_options(FREEGLUT)
+cm_package_end(FREEGLUT)
 cm_message_footer(FREEGLUT)

@@ -23,27 +23,27 @@
 # ************************************************************
 # Start package
 cm_message_header( SQLITE )
-package_begin( SQLITE )
-package_create_home_path( SQLITE SQLITE_ROOT )
+cm_package_begin( SQLITE )
+cm_package_create_home_path( SQLITE SQLITE_ROOT )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( SQLITE_PREFIX_PATH ${SQLITE_HOME} )
-package_create_search_path_include( SQLITE )
-package_create_search_path_library( SQLITE )
+cm_package_create_search_path_include( SQLITE )
+cm_package_create_search_path_library( SQLITE )
 package_create_search_path_plugin( SQLITE )
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set( SQLITE_LIBRARY_NAMES "sqlite3" )
-package_create_debug_names( SQLITE_LIBRARY_NAMES )
+cm_package_create_debug_names( SQLITE_LIBRARY_NAMES )
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed( SQLITE_PREFIX_PATH
+cm_package_clear_if_changed( SQLITE_PREFIX_PATH
     SQLITE_LIBRARY_RELEASE
     SQLITE_LIBRARY_DEBUG
     SQLITE_PATH_INCLUDE
@@ -52,33 +52,33 @@ package_clear_if_changed( SQLITE_PREFIX_PATH
 
 # ************************************************************
 # Find path and file
-package_find_path( SQLITE_PATH_INCLUDE "sqlite3.h" "${SQLITE_SEARCH_PATH_INCLUDE}" "" )
-package_find_library( SQLITE_LIBRARY_DEBUG "${SQLITE_LIBRARY_NAMES_DEBUG}" "${SQLITE_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( SQLITE_LIBRARY_RELEASE "${SQLITE_LIBRARY_NAMES}" "${SQLITE_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
-package_make_library( SQLITE_LIBRARY SQLITE_LIBRARY_DEBUG SQLITE_LIBRARY_RELEASE )
+cm_package_find_path( SQLITE_PATH_INCLUDE "sqlite3.h" "${SQLITE_SEARCH_PATH_INCLUDE}" "" )
+cm_package_find_library( SQLITE_LIBRARY_DEBUG "${SQLITE_LIBRARY_NAMES_DEBUG}" "${SQLITE_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( SQLITE_LIBRARY_RELEASE "${SQLITE_LIBRARY_NAMES}" "${SQLITE_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
+cm_package_make_library( SQLITE_LIBRARY SQLITE_LIBRARY_DEBUG SQLITE_LIBRARY_RELEASE )
 
 
 #if( WIN32 )
 #    set( SQLITE_BINARY_NAMES "SQLITE" )
-#    package_create_release_binary_names( SQLITE_BINARY_NAMES )
-#    package_create_debug_binary_names( SQLITE_BINARY_NAMES )
+#    cm_package_create_release_binary_names( SQLITE_BINARY_NAMES )
+#    cm_package_create_debug_binary_names( SQLITE_BINARY_NAMES )
 #
-#    package_clear_if_changed( SQLITE_PREFIX_PATH
+#    cm_package_clear_if_changed( SQLITE_PREFIX_PATH
 #	    SQLITE_BINARY_RELEASE
 #	    SQLITE_BINARY_DEBUG
 #    )
 #
 #    package_find_binary_release( SQLITE )
 #    package_find_binary_debug( SQLITE )
-#    package_make_library_set( SQLITE_BINARY )
+#    cm_package_make_library_set( SQLITE_BINARY )
 #    package_copy_binary( SQLITE )
 #endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate( SQLITE )
-package_add_parent_dir( SQLITE )
-package_end( SQLITE )
+# Finalize Package
+cm_package_validate( SQLITE )
+cm_package_include_options( SQLITE )
+cm_package_end( SQLITE )
 cm_message_footer( SQLITE )
 

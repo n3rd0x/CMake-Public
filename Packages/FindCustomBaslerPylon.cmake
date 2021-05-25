@@ -24,8 +24,8 @@
 # Start Package
 # ************************************************************
 cm_message_header(BASLER_PYLON)
-package_begin(BASLER_PYLON)
-package_create_home_path(BASLER_PYLON BASLER_PYLON_ROOT)
+cm_package_begin(BASLER_PYLON)
+cm_package_create_home_path(BASLER_PYLON BASLER_PYLON_ROOT)
 
 
 
@@ -43,8 +43,8 @@ set(BASLER_PYLON_LIBRARY_NAMES "${BASLER_PYLON_PREFIX_NAMES}")
 # Create Search Path
 # ************************************************************
 set(BASLER_PYLON_PREFIX_PATH ${BASLER_PYLON_HOME})
-package_create_search_path_include(BASLER_PYLON)
-package_create_search_path_library(BASLER_PYLON)
+cm_package_create_search_path_include(BASLER_PYLON)
+cm_package_create_search_path_library(BASLER_PYLON)
 
 
 
@@ -52,7 +52,7 @@ package_create_search_path_library(BASLER_PYLON)
 # ************************************************************
 # Clear
 # ************************************************************
-package_clear_if_changed(BASLER_PYLON_HOME
+cm_package_clear_if_changed(BASLER_PYLON_HOME
     BASLER_PYLON_PATH_INCLUDE
     BASLER_PYLON_LIBRARY_DEBUG
     BASLER_PYLON_LIBRARY_RELEASE
@@ -65,12 +65,12 @@ package_clear_if_changed(BASLER_PYLON_HOME
 # Find Paths
 # ************************************************************
 if(APPLE)
-    package_find_path(BASLER_PYLON_PATH_INCLUDE "PylonBase.h" "${BASLER_PYLON_SEARCH_PATH_INCLUDE}" "")
-    package_find_library(BASLER_PYLON_LIBRARY_DEBUG "${BASLER_PYLON_LIBRARY_NAMES}" "${BASLER_PYLON_SEARCH_PATH_LIBRARY}" "")
-    package_find_library(BASLER_PYLON_LIBRARY_RELEASE "${BASLER_PYLON_LIBRARY_NAMES}" "${BASLER_PYLON_SEARCH_PATH_LIBRARY}" "")
-    package_make_library(BASLER_PYLON_LIBRARY BASLER_PYLON_LIBRARY_DEBUG BASLER_PYLON_LIBRARY_RELEASE)
+    cm_package_find_path(BASLER_PYLON_PATH_INCLUDE "PylonBase.h" "${BASLER_PYLON_SEARCH_PATH_INCLUDE}" "")
+    cm_package_find_library(BASLER_PYLON_LIBRARY_DEBUG "${BASLER_PYLON_LIBRARY_NAMES}" "${BASLER_PYLON_SEARCH_PATH_LIBRARY}" "")
+    cm_package_find_library(BASLER_PYLON_LIBRARY_RELEASE "${BASLER_PYLON_LIBRARY_NAMES}" "${BASLER_PYLON_SEARCH_PATH_LIBRARY}" "")
+    cm_package_make_library(BASLER_PYLON_LIBRARY BASLER_PYLON_LIBRARY_DEBUG BASLER_PYLON_LIBRARY_RELEASE)
 else()
-    package_find_path(BASLER_PYLON_PATH_INCLUDE "pylon" "${BASLER_PYLON_SEARCH_PATH_INCLUDE}" "")
+    cm_package_find_path(BASLER_PYLON_PATH_INCLUDE "pylon" "${BASLER_PYLON_SEARCH_PATH_INCLUDE}" "")
     set(Args "")
     set(BASLER_PYLON_LIBRARY_DEBUG "")
     set(BASLER_PYLON_LIBRARY_RELEASE "")
@@ -84,7 +84,7 @@ else()
         string(REGEX MATCH "-l" LibraryFound ${Var})
         if(LibraryFound)
             string(REGEX REPLACE "-l" "" LibraryName "${Var}")
-            package_find_library(BASLER_PYLON_LIBRARY_${LibraryName} "${LibraryName}" "${BASLER_PYLON_SEARCH_PATH_LIBRARY}" "")
+            cm_package_find_library(BASLER_PYLON_LIBRARY_${LibraryName} "${LibraryName}" "${BASLER_PYLON_SEARCH_PATH_LIBRARY}" "")
             if(BASLER_PYLON_LIBRARY_${LibraryName})
                 list(APPEND BASLER_PYLON_LIBRARY_RELEASE ${BASLER_PYLON_LIBRARY_${LibraryName}})
             endif()
@@ -95,7 +95,7 @@ else()
     unset(Args)
     unset(LibraryFound)
     unset(ListArgs)
-    package_make_library(BASLER_PYLON_LIBRARY BASLER_PYLON_LIBRARY_DEBUG BASLER_PYLON_LIBRARY_RELEASE)
+    cm_package_make_library(BASLER_PYLON_LIBRARY BASLER_PYLON_LIBRARY_DEBUG BASLER_PYLON_LIBRARY_RELEASE)
 endif()
 
 
@@ -104,12 +104,12 @@ endif()
 # ************************************************************
 # Finalize Package
 # ************************************************************
-package_validate(BASLER_PYLON)
+cm_package_validate(BASLER_PYLON)
 if(APPLE)
-    package_add_parent_dir(BASLER_PYLON)
+    cm_package_include_options(BASLER_PYLON)
     list(APPEND BASLER_PYLON_INCLUDE_DIR "${BASLER_PYLON_PATH_INCLUDE}/GenICam")
 else()
-    package_add_parent_dir(BASLER_PYLON ADD_PARENT)
+    cm_package_include_options(BASLER_PYLON)
 endif()
-package_end(BASLER_PYLON)
+cm_package_end(BASLER_PYLON)
 cm_message_footer(BASLER_PYLON)

@@ -23,25 +23,25 @@
 # ************************************************************
 # Start package
 cm_message_header(GLIB)
-package_begin(GLIB)
-package_create_home_path(GLIB GLIB_ROOT)
+cm_package_begin(GLIB)
+cm_package_create_home_path(GLIB GLIB_ROOT)
 
 
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set(GLIB_LIBRARY_NAMES "glib-2.0")
-package_create_debug_names(GLIB_LIBRARY_NAMES)
+cm_package_create_debug_names(GLIB_LIBRARY_NAMES)
 
 
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(GLIB_PREFIX_PATH ${GLIB_HOME})
-package_create_search_path_include(GLIB)
-package_create_search_path_library(GLIB)
+cm_package_create_search_path_include(GLIB)
+cm_package_create_search_path_library(GLIB)
 
 
 
@@ -53,7 +53,7 @@ set(GLIB_CLEAR_IF_CHANGED
 )
 foreach(VAR ${GLIB_CLEAR_IF_CHANGED})
     if(WIN32)
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             GLIB_LIBRARY_DEBUG
             GLIB_LIBRARY_RELEASE
             GLIB_PATH_INCLUDE
@@ -61,7 +61,7 @@ foreach(VAR ${GLIB_CLEAR_IF_CHANGED})
             GLIB_BINARY_DEBUG
         )
     else()
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             GLIB_LIBRARY_DEBUG
             GLIB_LIBRARY_RELEASE
             GLIB_PATH_INCLUDE
@@ -73,19 +73,19 @@ endforeach()
 
 
 # ************************************************************
-# Find paths
-package_find_path(GLIB_PATH_INCLUDE "glib.h" "${GLIB_SEARCH_PATH_INCLUDE}" "glib;glib-2.0")
-package_find_library(GLIB_LIBRARY_DEBUG "${GLIB_LIBRARY_NAMES_DEBUG}" "${GLIB_SEARCH_PATH_LIBRARY}" "debug")
-package_find_library(GLIB_LIBRARY_RELEASE "${GLIB_LIBRARY_NAMES}" "${GLIB_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(GLIB_LIBRARY GLIB_LIBRARY_DEBUG GLIB_LIBRARY_RELEASE)
+# Find Paths
+cm_package_find_path(GLIB_PATH_INCLUDE "glib.h" "${GLIB_SEARCH_PATH_INCLUDE}" "glib;glib-2.0")
+cm_package_find_library(GLIB_LIBRARY_DEBUG "${GLIB_LIBRARY_NAMES_DEBUG}" "${GLIB_SEARCH_PATH_LIBRARY}" "debug")
+cm_package_find_library(GLIB_LIBRARY_RELEASE "${GLIB_LIBRARY_NAMES}" "${GLIB_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_make_library(GLIB_LIBRARY GLIB_LIBRARY_DEBUG GLIB_LIBRARY_RELEASE)
 
 
 
 
 # ************************************************************
-# Finalize package
-package_validate(GLIB)
-package_add_parent_dir(GLIB ADD_PARENT)
-package_end(GLIB)
+# Finalize Package
+cm_package_validate(GLIB)
+cm_package_include_options(GLIB)
+cm_package_end(GLIB)
 cm_message_footer(GLIB)
 

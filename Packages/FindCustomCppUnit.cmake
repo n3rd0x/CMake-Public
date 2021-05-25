@@ -25,27 +25,27 @@
 # ************************************************************
 # Start package
 cm_message_header( CPPUNIT )
-package_begin( CPPUNIT )
-package_create_home_path( CPPUNIT CPPUNIT_ROOT )
+cm_package_begin( CPPUNIT )
+cm_package_create_home_path( CPPUNIT CPPUNIT_ROOT )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( CPPUNIT_PREFIX_PATH ${CPPUNIT_HOME} )
-package_create_search_path_include( CPPUNIT )
-package_create_search_path_library( CPPUNIT )
+cm_package_create_search_path_include( CPPUNIT )
+cm_package_create_search_path_library( CPPUNIT )
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set( CPPUNIT_LIBRARY_NAMES "cppunit" )
-package_create_debug_names( CPPUNIT_LIBRARY_NAMES )
+cm_package_create_debug_names( CPPUNIT_LIBRARY_NAMES )
 
 
 # ************************************************************
 # Clear
 if( WIN32 )
-	package_clear_if_changed( CPPUNIT_PREFIX_PATH
+	cm_package_clear_if_changed( CPPUNIT_PREFIX_PATH
 		CPPUNIT_BINARY_RELEASE
 		CPPUNIT_BINARY_DEBUG
 		CPPUNIT_LIBRARY_DEBUG
@@ -53,7 +53,7 @@ if( WIN32 )
 		CPPUNIT_PATH_INCLUDE
 	)
 else()
-	package_clear_if_changed( CPPUNIT_PREFIX_PATH
+	cm_package_clear_if_changed( CPPUNIT_PREFIX_PATH
 		CPPUNIT_LIBRARY_DEBUG
 		CPPUNIT_LIBRARY_RELEASE
 		CPPUNIT_PATH_INCLUDE
@@ -62,34 +62,34 @@ endif()
 
 
 # ************************************************************
-# Find paths
-package_find_path( CPPUNIT_PATH_INCLUDE "Test.h" "${CPPUNIT_SEARCH_PATH_INCLUDE}" "cppunit" )
-package_find_library( CPPUNIT_LIBRARY_DEBUG "${CPPUNIT_LIBRARY_NAMES_DEBUG}" "${CPPUNIT_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( CPPUNIT_LIBRARY_RELEASE "${CPPUNIT_LIBRARY_NAMES}" "${CPPUNIT_SEARCH_PATH_LIBRARY}" "release"  )
-package_make_library( CPPUNIT_LIBRARY CPPUNIT_LIBRARY_DEBUG CPPUNIT_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path( CPPUNIT_PATH_INCLUDE "Test.h" "${CPPUNIT_SEARCH_PATH_INCLUDE}" "cppunit" )
+cm_package_find_library( CPPUNIT_LIBRARY_DEBUG "${CPPUNIT_LIBRARY_NAMES_DEBUG}" "${CPPUNIT_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( CPPUNIT_LIBRARY_RELEASE "${CPPUNIT_LIBRARY_NAMES}" "${CPPUNIT_SEARCH_PATH_LIBRARY}" "release"  )
+cm_package_make_library( CPPUNIT_LIBRARY CPPUNIT_LIBRARY_DEBUG CPPUNIT_LIBRARY_RELEASE )
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if( WIN32 )
 	set( CPPUNIT_BINARY_NAMES "cppunit" )
-	package_create_release_binary_names( CPPUNIT_BINARY_NAMES )
-	package_create_debug_binary_names( CPPUNIT_BINARY_NAMES )
-	package_create_search_path_binary( CPPUNIT )
+	cm_package_create_release_binary_names( CPPUNIT_BINARY_NAMES )
+	cm_package_create_debug_binary_names( CPPUNIT_BINARY_NAMES )
+	cm_package_create_search_path_binary( CPPUNIT )
 
 	set( CPPUNIT_SEARCH_BINARIES
 		${CPPUNIT_SEARCH_PATH_BINARY}
 		${CPPUNIT_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file( CPPUNIT_BINARY_DEBUG "${CPPUNIT_BINARY_NAMES_DEBUG}" "${CPPUNIT_SEARCH_BINARIES}" "debug" )
-	package_find_file( CPPUNIT_BINARY_RELEASE "${CPPUNIT_BINARY_NAMES_RELEASE}" "${CPPUNIT_SEARCH_BINARIES}" "release" )
+	cm_package_find_file( CPPUNIT_BINARY_DEBUG "${CPPUNIT_BINARY_NAMES_DEBUG}" "${CPPUNIT_SEARCH_BINARIES}" "debug" )
+	cm_package_find_file( CPPUNIT_BINARY_RELEASE "${CPPUNIT_BINARY_NAMES_RELEASE}" "${CPPUNIT_SEARCH_BINARIES}" "release" )
 endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate( CPPUNIT )
-package_add_parent_dir( CPPUNIT )
-package_end( CPPUNIT )
+# Finalize Package
+cm_package_validate( CPPUNIT )
+cm_package_include_options( CPPUNIT )
+cm_package_end( CPPUNIT )
 cm_message_footer( CPPUNIT )

@@ -23,8 +23,8 @@
 # ************************************************************
 # Start package
 cm_message_header(GLEW)
-package_begin(GLEW)
-package_create_home_path(GLEW GLEW_ROOT)
+cm_package_begin(GLEW)
+cm_package_create_home_path(GLEW GLEW_ROOT)
 
 
 
@@ -45,10 +45,10 @@ unset(x64_FOUND)
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(GLEW_PREFIX_PATH ${GLEW_HOME})
-package_create_search_path_include(GLEW)
-package_create_search_path_library(GLEW)
+cm_package_create_search_path_include(GLEW)
+cm_package_create_search_path_library(GLEW)
 
 
 # ************************************************************
@@ -58,7 +58,7 @@ option(GLEW_ENABLE_STATICAL "Flag for using static library." OFF)
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 if(GLEW_ENABLE_MX)
     if(GLEW_ENABLE_STATICAL)
         set(GLEW_LIBRARY_NAMES "glew32mx" "glewmx")
@@ -72,7 +72,7 @@ else()
         set(GLEW_LIBRARY_NAMES "glew32" "glew")
     endif()
 endif()
-package_create_debug_names(GLEW_LIBRARY_NAMES)
+cm_package_create_debug_names(GLEW_LIBRARY_NAMES)
 
 
 # ************************************************************
@@ -84,7 +84,7 @@ set(GLEW_CLEAR_IF_CHANGED
 )
 foreach(VAR ${GLEW_CLEAR_IF_CHANGED})
     if(WIN32)
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             GLEW_LIBRARY_DEBUG
             GLEW_LIBRARY_RELEASE
             GLEW_PATH_INCLUDE
@@ -92,7 +92,7 @@ foreach(VAR ${GLEW_CLEAR_IF_CHANGED})
             GLEW_BINARY_DEBUG
         )
     else()
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             GLEW_LIBRARY_DEBUG
             GLEW_LIBRARY_RELEASE
             GLEW_PATH_INCLUDE
@@ -105,17 +105,17 @@ unset(VAR)
 
 
 # ************************************************************
-# Find paths
-package_find_path(GLEW_PATH_INCLUDE "glew.h" "${GLEW_SEARCH_PATH_INCLUDE}" "GL")
-package_find_library(GLEW_LIBRARY_DEBUG "${GLEW_LIBRARY_NAMES_DEBUG}" "${GLEW_SEARCH_PATH_LIBRARY}" "${PATH_SUFFIX}")
-package_find_library(GLEW_LIBRARY_RELEASE "${GLEW_LIBRARY_NAMES}" "${GLEW_SEARCH_PATH_LIBRARY}" "${PATH_SUFFIX}")
-package_make_library(GLEW_LIBRARY GLEW_LIBRARY_DEBUG GLEW_LIBRARY_RELEASE)
+# Find Paths
+cm_package_find_path(GLEW_PATH_INCLUDE "glew.h" "${GLEW_SEARCH_PATH_INCLUDE}" "GL")
+cm_package_find_library(GLEW_LIBRARY_DEBUG "${GLEW_LIBRARY_NAMES_DEBUG}" "${GLEW_SEARCH_PATH_LIBRARY}" "${PATH_SUFFIX}")
+cm_package_find_library(GLEW_LIBRARY_RELEASE "${GLEW_LIBRARY_NAMES}" "${GLEW_SEARCH_PATH_LIBRARY}" "${PATH_SUFFIX}")
+cm_package_make_library(GLEW_LIBRARY GLEW_LIBRARY_DEBUG GLEW_LIBRARY_RELEASE)
 
 
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if(WIN32 AND NOT GLEW_ENABLE_STATICAL)
     if(GLEW_ENABLE_MX )
         set(GLEW_BINARY_NAMES "glew32mx")
@@ -123,24 +123,24 @@ if(WIN32 AND NOT GLEW_ENABLE_STATICAL)
         set(GLEW_BINARY_NAMES "glew32")
     endif()
 
-    package_create_debug_binary_names(GLEW_BINARY_NAMES)
-	package_create_release_binary_names(GLEW_BINARY_NAMES)
-	package_create_search_path_binary(GLEW)
+    cm_package_create_debug_binary_names(GLEW_BINARY_NAMES)
+	cm_package_create_release_binary_names(GLEW_BINARY_NAMES)
+	cm_package_create_search_path_binary(GLEW)
 
 	set(GLEW_SEARCH_BINARIES
 		${GLEW_SEARCH_PATH_BINARY}
 		${GLEW_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file(GLEW_BINARY_DEBUG "${GLEW_BINARY_NAMES_DEBUG}" "${GLEW_SEARCH_BINARIES}" "${PATH_SUFFIX}")
-	package_find_file(GLEW_BINARY_RELEASE "${GLEW_BINARY_NAMES_RELEASE}" "${GLEW_SEARCH_BINARIES}" "${PATH_SUFFIX}")
+	cm_package_find_file(GLEW_BINARY_DEBUG "${GLEW_BINARY_NAMES_DEBUG}" "${GLEW_SEARCH_BINARIES}" "${PATH_SUFFIX}")
+	cm_package_find_file(GLEW_BINARY_RELEASE "${GLEW_BINARY_NAMES_RELEASE}" "${GLEW_SEARCH_BINARIES}" "${PATH_SUFFIX}")
 endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate(GLEW)
-package_add_parent_dir(GLEW ADD_PARENT)
-package_end(GLEW)
+# Finalize Package
+cm_package_validate(GLEW)
+cm_package_include_options(GLEW)
+cm_package_end(GLEW)
 cm_message_footer(GLEW)
 

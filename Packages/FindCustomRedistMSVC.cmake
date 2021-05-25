@@ -22,14 +22,14 @@
 # ************************************************************
 # Start package
 cm_message_header(RedistMSVC)
-package_begin(RedistMSVC)
-package_create_home_path(RedistMSVC RedistMSVC_ROOT)
+cm_package_begin(RedistMSVC)
+cm_package_create_home_path(RedistMSVC RedistMSVC_ROOT)
 
 
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(RedistMSVC_PREFIX_PATH ${RedistMSVC_HOME})
 
 
@@ -43,7 +43,7 @@ option(RedistMSVC_DIRECTX11 "Search for DirectX 11.0." OFF)
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set(VERSION_VALUE "")
 if(MSVC14)
     set(VERSION_VALUE "140")
@@ -56,11 +56,11 @@ elseif(MSVC10)
 endif()
 set(MSVCP_NAME "msvcp${VERSION_VALUE}")
 set(MSVCR_NAME "msvcr${VERSION_VALUE}")
-package_create_debug_binary_names(MSVCP_NAME)
-package_create_release_binary_names(MSVCP_NAME)
+cm_package_create_debug_binary_names(MSVCP_NAME)
+cm_package_create_release_binary_names(MSVCP_NAME)
 if(NOT MSVC14)
-    package_create_debug_binary_names(MSVCR_NAME)
-    package_create_release_binary_names(MSVCR_NAME)
+    cm_package_create_debug_binary_names(MSVCR_NAME)
+    cm_package_create_release_binary_names(MSVCR_NAME)
 endif()
 
 
@@ -88,7 +88,7 @@ if(RedistMSVC_DIRECTX11)
     )
 endif()
 foreach(VAR ${ClearIfChanged})
-    package_clear_if_changed(${VAR}
+    cm_package_clear_if_changed(${VAR}
         ${Modules}
     )
 endforeach()
@@ -100,17 +100,17 @@ unset(Modules)
 
 
 # ************************************************************
-# Find paths
-package_find_file(RedistMSVC_MSVCP_DEBUG "${MSVCP_NAME_DEBUG}" "${RedistMSVC_HOME}" "debug")
-package_find_file(RedistMSVC_MSVCP_RELEASE "${MSVCP_NAME_RELEASE}" "${RedistMSVC_HOME}" "release")
+# Find Paths
+cm_package_find_file(RedistMSVC_MSVCP_DEBUG "${MSVCP_NAME_DEBUG}" "${RedistMSVC_HOME}" "debug")
+cm_package_find_file(RedistMSVC_MSVCP_RELEASE "${MSVCP_NAME_RELEASE}" "${RedistMSVC_HOME}" "release")
 
 if(NOT MSVC14)
-    package_find_file(RedistMSVC_MSVCR_DEBUG "${MSVCR_NAME_DEBUG}" "${RedistMSVC_HOME}" "debug")
-    package_find_file(RedistMSVC_MSVCR_RELEASE "${MSVCR_NAME_RELEASE}" "${RedistMSVC_HOME}" "release")
+    cm_package_find_file(RedistMSVC_MSVCR_DEBUG "${MSVCR_NAME_DEBUG}" "${RedistMSVC_HOME}" "debug")
+    cm_package_find_file(RedistMSVC_MSVCR_RELEASE "${MSVCR_NAME_RELEASE}" "${RedistMSVC_HOME}" "release")
 endif()
 
 if(RedistMSVC_DIRECTX11)
-    package_find_file(RedistMSVC_DX11 "D3Dcompiler_47.dll" "${RedistMSVC_HOME}" "debug;release")
+    cm_package_find_file(RedistMSVC_DX11 "D3Dcompiler_47.dll" "${RedistMSVC_HOME}" "debug;release")
 endif()
 
 # Add into final variable.
@@ -160,7 +160,7 @@ endif()
 
 
 # ************************************************************
-# Finalize package
+# Finalize Package
 if(RedistFoundDebug OR RedistFoundRelease)
     cm_message_status(STATUS "The RedistMSVC library is located.")
 else()

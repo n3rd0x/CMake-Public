@@ -23,15 +23,15 @@
 # ************************************************************
 # Start package
 cm_message_header(RAKNET)
-package_begin(RAKNET)
-package_create_home_path(RAKNET RAKNET_ROOT)
+cm_package_begin(RAKNET)
+cm_package_create_home_path(RAKNET RAKNET_ROOT)
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(RAKNET_PREFIX_PATH ${RAKNET_HOME})
-package_create_search_path_include(RAKNET)
-package_create_search_path_library(RAKNET)
+cm_package_create_search_path_include(RAKNET)
+cm_package_create_search_path_library(RAKNET)
 
 
 # ************************************************************
@@ -40,15 +40,15 @@ option( RAKNET_ENABLE_STATICAL "Flag for using statical library." OFF )
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set(RAKNET_LIBRARY_NAMES "RakNet")
 if(RAKNET_ENABLE_STATICAL)
     cm_message_verbose( STATUS "Enable statical library." )
-    package_create_statical_names( RAKNET_LIBRARY_NAMES )
+    cm_package_create_statical_names( RAKNET_LIBRARY_NAMES )
 else()
     set(RAKNET_LIBRARY_NAMES "${RAKNET_LIBRARY_NAMES};RakNetDLL")
 endif()
-package_create_debug_names(RAKNET_LIBRARY_NAMES)
+cm_package_create_debug_names(RAKNET_LIBRARY_NAMES)
 
 
 # ************************************************************
@@ -64,13 +64,13 @@ set(RAKNET_CLEAR_IF_CHANGED
 )
 foreach(VAR ${RAKNET_CLEAR_IF_CHANGED})
     if(WIN32 AND NOT RAKNET_ENABLE_STATICAL)
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             RAKNET_BINARY_DEBUG
             RAKNET_BINARY_RELEASE
             ${RAKNET_COMMON_VARIABLES}
         )
     else()
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             ${RAKNET_COMMON_VARIABLES}
         )
         unset(RAKNET_BINARY_DEBUG CACHE)
@@ -81,34 +81,34 @@ endforeach()
 
 
 # ************************************************************
-# Find paths
-package_find_path(RAKNET_PATH_INCLUDE "RakNetDefines.h" "${RAKNET_SEARCH_PATH_INCLUDE}" "RakNet" )
-package_find_library(RAKNET_LIBRARY_DEBUG "${RAKNET_LIBRARY_NAMES_DEBUG}" "${RAKNET_SEARCH_PATH_LIBRARY}" "debug")
-package_find_library(RAKNET_LIBRARY_RELEASE "${RAKNET_LIBRARY_NAMES}" "${RAKNET_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
-package_make_library(RAKNET_LIBRARY RAKNET_LIBRARY_DEBUG RAKNET_LIBRARY_RELEASE)
+# Find Paths
+cm_package_find_path(RAKNET_PATH_INCLUDE "RakNetDefines.h" "${RAKNET_SEARCH_PATH_INCLUDE}" "RakNet" )
+cm_package_find_library(RAKNET_LIBRARY_DEBUG "${RAKNET_LIBRARY_NAMES_DEBUG}" "${RAKNET_SEARCH_PATH_LIBRARY}" "debug")
+cm_package_find_library(RAKNET_LIBRARY_RELEASE "${RAKNET_LIBRARY_NAMES}" "${RAKNET_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel")
+cm_package_make_library(RAKNET_LIBRARY RAKNET_LIBRARY_DEBUG RAKNET_LIBRARY_RELEASE)
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if(WIN32 AND NOT RAKNET_ENABLE_STATICAL)
     set( RAKNET_BINARY_NAMES "RakNetDLL" )
-	package_create_release_binary_names(RAKNET_BINARY_NAMES)
-	package_create_debug_binary_names(RAKNET_BINARY_NAMES)
-	package_create_search_path_binary(RAKNET)
+	cm_package_create_release_binary_names(RAKNET_BINARY_NAMES)
+	cm_package_create_debug_binary_names(RAKNET_BINARY_NAMES)
+	cm_package_create_search_path_binary(RAKNET)
 
 	set(RAKNET_SEARCH_BINARIES
 		${RAKNET_SEARCH_PATH_BINARY}
 		${RAKNET_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file(RAKNET_BINARY_DEBUG "${RAKNET_BINARY_NAMES_DEBUG}" "${RAKNET_SEARCH_BINARIES}" "debug")
-	package_find_file(RAKNET_BINARY_RELEASE "${RAKNET_BINARY_NAMES_RELEASE}" "${RAKNET_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+	cm_package_find_file(RAKNET_BINARY_DEBUG "${RAKNET_BINARY_NAMES_DEBUG}" "${RAKNET_SEARCH_BINARIES}" "debug")
+	cm_package_find_file(RAKNET_BINARY_RELEASE "${RAKNET_BINARY_NAMES_RELEASE}" "${RAKNET_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate(RAKNET)
-package_add_parent_dir(RAKNET ADD_PARENT)
-package_end(RAKNET)
+# Finalize Package
+cm_package_validate(RAKNET)
+cm_package_include_options(RAKNET)
+cm_package_end(RAKNET)
 cm_message_footer(RAKNET)

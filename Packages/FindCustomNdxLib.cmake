@@ -22,28 +22,28 @@
 # ************************************************************
 # Start package
 cm_message_header( NDXLIB )
-package_begin( NDXLIB )
-package_create_home_path( NDXLIB NDXLIB_ROOT )
+cm_package_begin( NDXLIB )
+cm_package_create_home_path( NDXLIB NDXLIB_ROOT )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( NDXLIB_PREFIX_PATH ${NDXLIB_HOME} "${NDXLIB_HOME}/library" )
-package_create_search_path_include( NDXLIB )
-package_create_search_path_library( NDXLIB )
+cm_package_create_search_path_include( NDXLIB )
+cm_package_create_search_path_library( NDXLIB )
 package_create_search_path_plugin( NDXLIB )
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set( NDXLIB_LIBRARY_NAMES "ndxLib" )
-package_create_debug_names( NDXLIB_LIBRARY_NAMES )
+cm_package_create_debug_names( NDXLIB_LIBRARY_NAMES )
 
 
 # ************************************************************
 # Clear
 if( WIN32 )
-    package_clear_if_changed( NDXLIB_PREFIX_PATH
+    cm_package_clear_if_changed( NDXLIB_PREFIX_PATH
         NDXLIB_LIBRARY_DEBUG
         NDXLIB_LIBRARY_RELEASE
         NDXLIB_PATH_INCLUDE
@@ -51,7 +51,7 @@ if( WIN32 )
         NDXLIB_BINARY_DEBUG
     )
 else()
-    package_clear_if_changed( NDXLIB_PREFIX_PATH
+    cm_package_clear_if_changed( NDXLIB_PREFIX_PATH
         NDXLIB_LIBRARY_DEBUG
         NDXLIB_LIBRARY_RELEASE
         NDXLIB_PATH_INCLUDE
@@ -60,34 +60,34 @@ endif()
 
 
 # ************************************************************
-# Find paths
-package_find_path( NDXLIB_PATH_INCLUDE "ndxBuildSettings.h" "${NDXLIB_SEARCH_PATH_INCLUDE}" "ndxlib" )
-package_find_library( NDXLIB_LIBRARY_DEBUG "${NDXLIB_LIBRARY_NAMES_DEBUG}" "${NDXLIB_SEARCH_PATH_LIBRARY}" "debug" )
-package_find_library( NDXLIB_LIBRARY_RELEASE "${NDXLIB_LIBRARY_NAMES}" "${NDXLIB_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel" )
-package_make_library( NDXLIB_LIBRARY NDXLIB_LIBRARY_DEBUG NDXLIB_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path( NDXLIB_PATH_INCLUDE "ndxBuildSettings.h" "${NDXLIB_SEARCH_PATH_INCLUDE}" "ndxlib" )
+cm_package_find_library( NDXLIB_LIBRARY_DEBUG "${NDXLIB_LIBRARY_NAMES_DEBUG}" "${NDXLIB_SEARCH_PATH_LIBRARY}" "debug" )
+cm_package_find_library( NDXLIB_LIBRARY_RELEASE "${NDXLIB_LIBRARY_NAMES}" "${NDXLIB_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel" )
+cm_package_make_library( NDXLIB_LIBRARY NDXLIB_LIBRARY_DEBUG NDXLIB_LIBRARY_RELEASE )
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if( WIN32 )
 	set( NDXLIB_BINARY_NAMES "ndxLib" )
-	package_create_release_binary_names( NDXLIB_BINARY_NAMES )
-	package_create_debug_binary_names( NDXLIB_BINARY_NAMES )
-	package_create_search_path_binary( NDXLIB )
+	cm_package_create_release_binary_names( NDXLIB_BINARY_NAMES )
+	cm_package_create_debug_binary_names( NDXLIB_BINARY_NAMES )
+	cm_package_create_search_path_binary( NDXLIB )
 
 	set( NDXLIB_SEARCH_BINARIES
 		${NDXLIB_SEARCH_PATH_BINARY}
 		${NDXLIB_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file( NDXLIB_BINARY_DEBUG "${NDXLIB_BINARY_NAMES_DEBUG}" "${NDXLIB_SEARCH_BINARIES}" "debug" )
-	package_find_file( NDXLIB_BINARY_RELEASE "${NDXLIB_BINARY_NAMES_RELEASE}" "${NDXLIB_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
+	cm_package_find_file( NDXLIB_BINARY_DEBUG "${NDXLIB_BINARY_NAMES_DEBUG}" "${NDXLIB_SEARCH_BINARIES}" "debug" )
+	cm_package_find_file( NDXLIB_BINARY_RELEASE "${NDXLIB_BINARY_NAMES_RELEASE}" "${NDXLIB_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
 endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate( NDXLIB )
-package_add_parent_dir( NDXLIB )
-package_end( NDXLIB )
+# Finalize Package
+cm_package_validate( NDXLIB )
+cm_package_include_options( NDXLIB )
+cm_package_end( NDXLIB )
 cm_message_footer( NDXLIB )

@@ -23,15 +23,15 @@
 # ************************************************************
 # Start package
 cm_message_header( LOG4CPLUS )
-package_begin( LOG4CPLUS )
-package_create_home_path( LOG4CPLUS LOG4CPLUS_ROOT )
+cm_package_begin( LOG4CPLUS )
+cm_package_create_home_path( LOG4CPLUS LOG4CPLUS_ROOT )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( LOG4CPLUS_PREFIX_PATH ${LOG4CPLUS_HOME} )
-package_create_search_path_include( LOG4CPLUS )
-package_create_search_path_library( LOG4CPLUS )
+cm_package_create_search_path_include( LOG4CPLUS )
+cm_package_create_search_path_library( LOG4CPLUS )
 
 
 # ************************************************************
@@ -40,13 +40,13 @@ option( LOG4CPLUS_ENABLE_STATICAL "Flag for using statical library." OFF )
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set( LOG4CPLUS_LIBRARY_NAMES "log4cplus" )
 if( LOG4CPLUS_ENABLE_STATICAL )
     cm_message_verbose( STATUS "Enable statical library." )
-    package_create_statical_names( LOG4CPLUS_LIBRARY_NAMES )
+    cm_package_create_statical_names( LOG4CPLUS_LIBRARY_NAMES )
 endif()
-package_create_debug_names( LOG4CPLUS_LIBRARY_NAMES )
+cm_package_create_debug_names( LOG4CPLUS_LIBRARY_NAMES )
 
 
 # ************************************************************
@@ -62,13 +62,13 @@ set( LOG4CPLUS_CLEAR_IF_CHANGED
 )
 foreach( VAR ${LOG4CPLUS_CLEAR_IF_CHANGED} )
     if( WIN32 AND NOT LOG4CPLUS_ENABLE_STATICAL )
-        package_clear_if_changed( ${VAR}
+        cm_package_clear_if_changed( ${VAR}
             LOG4CPLUS_BINARY_DEBUG
             LOG4CPLUS_BINARY_RELEASE
             ${LOG4CPLUS_COMMON_VARIABLES}
         )
     else()
-        package_clear_if_changed( ${VAR}
+        cm_package_clear_if_changed( ${VAR}
             ${LOG4CPLUS_COMMON_VARIABLES}
         )
         unset( LOG4CPLUS_BINARY_DEBUG CACHE )
@@ -78,39 +78,39 @@ endforeach()
 
 
 # ************************************************************
-# Find paths
-package_find_path( LOG4CPLUS_PATH_INCLUDE "logger.h" "${LOG4CPLUS_SEARCH_PATH_INCLUDE}" "log4cplus;log4cpp" )
-package_find_library( LOG4CPLUS_LIBRARY_DEBUG "${LOG4CPLUS_LIBRARY_NAMES_DEBUG}" "${LOG4CPLUS_SEARCH_PATH_LIBRARY}" "debug"  )
-package_find_library( LOG4CPLUS_LIBRARY_RELEASE "${LOG4CPLUS_LIBRARY_NAMES}" "${LOG4CPLUS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
-package_make_library( LOG4CPLUS_LIBRARY LOG4CPLUS_LIBRARY_DEBUG LOG4CPLUS_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path( LOG4CPLUS_PATH_INCLUDE "logger.h" "${LOG4CPLUS_SEARCH_PATH_INCLUDE}" "log4cplus;log4cpp" )
+cm_package_find_library( LOG4CPLUS_LIBRARY_DEBUG "${LOG4CPLUS_LIBRARY_NAMES_DEBUG}" "${LOG4CPLUS_SEARCH_PATH_LIBRARY}" "debug"  )
+cm_package_find_library( LOG4CPLUS_LIBRARY_RELEASE "${LOG4CPLUS_LIBRARY_NAMES}" "${LOG4CPLUS_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel"  )
+cm_package_make_library( LOG4CPLUS_LIBRARY LOG4CPLUS_LIBRARY_DEBUG LOG4CPLUS_LIBRARY_RELEASE )
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if( WIN32 AND NOT LOG4CPLUS_ENABLE_STATICAL )
 	set( LOG4CPLUS_BINARY_NAMES "log4cplus" )
-    package_create_debug_binary_names( LOG4CPLUS_BINARY_NAMES )
-	package_create_release_binary_names( LOG4CPLUS_BINARY_NAMES )
-	package_create_search_path_binary( LOG4CPLUS )
+    cm_package_create_debug_binary_names( LOG4CPLUS_BINARY_NAMES )
+	cm_package_create_release_binary_names( LOG4CPLUS_BINARY_NAMES )
+	cm_package_create_search_path_binary( LOG4CPLUS )
 
 	set( LOG4CPLUS_SEARCH_BINARIES
 		${LOG4CPLUS_SEARCH_PATH_BINARY}
 		${LOG4CPLUS_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file( LOG4CPLUS_BINARY_DEBUG "${LOG4CPLUS_BINARY_NAMES_DEBUG}" "${LOG4CPLUS_SEARCH_BINARIES}" "debug" )
-	package_find_file( LOG4CPLUS_BINARY_RELEASE "${LOG4CPLUS_BINARY_NAMES_RELEASE}" "${LOG4CPLUS_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
+	cm_package_find_file( LOG4CPLUS_BINARY_DEBUG "${LOG4CPLUS_BINARY_NAMES_DEBUG}" "${LOG4CPLUS_SEARCH_BINARIES}" "debug" )
+	cm_package_find_file( LOG4CPLUS_BINARY_RELEASE "${LOG4CPLUS_BINARY_NAMES_RELEASE}" "${LOG4CPLUS_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
 endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate( LOG4CPLUS )
+# Finalize Package
+cm_package_validate( LOG4CPLUS )
 
 if( WIN32 AND LOG4CPLUS_LIBRARIES )
 	set( LOG4CPLUS_LIBRARIES "${LOG4CPLUS_LIBRARIES}" "ws2_32.lib" )
 endif()
 
-package_add_parent_dir( LOG4CPLUS )
-package_end( LOG4CPLUS )
+cm_package_include_options( LOG4CPLUS )
+cm_package_end( LOG4CPLUS )
 cm_message_footer( LOG4CPLUS )

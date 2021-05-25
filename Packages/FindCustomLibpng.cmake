@@ -23,17 +23,17 @@
 # ************************************************************
 # Start package
 cm_message_header(PNG)
-package_begin(PNG)
-package_create_home_path(PNG PNG_ROOT)
+cm_package_begin(PNG)
+cm_package_create_home_path(PNG PNG_ROOT)
 
 
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set(PNG_PREFIX_PATH ${PNG_HOME})
-package_create_search_path_include(PNG)
-package_create_search_path_library(PNG)
+cm_package_create_search_path_include(PNG)
+cm_package_create_search_path_library(PNG)
 
 
 
@@ -46,13 +46,13 @@ option(PNG_ENABLE_STATICAL "Flag for using statical library." OFF)
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set(PNG_LIBRARY_NAMES "libpng")
 if(PNG_ENABLE_STATICAL)
     cm_message_verbose(STATUS "Enable statical library.")
-    package_create_statical_names(PNG_LIBRARY_NAMES)
+    cm_package_create_statical_names(PNG_LIBRARY_NAMES)
 endif()
-package_create_debug_names(PNG_LIBRARY_NAMES)
+cm_package_create_debug_names(PNG_LIBRARY_NAMES)
 
 
 
@@ -70,13 +70,13 @@ set(PNG_CLEAR_IF_CHANGED
 )
 foreach(VAR ${PNG_CLEAR_IF_CHANGED})
     if( WIN32 AND NOT PNG_ENABLE_STATICAL )
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             PNG_BINARY_DEBUG
             PNG_BINARY_RELEASE
             ${PNG_COMMON_VARIABLES}
         )
     else()
-        package_clear_if_changed(${VAR}
+        cm_package_clear_if_changed(${VAR}
             ${PNG_COMMON_VARIABLES}
         )
         unset(PNG_BINARY_DEBUG CACHE)
@@ -88,38 +88,38 @@ endforeach()
 
 
 # ************************************************************
-# Find paths
-package_find_path(PNG_PATH_INCLUDE "png.h" "${PNG_SEARCH_PATH_INCLUDE}" "" )
-package_find_library(PNG_LIBRARY_DEBUG "${PNG_LIBRARY_NAMES_DEBUG}" "${PNG_SEARCH_PATH_LIBRARY}" "debug")
-package_find_library(PNG_LIBRARY_RELEASE "${PNG_LIBRARY_NAMES}" "${PNG_SEARCH_PATH_LIBRARY}" "release")
-package_make_library(PNG_LIBRARY PNG_LIBRARY_DEBUG PNG_LIBRARY_RELEASE)
+# Find Paths
+cm_package_find_path(PNG_PATH_INCLUDE "png.h" "${PNG_SEARCH_PATH_INCLUDE}" "" )
+cm_package_find_library(PNG_LIBRARY_DEBUG "${PNG_LIBRARY_NAMES_DEBUG}" "${PNG_SEARCH_PATH_LIBRARY}" "debug")
+cm_package_find_library(PNG_LIBRARY_RELEASE "${PNG_LIBRARY_NAMES}" "${PNG_SEARCH_PATH_LIBRARY}" "release")
+cm_package_make_library(PNG_LIBRARY PNG_LIBRARY_DEBUG PNG_LIBRARY_RELEASE)
 
 
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if(WIN32 AND NOT PNG_ENABLE_STATICAL)
 	set(PNG_BINARY_NAMES "libpng")
-    package_create_debug_binary_names(PNG_BINARY_NAMES)
-	package_create_release_binary_names(PNG_BINARY_NAMES)
-	package_create_search_path_binary(PNG)
+    cm_package_create_debug_binary_names(PNG_BINARY_NAMES)
+	cm_package_create_release_binary_names(PNG_BINARY_NAMES)
+	cm_package_create_search_path_binary(PNG)
 
 	set(PNG_SEARCH_BINARIES
 		${PNG_SEARCH_PATH_BINARY}
 		${PNG_SEARCH_PATH_LIBRARY}
 	)
 
-	package_find_file(PNG_BINARY_DEBUG "${PNG_BINARY_NAMES_DEBUG}" "${PNG_SEARCH_BINARIES}" "debug")
-	package_find_file(PNG_BINARY_RELEASE "${PNG_BINARY_NAMES_RELEASE}" "${PNG_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
+	cm_package_find_file(PNG_BINARY_DEBUG "${PNG_BINARY_NAMES_DEBUG}" "${PNG_SEARCH_BINARIES}" "debug")
+	cm_package_find_file(PNG_BINARY_RELEASE "${PNG_BINARY_NAMES_RELEASE}" "${PNG_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel")
 endif()
 
 
 
 
 # ************************************************************
-# Finalize package
-package_validate(PNG)
-package_add_parent_dir(PNG)
-package_end(PNG)
+# Finalize Package
+cm_package_validate(PNG)
+cm_package_include_options(PNG)
+cm_package_end(PNG)
 cm_message_footer(PNG)

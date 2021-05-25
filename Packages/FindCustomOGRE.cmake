@@ -24,8 +24,8 @@
 # Start package
 # ************************************************************
 cm_message_header(OGRE)
-package_begin(OGRE)
-package_create_home_path(OGRE OGRE_ROOT)
+cm_package_begin(OGRE)
+cm_package_create_home_path(OGRE OGRE_ROOT)
 
 # Specifiy version prefix.
 set(OGRE_OPT_VERSION_PREFIX "" CACHE STRING "Append version prefix into the search.")
@@ -70,11 +70,11 @@ set(_ReleaseSuffix
 macro(OGRE_FIND_COMPONENT_BINARY COMPONENT NAME)
     set(OGRE_${COMPONENT}_BINARY_NAMES "${NAME}")
 
-    package_create_debug_binary_names(OGRE_${COMPONENT}_BINARY_NAMES)
-    package_create_release_binary_names(OGRE_${COMPONENT}_BINARY_NAMES)
+    cm_package_create_debug_binary_names(OGRE_${COMPONENT}_BINARY_NAMES)
+    cm_package_create_release_binary_names(OGRE_${COMPONENT}_BINARY_NAMES)
 
-    package_find_file(OGRE_${COMPONENT}_BINARY_DEBUG "${OGRE_${COMPONENT}_BINARY_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "${_DebugSuffix}")
-    package_find_file(OGRE_${COMPONENT}_BINARY_RELEASE "${OGRE_${COMPONENT}_BINARY_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "${_ReleaseSuffix}")
+    cm_package_find_file(OGRE_${COMPONENT}_BINARY_DEBUG "${OGRE_${COMPONENT}_BINARY_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "${_DebugSuffix}")
+    cm_package_find_file(OGRE_${COMPONENT}_BINARY_RELEASE "${OGRE_${COMPONENT}_BINARY_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "${_ReleaseSuffix}")
 
     unset(OGRE_${COMPONENT}_BINARY_NAMES)
     unset(OGRE_${COMPONENT}_BINARY_NAMES_DEBUG)
@@ -88,17 +88,17 @@ endmacro()
 # Find library
 # ************************************************************
 macro(OGRE_FIND_COMPONENT_LIBRARY COMPONENT NAME HEADER SUFFIX)
-    package_begin(OGRE_${COMPONENT})
+    cm_package_begin(OGRE_${COMPONENT})
     set(OGRE_${COMPONENT}_LIBRARY_NAMES "${NAME}")
-    package_create_debug_names(OGRE_${COMPONENT}_LIBRARY_NAMES)
+    cm_package_create_debug_names(OGRE_${COMPONENT}_LIBRARY_NAMES)
 
-    package_find_path(OGRE_${COMPONENT}_PATH_INCLUDE "${HEADER}" "${OGRE_SEARCH_PATH_INCLUDE}" "${SUFFIX}")
-    package_find_library(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_DebugSuffix}")
-    package_find_library(OGRE_${COMPONENT}_LIBRARY_RELEASE "${OGRE_${COMPONENT}_LIBRARY_NAMES}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_ReleaseSuffix}")
-    package_make_library(OGRE_${COMPONENT}_LIBRARY OGRE_${COMPONENT}_LIBRARY_DEBUG OGRE_${COMPONENT}_LIBRARY_RELEASE)
+    cm_package_find_path(OGRE_${COMPONENT}_PATH_INCLUDE "${HEADER}" "${OGRE_SEARCH_PATH_INCLUDE}" "${SUFFIX}")
+    cm_package_find_library(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_DebugSuffix}")
+    cm_package_find_library(OGRE_${COMPONENT}_LIBRARY_RELEASE "${OGRE_${COMPONENT}_LIBRARY_NAMES}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_ReleaseSuffix}")
+    cm_package_make_library(OGRE_${COMPONENT}_LIBRARY OGRE_${COMPONENT}_LIBRARY_DEBUG OGRE_${COMPONENT}_LIBRARY_RELEASE)
 
-    package_validate(OGRE_${COMPONENT})
-    package_end(OGRE_${COMPONENT})
+    cm_package_validate(OGRE_${COMPONENT})
+    cm_package_end(OGRE_${COMPONENT})
 
     unset(OGRE_${COMPONENT}_LIBRARY_NAMES)
     unset(OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG)
@@ -111,7 +111,7 @@ endmacro()
 # Find plugins / rendersystems
 # ************************************************************
 macro(OGRE_FIND_EXTRA_COMPONENT_LIBRARY COMPONENT NAME HEADER SUFFIX)
-    package_begin(OGRE_${COMPONENT})
+    cm_package_begin(OGRE_${COMPONENT})
     if(APPLE)
         set(LibSuffix "dylib")
     elseif(MSVC)
@@ -135,19 +135,19 @@ macro(OGRE_FIND_EXTRA_COMPONENT_LIBRARY COMPONENT NAME HEADER SUFFIX)
         list(APPEND OGRE_${COMPONENT}_NAMES_RELEASE "${NAME}.dll")
     endif()
 
-    package_find_path(OGRE_${COMPONENT}_PATH_INCLUDE "${HEADER}" "${OGRE_SEARCH_PATH_INCLUDE}" "${SUFFIX}")
+    cm_package_find_path(OGRE_${COMPONENT}_PATH_INCLUDE "${HEADER}" "${OGRE_SEARCH_PATH_INCLUDE}" "${SUFFIX}")
 
-    package_find_file(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_DebugSuffix}")
-    package_find_file(OGRE_${COMPONENT}_LIBRARY_RELEASE "${OGRE_${COMPONENT}_NAMES_RELEASE}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_ReleaseSuffix}")
-    package_make_library(OGRE_${COMPONENT}_LIBRARY OGRE_${COMPONENT}_LIBRARY_DEBUG OGRE_${COMPONENT}_LIBRARY_RELEASE)
+    cm_package_find_file(OGRE_${COMPONENT}_LIBRARY_DEBUG "${OGRE_${COMPONENT}_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_DebugSuffix}")
+    cm_package_find_file(OGRE_${COMPONENT}_LIBRARY_RELEASE "${OGRE_${COMPONENT}_NAMES_RELEASE}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_ReleaseSuffix}")
+    cm_package_make_library(OGRE_${COMPONENT}_LIBRARY OGRE_${COMPONENT}_LIBRARY_DEBUG OGRE_${COMPONENT}_LIBRARY_RELEASE)
 
     if(WIN32)
-        package_find_file(OGRE_${COMPONENT}_BINARY_DEBUG "${OGRE_${COMPONENT}_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "${_DebugSuffix}")
-        package_find_file(OGRE_${COMPONENT}_BINARY_RELEASE "${OGRE_${COMPONENT}_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "${_ReleaseSuffix}")
+        cm_package_find_file(OGRE_${COMPONENT}_BINARY_DEBUG "${OGRE_${COMPONENT}_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "${_DebugSuffix}")
+        cm_package_find_file(OGRE_${COMPONENT}_BINARY_RELEASE "${OGRE_${COMPONENT}_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "${_ReleaseSuffix}")
     endif()
 
-    package_validate(OGRE_${COMPONENT})
-    package_end(OGRE_${COMPONENT})
+    cm_package_validate(OGRE_${COMPONENT})
+    cm_package_end(OGRE_${COMPONENT})
 
     unset(ExtSuffix)
     unset(OGRE_${COMPONENT}_LIBRARY_NAMES_DEBUG)
@@ -158,12 +158,12 @@ endmacro()
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 # ************************************************************
 set(OGRE_PREFIX_PATH ${OGRE_HOME})
-package_create_search_path_binary(OGRE)
-package_create_search_path_include(OGRE)
-package_create_search_path_library(OGRE)
+cm_package_create_search_path_binary(OGRE)
+cm_package_create_search_path_include(OGRE)
+cm_package_create_search_path_library(OGRE)
 package_create_search_path_plugin(OGRE)
 if(NOT OGRE_OPT_VERSION_PREFIX STREQUAL "")
     package_append_paths(OGRE_SEARCH_PATH_LIBRARY "${OGRE_OPT_VERSION_PREFIX}")
@@ -332,17 +332,17 @@ set(_ClearIfChanged
     OGRE_OPT_VERSION
 )
 foreach(VAR ${_ClearIfChanged})
-    package_clear_if_changed(${VAR} ${_LocalVars})
+    cm_package_clear_if_changed(${VAR} ${_LocalVars})
 endforeach()
 
 
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 # ************************************************************
 set(OGRE_LIBRARY_NAMES "OgreMain" "Ogre")
-package_create_debug_names(OGRE_LIBRARY_NAMES)
+cm_package_create_debug_names(OGRE_LIBRARY_NAMES)
 
 
 
@@ -350,10 +350,10 @@ package_create_debug_names(OGRE_LIBRARY_NAMES)
 # ************************************************************
 # Find path and file
 # ************************************************************
-package_find_path(OGRE_PATH_INCLUDE "Ogre.h" "${OGRE_SEARCH_PATH_INCLUDE}" "${_IncludeSuffix}")
-package_find_library(OGRE_LIBRARY_DEBUG "${OGRE_LIBRARY_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_DebugSuffix}")
-package_find_library(OGRE_LIBRARY_RELEASE "${OGRE_LIBRARY_NAMES}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_ReleaseSuffix}")
-package_make_library(OGRE_LIBRARY OGRE_LIBRARY_DEBUG OGRE_LIBRARY_RELEASE)
+cm_package_find_path(OGRE_PATH_INCLUDE "Ogre.h" "${OGRE_SEARCH_PATH_INCLUDE}" "${_IncludeSuffix}")
+cm_package_find_library(OGRE_LIBRARY_DEBUG "${OGRE_LIBRARY_NAMES_DEBUG}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_DebugSuffix}")
+cm_package_find_library(OGRE_LIBRARY_RELEASE "${OGRE_LIBRARY_NAMES}" "${OGRE_SEARCH_PATH_LIBRARY}" "${_ReleaseSuffix}")
+cm_package_make_library(OGRE_LIBRARY OGRE_LIBRARY_DEBUG OGRE_LIBRARY_RELEASE)
 
 
 
@@ -362,7 +362,7 @@ package_make_library(OGRE_LIBRARY OGRE_LIBRARY_DEBUG OGRE_LIBRARY_RELEASE)
 # Search the components
 # ************************************************************
 if("${OGRE_OPT_VERSION}" STREQUAL "Next")
-    package_find_path(OGRE_HlmsCommon_PATH_INCLUDE "OgreHlmsBufferManager.h" "${OGRE_SEARCH_PATH_INCLUDE}" "Hlms/Common")
+    cm_package_find_path(OGRE_HlmsCommon_PATH_INCLUDE "OgreHlmsBufferManager.h" "${OGRE_SEARCH_PATH_INCLUDE}" "Hlms/Common")
     ogre_find_component_library(HlmsPbs "OgreHlmsPbs" "OgreHlmsPbs.h" "Hlms/Pbs")
     ogre_find_component_library(HlmsUnlit "OgreHlmsUnlit" "OgreHlmsUnlit.h" "Hlms/Unlit")
     ogre_find_component_library(MeshLodGenerator "OgreMeshLodGenerator" "OgreMeshLodGenerator.h" "MeshLodGenerator")
@@ -384,7 +384,7 @@ ogre_find_component_library(Overlay "OgreOverlay" "OgreOverlaySystem.h" "Overlay
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 # ************************************************************
 if(WIN32)
     set(OGRE_SEARCH_BINARIES
@@ -393,11 +393,11 @@ if(WIN32)
     )
 
     set(OGRE_BINARY_NAMES "OgreMain")
-    package_create_release_binary_names(OGRE_BINARY_NAMES)
-    package_create_debug_binary_names(OGRE_BINARY_NAMES)
+    cm_package_create_release_binary_names(OGRE_BINARY_NAMES)
+    cm_package_create_debug_binary_names(OGRE_BINARY_NAMES)
 
-    package_find_file(OGRE_BINARY_DEBUG "${OGRE_BINARY_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "${_DebugSuffix}")
-    package_find_file(OGRE_BINARY_RELEASE "${OGRE_BINARY_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "${_ReleaseSuffix}")
+    cm_package_find_file(OGRE_BINARY_DEBUG "${OGRE_BINARY_NAMES_DEBUG}" "${OGRE_SEARCH_BINARIES}" "${_DebugSuffix}")
+    cm_package_find_file(OGRE_BINARY_RELEASE "${OGRE_BINARY_NAMES_RELEASE}" "${OGRE_SEARCH_BINARIES}" "${_ReleaseSuffix}")
 
     unset(OGRE_BINARY_NAMES)
     unset(OGRE_BINARY_NAMES_DEBUG)
@@ -487,13 +487,13 @@ else()
 endif()
 if(PlugDebugPath)
     get_filename_component(OGRE_RenderSystem_FileName ${${PlugDebugPath}} NAME)
-    package_find_path(OGRE_PATH_PLUGIN_DEBUG "${OGRE_RenderSystem_FileName}" "${OGRE_SEARCH_PLUGINS}" "${_DebugSuffix}")
+    cm_package_find_path(OGRE_PATH_PLUGIN_DEBUG "${OGRE_RenderSystem_FileName}" "${OGRE_SEARCH_PLUGINS}" "${_DebugSuffix}")
     unset(OGRE_RenderSystem_FileName)
 endif()
 
 if(PlugReleasePath)
     get_filename_component(OGRE_RenderSystem_FileName ${${PlugReleasePath}} NAME)
-    package_find_path(OGRE_PATH_PLUGIN_RELEASE "${OGRE_RenderSystem_FileName}" "${OGRE_SEARCH_PLUGINS}" "${_ReleaseSuffix}")
+    cm_package_find_path(OGRE_PATH_PLUGIN_RELEASE "${OGRE_RenderSystem_FileName}" "${OGRE_SEARCH_PLUGINS}" "${_ReleaseSuffix}")
     unset(OGRE_RenderSystem_FileName)
 endif()
 
@@ -507,10 +507,10 @@ unset(_ClearIfChanged)
 
 
 # ************************************************************
-# Finalize package
+# Finalize Package
 # ************************************************************
-package_validate(OGRE)
-package_add_parent_dir(OGRE ADD_PARENT)
-package_end(OGRE)
+cm_package_validate(OGRE)
+cm_package_include_options(OGRE)
+cm_package_end(OGRE)
 cm_message_footer(OGRE)
 

@@ -22,27 +22,27 @@
 # ************************************************************
 # Start package
 cm_message_header( DXSHOW )
-package_begin( DXSHOW )
-package_create_home_path( DXSHOW DXSHOW_ROOT )
+cm_package_begin( DXSHOW )
+cm_package_create_home_path( DXSHOW DXSHOW_ROOT )
 
 
 # ************************************************************
-# Create search path
+# Create Search Path
 set( DXSHOW_PREFIX_PATH ${DXSHOW_HOME} )
-package_create_search_path_include( DXSHOW )
-package_create_search_path_library( DXSHOW )
+cm_package_create_search_path_include( DXSHOW )
+cm_package_create_search_path_library( DXSHOW )
 package_create_search_path_plugin( DXSHOW )
 
 
 # ************************************************************
-# Create search name
+# Create Search Name
 set( DXSHOW_LIBRARY_NAMES "dscapture" )
-package_create_debug_names( DXSHOW_LIBRARY_NAMES )
+cm_package_create_debug_names( DXSHOW_LIBRARY_NAMES )
 
 
 # ************************************************************
 # Clear
-package_clear_if_changed( DXSHOW_PREFIX_PATH
+cm_package_clear_if_changed( DXSHOW_PREFIX_PATH
     DXSHOW_LIBRARY_RELEASE
     DXSHOW_LIBRARY_DEBUG
     DXSHOW_PATH_INCLUDE
@@ -50,40 +50,40 @@ package_clear_if_changed( DXSHOW_PREFIX_PATH
 
 
 # ************************************************************
-# Find paths
-package_find_path( DXSHOW_PATH_INCLUDE "CaptureDSAPI.h" "${DXSHOW_SEARCH_PATH_INCLUDE}" "dxshow" )
-package_find_library( DXSHOW_LIBRARY_DEBUG "${DXSHOW_LIBRARY_NAMES_DEBUG}" "${DXSHOW_SEARCH_PATH_LIBRARY}" "debug" )
-package_find_library( DXSHOW_LIBRARY_RELEASE "${DXSHOW_LIBRARY_NAMES}" "${DXSHOW_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel" )
-package_make_library( DXSHOW_LIBRARY DXSHOW_LIBRARY_DEBUG DXSHOW_LIBRARY_RELEASE )
+# Find Paths
+cm_package_find_path( DXSHOW_PATH_INCLUDE "CaptureDSAPI.h" "${DXSHOW_SEARCH_PATH_INCLUDE}" "dxshow" )
+cm_package_find_library( DXSHOW_LIBRARY_DEBUG "${DXSHOW_LIBRARY_NAMES_DEBUG}" "${DXSHOW_SEARCH_PATH_LIBRARY}" "debug" )
+cm_package_find_library( DXSHOW_LIBRARY_RELEASE "${DXSHOW_LIBRARY_NAMES}" "${DXSHOW_SEARCH_PATH_LIBRARY}" "release;relwithdebinfo;minsizerel" )
+cm_package_make_library( DXSHOW_LIBRARY DXSHOW_LIBRARY_DEBUG DXSHOW_LIBRARY_RELEASE )
 
 
 # ************************************************************
-# Find binaries on Windows
+# Find Binaries on Windows
 if( WIN32 )
 	set( DXSHOW_BINARY_NAMES "dscapture" )
-	package_create_release_binary_names( DXSHOW_BINARY_NAMES )
-	package_create_debug_binary_names( DXSHOW_BINARY_NAMES )
-	package_create_search_path_binary( DXSHOW )
+	cm_package_create_release_binary_names( DXSHOW_BINARY_NAMES )
+	cm_package_create_debug_binary_names( DXSHOW_BINARY_NAMES )
+	cm_package_create_search_path_binary( DXSHOW )
 
 	set( DXSHOW_SEARCH_BINARIES
 		${DXSHOW_SEARCH_PATH_BINARY}
 		${DXSHOW_SEARCH_PATH_LIBRARY}
 	)
 
-	package_clear_if_changed( DXSHOW_PREFIX_PATH
+	cm_package_clear_if_changed( DXSHOW_PREFIX_PATH
 		DXSHOW_BINARY_RELEASE
 		DXSHOW_BINARY_DEBUG
 	)
 
-	package_find_file( DXSHOW_BINARY_DEBUG "${DXSHOW_BINARY_NAMES_DEBUG}" "${DXSHOW_SEARCH_BINARIES}" "debug" )
-	package_find_file( DXSHOW_BINARY_RELEASE "${DXSHOW_BINARY_NAMES_RELEASE}" "${DXSHOW_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
+	cm_package_find_file( DXSHOW_BINARY_DEBUG "${DXSHOW_BINARY_NAMES_DEBUG}" "${DXSHOW_SEARCH_BINARIES}" "debug" )
+	cm_package_find_file( DXSHOW_BINARY_RELEASE "${DXSHOW_BINARY_NAMES_RELEASE}" "${DXSHOW_SEARCH_BINARIES}" "release;relwithdebinfo;minsizerel" )
 endif()
 
 
 # ************************************************************
-# Finalize package
-package_validate( DXSHOW )
-package_add_parent_dir( DXSHOW )
-package_end( DXSHOW )
+# Finalize Package
+cm_package_validate( DXSHOW )
+cm_package_include_options( DXSHOW )
+cm_package_end( DXSHOW )
 cm_message_footer( DXSHOW )
 

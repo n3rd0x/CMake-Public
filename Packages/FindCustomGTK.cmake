@@ -22,8 +22,8 @@
 # ************************************************************
 # Start package
 cm_message_header( GTK )
-package_begin( GTK )
-package_create_home_path( GTK GTK_ROOT )
+cm_package_begin( GTK )
+cm_package_create_home_path( GTK GTK_ROOT )
 
 
 # ************************************************************
@@ -116,12 +116,12 @@ if( NOT GTK_VERSION STREQUAL "")
     endif()
 
     foreach( VAR ${GTK_DEPENDENCIES} )
-        package_find_file( GTK_${VAR}_BINARY_DEBUG "${VAR}" "${GTK_PATH_BINARY}" "debug" )
+        cm_package_find_file( GTK_${VAR}_BINARY_DEBUG "${VAR}" "${GTK_PATH_BINARY}" "debug" )
         if( GTK_${VAR}_BINARY_DEBUG )
             set( GTK_BINARY_DEBUG ${GTK_BINARY_DEBUG} ${GTK_${VAR}_BINARY_DEBUG} )
         endif()
 
-        package_find_file( GTK_${VAR}_BINARY_RELEASE "${VAR}" "${GTK_PATH_BINARY}" "release;relwithdebinfo;minsizerel" )
+        cm_package_find_file( GTK_${VAR}_BINARY_RELEASE "${VAR}" "${GTK_PATH_BINARY}" "release;relwithdebinfo;minsizerel" )
         if( GTK_${VAR}_BINARY_RELEASE )
             set( GTK_BINARY_RELEASE ${GTK_BINARY_RELEASE} ${GTK_${VAR}_BINARY_RELEASE} )
         endif()
@@ -133,6 +133,6 @@ endif()
 
 
 # ************************************************************
-# Finalize package
-package_end( GTK )
+# Finalize Package
+cm_package_end( GTK )
 cm_message_footer( GTK )
