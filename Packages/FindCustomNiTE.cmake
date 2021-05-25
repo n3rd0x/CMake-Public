@@ -105,7 +105,7 @@ if( WIN32 )
         set( NiTE_BINARY_RELEASE ${NiTE_MAIN_REDIST} )
 
         # Add rules.
-        package_copy_binary_from_target( NiTE )
+        cm_package_copy_binary_from_target( NiTE )
     endif()
 endif()
 

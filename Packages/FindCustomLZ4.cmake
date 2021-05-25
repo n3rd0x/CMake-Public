@@ -38,6 +38,7 @@ cm_package_create_search_path_library(LZ4)
 
 # ************************************************************
 # Create Search Name
+# ************************************************************
 set(LZ4_LIBRARY_NAMES "lz4")
 cm_package_create_debug_names(LZ4_LIBRARY_NAMES)
 

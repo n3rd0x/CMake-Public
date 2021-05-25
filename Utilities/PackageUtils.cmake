@@ -22,32 +22,33 @@
 
 
 # ************************************************************
-# Copy binaries from target.
-macro(PACKAGE_ADD_RUNTIME_TARGET SrcFile Path)
+# Copy Binaries from Target
+# ************************************************************
+macro(CM_PACKAGE_ADD_RUNTIME_TARGET SrcFile Path)
     # TST 2014-09-19
     # We assume that the source file do exists.
     # This would increase the processing speed.
 
     # Find the existence of the source.
-    get_filename_component(FileName ${SrcFile} NAME)
-    #get_filename_component(FilePath ${SrcFile} PATH)
-    #find_file(FileFound NAMES ${FileName} HINTS ${FilePath})
-    #if(FileFound)
+    get_filename_component(_filename ${SrcFile} NAME)
+    #get_filename_component(_path ${SrcFile} PATH)
+    #find_file(_found NAMES ${_filename} HINTS ${_path})
+    #if(_found)
         # Add command.
         add_custom_command(
             TARGET ALL_CopyRuntime
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
             ${SrcFile}
-            "${Path}/${FileName}"
-      )
+            "${Path}/${_filename}"
+        )
         cm_message_verbose(STATUS "Adding [${SrcFile}] to [${Path}] in ALL_CopyRuntime target.")
     #else()
     #    cm_message_status("" "Failed to locate: ${SrcFile}")
     #endif()
 
-    #unset(FileFound CACHE)
-    unset(FileName)
-    #unset(FilePath)
+    #unset(_found CACHE)
+    unset(_filename)
+    #unset(_path)
 endmacro()
 
 
@@ -56,6 +57,7 @@ endmacro()
 # ************************************************************
 # Add parent directory
 # Ex: /usr/include/json -> /usr/include
+# TODO: Deprecated
 macro(PACKAGE_ADD_PARENT_DIR Prefix)
     # Help information.
     cm_message_header(PACKAGE_ADD_PARENT_DIR)
@@ -84,7 +86,7 @@ macro(PACKAGE_ADD_PARENT_DIR Prefix)
         #    endif()
         #endforeach()
         set(PathCpy ${${Prefix}_INCLUDE_DIR})
-        get_filename_component(Path "${PathCpy}" PATH)
+        get__filename_component(Path "${PathCpy}" PATH)
         if(PACKAGE_ADD_PARENT_DIR_ADD_PARENT)
             set(${Prefix}_INCLUDE_DIR ${Path} ${${Prefix}_INCLUDE_DIR})
         else()
@@ -171,33 +173,34 @@ endmacro()
 
 
 # ************************************************************
-# Copy binaries
-macro(PACKAGE_COPY_BINARY Prefix)
+# Copy Binaries
+# ************************************************************
+macro(CM_PACKAGE_COPY_BINARY Prefix)
     # Copy debug runtime files.
     if(${Prefix}_BINARY_DEBUG)
-        foreach(DebugFile ${${Prefix}_BINARY_DEBUG})
+        foreach(file ${${Prefix}_BINARY_DEBUG})
             # Get the file name.
-            get_filename_component(FileName ${DebugFile} NAME)
+            get_filename_component(_filename ${file} NAME)
 
             # Copy into output directory.
-            copy_single_file(${DebugFile} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${FileName}" "COPYONLY")
+            cm_copy_single_file(${file} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/${_filename}" "COPYONLY")
 
             # Clean up.
-            unset(FileName)
+            unset(_filename)
         endforeach()
     endif()
 
     # Copy release runtime files.
     if(${Prefix}_BINARY_RELEASE)
-        foreach(ReleaseFile ${${Prefix}_BINARY_RELEASE})
+        foreach(file ${${Prefix}_BINARY_RELEASE})
             # Get the file name.
-            get_filename_component(FileName ${ReleaseFile} NAME)
+            get_filename_component(_filename ${file} NAME)
 
             # Copy into output directory.
-            copy_single_file(${ReleaseFile} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/${FileName}" "COPYONLY")
+            cm_copy_single_file(${file} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/${_filename}" "COPYONLY")
 
             # Clean up.
-            unset(FileName)
+            unset(_filename)
         endforeach()
     endif()
 endmacro()
@@ -206,20 +209,21 @@ endmacro()
 
 
 # ************************************************************
-# Copy binaries from target.
-macro(PACKAGE_COPY_BINARY_FROM_TARGET Prefix)
+# Copy Binaries from Target
+# ************************************************************
+macro(CM_PACKAGE_COPY_BINARY_FROM_TARGET Prefix)
     # Set debug runtime files.
     if(${Prefix}_BINARY_DEBUG)
-        foreach(DebugFile ${${Prefix}_BINARY_DEBUG})
-            package_add_runtime_target(${DebugFile} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}")
+        foreach(file ${${Prefix}_BINARY_DEBUG})
+            cm_package_add_runtime_target(${file} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}")
         endforeach()
     endif()
 
 
     # Set release runtime files.
     if(${Prefix}_BINARY_RELEASE)
-        foreach(ReleaseFile ${${Prefix}_BINARY_RELEASE})
-            package_add_runtime_target(${ReleaseFile} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}")
+        foreach(file ${${Prefix}_BINARY_RELEASE})
+            cm_package_add_runtime_target(${file} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}")
         endforeach()
     endif()
 endmacro()
@@ -791,7 +795,7 @@ macro(CM_PACKAGE_FIND_FILE Prefix SearchName SearchPath Suffixes)
 
     find_file(${Prefix} NAMES ${SearchName} HINTS ${SearchPath} PATH_SUFFIXES ${Suffixes} NO_DEFAULT_PATH)
     if(${Prefix})
-        cm_message_verbose(STATUS "Found file:      ${${Prefix}}")
+        cm_message_verbose(STATUS "Found file: ${${Prefix}}")
     else()
         cm_message_verbose("" "Failed to locate one of these files: ${SearchName}")
     endif()
@@ -870,7 +874,7 @@ macro(CM_PACKAGE_INCLUDE_OPTIONS Prefix)
         set_property(CACHE ${Prefix}_PATH_INCLUDE_MODE PROPERTY STRINGS "" "Include Parent" "Parent Only")
 
         set(_opt ${${Prefix}_PATH_INCLUDE_MODE})
-        get_filename_component(_path "${${Prefix}_INCLUDE_DIR}" PATH)
+        get__filename_component(_path "${${Prefix}_INCLUDE_DIR}" PATH)
         if(_opt STREQUAL "Include Parent")
             list(APPEND ${Prefix}_INCLUDE_DIR ${_path})
         elseif(_opt STREQUAL "Parent Only")
@@ -919,18 +923,18 @@ macro(PACKAGE_INSTALL_BINARY_FROM_TARGET Prefix)
 
     # Set debug runtime files.
     if(${Prefix}_BINARY_DEBUG)
-        foreach(DebugFile ${${Prefix}_BINARY_DEBUG})
-            install(FILES "${DebugFile}" DESTINATION "${Path}" CONFIGURATIONS "debug")
-            cm_message_verbose(STATUS "Install [${DebugFile}] to ${Path}.")
+        foreach(file ${${Prefix}_BINARY_DEBUG})
+            install(FILES "${file}" DESTINATION "${Path}" CONFIGURATIONS "debug")
+            cm_message_verbose(STATUS "Install [${file}] to ${Path}.")
         endforeach()
     endif()
 
 
     # Set release runtime files.
     if(${Prefix}_BINARY_RELEASE)
-        foreach(ReleaseFile ${${Prefix}_BINARY_RELEASE})
-            install(FILES "${ReleaseFile}" DESTINATION "${Path}" CONFIGURATIONS "release")
-            cm_message_verbose(STATUS "Install [${ReleaseFile}] to ${Path}.")
+        foreach(file ${${Prefix}_BINARY_RELEASE})
+            install(FILES "${file}" DESTINATION "${Path}" CONFIGURATIONS "release")
+            cm_message_verbose(STATUS "Install [${file}] to ${Path}.")
         endforeach()
     endif()
 

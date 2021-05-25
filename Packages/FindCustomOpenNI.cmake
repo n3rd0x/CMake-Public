@@ -102,12 +102,12 @@ if( WIN32 )
 
         # Debug.
         foreach( VAR ${OPENNI_REDIST_MAIN})
-            package_add_runtime_target( ${VAR} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}" )
+            cm_package_add_runtime_target( ${VAR} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}" )
         endforeach()
 
         # Release.
         foreach( VAR ${OPENNI_REDIST_MAIN} )
-            package_add_runtime_target( ${VAR} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}" )
+            cm_package_add_runtime_target( ${VAR} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}" )
         endforeach()
 
 
@@ -123,12 +123,12 @@ if( WIN32 )
 
         # Debug
         foreach( VAR ${OPENNI_REDIST_DRIVERS} )
-            package_add_runtime_target( ${VAR} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/OpenNI${OPENNI_VERSION}/Drivers" )
+            cm_package_add_runtime_target( ${VAR} "${PROJECT_PATH_OUTPUT_EXECUTABLE_DEBUG}/OpenNI${OPENNI_VERSION}/Drivers" )
         endforeach()
 
         # Release
         foreach( VAR ${OPENNI_REDIST_DRIVERS} )
-            package_add_runtime_target( ${VAR} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/OpenNI${OPENNI_VERSION}/Drivers" )
+            cm_package_add_runtime_target( ${VAR} "${PROJECT_PATH_OUTPUT_EXECUTABLE_RELEASE}/OpenNI${OPENNI_VERSION}/Drivers" )
         endforeach()
     endif()
 endif()

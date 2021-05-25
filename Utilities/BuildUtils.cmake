@@ -106,20 +106,20 @@ macro(ADD_DATA_TARGET SrcFile)
     # Parse Options
     # ----------------------------------------
     set(_options GENERATE)
-    set(_oneValueArgs Name SubPath)
-    cmake_parse_arguments(ADD_DATA_TARGET "${_options}" "${_oneValueArgs}" "" ${ARGN})
+    set(__oneValueArgs Name SubPath)
+    cmake_parse_arguments(ADD_DATA_TARGET "${_options}" "${__oneValueArgs}" "" ${ARGN})
 
     # Find the existence of the source.
-    get_filename_component(_fileName ${SrcFile} NAME)
-    get_filename_component(_filePath ${SrcFile} PATH)
-    find_file(_fileFound NAMES ${_fileName} HINTS ${_filePath})
-    if(_fileFound)
+    get_name_component(_name ${SrcFile} NAME)
+    get_name_component(_path ${SrcFile} PATH)
+    find_file(_found NAMES ${_name} HINTS ${_path})
+    if(_found)
         # Working vars.
-        set(_fileToCopy "${_fileFound}")
+        set(_fileToCopy "${_found}")
 
         # Parse "Name".
         if(ADD_DATA_TARGET_Name)
-            set(_fileName ${ADD_DATA_TARGET_Name})
+            set(_name ${ADD_DATA_TARGET_Name})
         endif()
 
         # Default output path.
@@ -137,8 +137,8 @@ macro(ADD_DATA_TARGET SrcFile)
         # Generate template file and add command.
         if(ADD_DATA_TARGET_GENERATE)
             cm_message_verbose(STATUS "Generate from template file.")
-            configure_file(${_fileToCopy} "${CMAKE_CURRENT_BINARY_DIR}/${_fileName}")
-            set(_fileToCopy "${CMAKE_CURRENT_BINARY_DIR}/${_fileName}")
+            configure_file(${_fileToCopy} "${CMAKE_CURRENT_BINARY_DIR}/${_name}")
+            set(_fileToCopy "${CMAKE_CURRENT_BINARY_DIR}/${_name}")
         endif()
 
         # Add command.
@@ -146,7 +146,7 @@ macro(ADD_DATA_TARGET SrcFile)
             TARGET ALL_CopyData
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
             ${_fileToCopy}
-            "${_outputPath}/${_fileName}"
+            "${_outputPath}/${_name}"
        )
 
         if(ADD_DATA_TARGET_GENERATE)
@@ -162,10 +162,10 @@ macro(ADD_DATA_TARGET SrcFile)
 
     # Clean up.
     unset(_options)
-    unset(_oneValueArgs)
-    unset(_fileFound CACHE)
-    unset(_fileName)
-    unset(_filePath)
+    unset(__oneValueArgs)
+    unset(_found CACHE)
+    unset(_name)
+    unset(_path)
     unset(ADD_DATA_TARGET_GENERATE)
     unset(ADD_DATA_TARGET_Name)
     unset(ADD_DATA_TARGET_SubPath)
@@ -193,8 +193,8 @@ macro(CM_ADD_VALUE Prefix Value)
         # Parse Options
         # ----------------------------------------
         set(_options AS_STRING CACHING)
-        set(_oneValueArgs Description)
-        cmake_parse_arguments(CM_ADD_VALUE "${_options}" "${_oneValueArgs}" "" ${ARGN})
+        set(__oneValueArgs Description)
+        cmake_parse_arguments(CM_ADD_VALUE "${_options}" "${__oneValueArgs}" "" ${ARGN})
 
 
         # ----------------------------------------
@@ -236,7 +236,7 @@ macro(CM_ADD_VALUE Prefix Value)
         # Clean Up
         # ----------------------------------------
         unset(_options)
-        unset(_oneValueArgs)
+        unset(__oneValueArgs)
         unset(_valueFound)
         unset(_values)
         unset(CM_ADD_VALUE_AS_STRING)
@@ -318,9 +318,9 @@ macro(BUILD_GROUP_FILES)
     set(GroupName "")
 
     # Parse options.
-    set(oneValueArgs Prefix)
+    set(_oneValueArgs Prefix)
     set(multiValueArgs Groups Headers Sources Files)
-    cmake_parse_arguments(BUILD_GROUP_FILES "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    cmake_parse_arguments(BUILD_GROUP_FILES "" "${_oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     # Parse "Prefix".
     if(BUILD_GROUP_FILES_Prefix)
@@ -344,22 +344,22 @@ macro(BUILD_GROUP_FILES)
                 set(${BUILD_GROUP_FILES_Prefix}_GROUP_HEADER_FILES ${${BUILD_GROUP_FILES_Prefix}_GROUP_HEADER_FILES} ${header})
 
                 # Find and add includes directory.
-                get_filename_component(_filePath ${header} PATH)
-                if(_filePath)
-                    cm_message_debug(STATUS "Path located: ${_filePath}")
+                get_name_component(_path ${header} PATH)
+                if(_path)
+                    cm_message_debug(STATUS "Path located: ${_path}")
                     if(NOT ${BUILD_GROUP_FILES_Prefix}_PATH_GROUP_HEADER)
                         set(PathExists FALSE)
                     else()
-                        string(REGEX MATCHALL ${_filePath} PathExists ${${BUILD_GROUP_FILES_Prefix}_PATH_GROUP_HEADER})
+                        string(REGEX MATCHALL ${_path} PathExists ${${BUILD_GROUP_FILES_Prefix}_PATH_GROUP_HEADER})
                     endif()
 
                     if(NOT PathExists)
                         cm_message_debug(STATUS "Add path into variable.")
-                        set(${BUILD_GROUP_FILES_Prefix}_PATH_GROUP_HEADER ${${BUILD_GROUP_FILES_Prefix}_PATH_GROUP_HEADER} ${_filePath})
+                        set(${BUILD_GROUP_FILES_Prefix}_PATH_GROUP_HEADER ${${BUILD_GROUP_FILES_Prefix}_PATH_GROUP_HEADER} ${_path})
                     endif()
                     unset(PathExists)
                 endif()
-                unset(_filePath)
+                unset(_path)
             endforeach()
 
             # Group files.
@@ -390,7 +390,7 @@ macro(BUILD_GROUP_FILES)
 
     # Clean up.
     unset(GroupName)
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
     unset(multiValueArgs)
     unset(BUILD_GROUP_FILES_Prefix)
     unset(BUILD_GROUP_FILES_Groups)
@@ -414,8 +414,8 @@ macro(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY)
     cm_message_help("[SubPath]    -> Sub directory of the output directory.")
 
     # Parse options.
-    set(oneValueArgs Path SubPath)
-    cmake_parse_arguments(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY "" "${oneValueArgs}" "" ${ARGN})
+    set(_oneValueArgs Path SubPath)
+    cmake_parse_arguments(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY "" "${_oneValueArgs}" "" ${ARGN})
 
     # Set sub path based on OS platform.
     set(Path "${PROJECT_PATH_OUTPUT_EXECUTABLE}")
@@ -439,7 +439,7 @@ macro(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY)
     cm_message_verbose(STATUS "Copy [${PROJECT_NAME}] into [${Path}].")
 
     # Clean up.
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
     unset(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_Path)
     unset(COPY_BUILD_FILE_TO_OUTPUT_DIRECTORY_SubPath)
     unset(Path)
@@ -452,30 +452,30 @@ endmacro()
 
 # ************************************************************
 # Copy a single file to the output directory
-macro(COPY_FILE_TO_OUTPUT_DIRECTORY SrcFile Dst_fileName)
+macro(COPY_FILE_TO_OUTPUT_DIRECTORY SrcFile DstFile)
     # Help information.
     cm_message_header(COPY_FILE_TO_OUTPUT_DIRECTORY)
     cm_message_help("Required:")
     cm_message_help("[SrcFile]        -> Source file.")
-    cm_message_help("[Dst_fileName]    -> Destination file name.")
+    cm_message_help("[DstFile]    -> Destination file name.")
     cm_message_help("Available options:")
     cm_message_help("[Params]         -> CMake parameters.")
     cm_message_help("[SubPath]        -> Sub directory of the output directory.")
 
     # Parse options.
-    set(oneValueArgs SubPath)
-    cmake_parse_arguments(COPY_FILE_TO_OUTPUT_DIRECTORY "" "${oneValueArgs}" "" ${ARGN})
+    set(_oneValueArgs SubPath)
+    cmake_parse_arguments(COPY_FILE_TO_OUTPUT_DIRECTORY "" "${_oneValueArgs}" "" ${ARGN})
 
     # With Visual Studio we will copy the file into the debug and release directory.
     if(MSVC OR XCODE)
-        copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Debug${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${Dst_fileName}" "${COPY_SINGLE_FILE_Params}")
-        copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Release${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${Dst_fileName}" "${COPY_SINGLE_FILE_Params}")
+        cm_copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Debug${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${DstFile}" "${COPY_SINGLE_FILE_Params}")
+        cm_copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Release${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${DstFile}" "${COPY_SINGLE_FILE_Params}")
     else()
-        copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${Dst_fileName}" "${COPY_SINGLE_FILE_Params}")
+        cm_copy_single_file("${SrcFile}" "${PROJECT_PATH_OUTPUT_EXECUTABLE}${COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath}/${DstFile}" "${COPY_SINGLE_FILE_Params}")
     endif()
 
     # Clean up.
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
     unset(COPY_SINGLE_FILE_Params)
     unset(COPY_FILE_TO_OUTPUT_DIRECTORY_SubPath)
 
@@ -486,36 +486,35 @@ endmacro()
 
 
 # ************************************************************
-# Copy project template
-macro(COPY_PROJECT_TEMPLATE)
-    # Help information.
-    cm_message_header(COPY_PROJECT_TEMPLATE)
-    cm_message_help("Available options:")
-    cm_message_help("[Source]         -> Path to the source file.")
-    cm_message_help("[Destination]    -> Path to the destination file.")
-
+# Copy Project Template
+# ************************************************************
+# Help information.
+# Optional:
+# [Source]      -> Source file.
+# [Destination] -> Destination file.
+macro(CM_COPY_PROJECT_TEMPLATE)
     # Default values.
-    set(Source "")
-    set(Destination "")
+    set(_source "")
+    set(_destination "")
 
     if(MSVC)
-        set(Source "${PROJECT_PATH_CMAKE_TEMPLATE}/MsvcProject_in.vcxproj.user")
-        set(Destination "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.vcxproj.user")
+        set(_source "${PROJECT_PATH_CMAKE_TEMPLATE}/MsvcProject_in.vcxproj.user")
+        set(_destination "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.vcxproj.user")
     endif()
 
     # Parse options.
-    set(oneValueArgs Source Destination)
-    cmake_parse_arguments(COPY_PROJECT_TEMPLATE "" "${oneValueArgs}" "" ${ARGN})
+    set(_oneValueArgs Source Destination)
+    cmake_parse_arguments(COPY_PROJECT_TEMPLATE "" "${_oneValueArgs}" "" ${ARGN})
 
     # Parse source.
     if(COPY_PROJECT_TEMPLATE_Source)
-        set(Source ${COPY_PROJECT_TEMPLATE_Source})
+        set(_source ${COPY_PROJECT_TEMPLATE_Source})
         cm_message_debug(STATUS "Source: ${COPY_PROJECT_TEMPLATE_Source}")
     endif()
 
     # Parse destination.
     if(COPY_PROJECT_TEMPLATE_Destination)
-        set(Destination ${COPY_PROJECT_TEMPLATE_Destination})
+        set(_destination ${COPY_PROJECT_TEMPLATE_Destination})
         cm_message_debug(STATUS "Destination: ${COPY_PROJECT_TEMPLATE_Destination}")
     endif()
 
@@ -523,13 +522,13 @@ macro(COPY_PROJECT_TEMPLATE)
     # TST 2014-08-29
     # At the moment only MSVC is supported.
     if(MSVC)
-        copy_single_file(${Source} ${Destination} "")
+        cm_copy_single_file(${_source} ${_destination} "")
     endif()
 
     # Clean up.
-    unset(Source)
-    unset(Destination)
-    unset(oneValueArgs)
+    unset(_source)
+    unset(_destination)
+    unset(_oneValueArgs)
     unset(COPY_PROJECT_TEMPLATE_Source)
     unset(COPY_PROJECT_TEMPLATE_Destination)
 
@@ -540,27 +539,26 @@ endmacro()
 
 
 # ************************************************************
-# Copy a single file
-macro(COPY_SINGLE_FILE SrcFile DstFile)
-    # Help information.
-    cm_message_header(COPY_SINGLE_FILE)
-    cm_message_help("Required:")
-    cm_message_help("[SrcFile]    -> Source file.")
-    cm_message_help("[DstFile]    -> Destination file.")
-    cm_message_help("Available options:")
-    cm_message_help("[Params]     -> CMake parameters.")
-
+# Copy a Single File
+# ************************************************************
+# Help information.
+# Required:
+# [SrcFile]    -> Source file.
+# [DstFile]    -> Destination file.
+# Optional:
+# [Params]     -> CMake parameters.
+macro(CM_COPY_SINGLE_FILE SrcFile DstFile)
     # Parse options.
-    set(oneValueArgs SubPath)
-    cmake_parse_arguments(COPY_SINGLE_FILE "" "${oneValueArgs}" "" ${ARGN})
+    set(_oneValueArgs SubPath)
+    cmake_parse_arguments(COPY_SINGLE_FILE "" "${_oneValueArgs}" "" ${ARGN})
 
     # Find the existence of the source.
-    get_filename_component(_fileName ${SrcFile} NAME)
-    get_filename_component(_filePath ${SrcFile} PATH)
-    find_file(_fileFound NAMES ${_fileName} HINTS ${_filePath})
+    get_name_component(_name ${SrcFile} NAME)
+    get_name_component(_path ${SrcFile} PATH)
+    find_file(_found NAMES ${_name} HINTS ${_path})
 
     # Copy the file if exists.
-    if(_fileFound)
+    if(_found)
         if(COPY_SINGLE_FILE_Params)
             configure_file(${SrcFile} ${DstFile} "${COPY_SINGLE_FILE_Params}")
         else()
@@ -572,14 +570,15 @@ macro(COPY_SINGLE_FILE SrcFile DstFile)
     endif()
 
     # Clean up.
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
+    unset(_found CACHE)
+    unset(_name)
+    unset(_path)
     unset(COPY_SINGLE_FILE_Params)
-    unset(_fileFound CACHE)
-    unset(_fileName)
-    unset(_filePath)
 
     cm_message_footer(COPY_SINGLE_FILE)
 endmacro()
+
 
 
 
@@ -696,25 +695,25 @@ macro(GENERATE_DEBUG_SYMBOLS)
         # "Hack" to make the output name as the "Project Name" due to a lower case naming.
         # Find the existence of the source.
         set(SrcFile "${CMAKE_CURRENT_BINARY_DIR}/Generated.pdb")
-        get_filename_component(_fileName ${SrcFile} NAME)
-        get_filename_component(_filePath ${SrcFile} PATH)
-        find_file(_fileFound NAMES ${_fileName} HINTS ${_filePath})
-        if(_fileFound)
-            #copy_single_file(${_fileFound} "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Debug/${PROJECT_NAME}_d.pdb")
+        get_name_component(_name ${SrcFile} NAME)
+        get_name_component(_path ${SrcFile} PATH)
+        find_file(_found NAMES ${_name} HINTS ${_path})
+        if(_found)
+            #cm_copy_single_file(${_found} "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Debug/${PROJECT_NAME}_d.pdb")
 
             # Copy and rename.
             add_custom_command(
                 TARGET ${PROJECT_NAME}
                 POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy
-                "${_fileFound}"
+                "${_found}"
                 "${PROJECT_PATH_OUTPUT_EXECUTABLE}/$<CONFIGURATION>/${PROJECT_NAME}$<$<CONFIG:Debug>:${CMAKE_DEBUG_POSTFIX}>.pdb"
            )
         endif()
 
-        unset(_fileFound CACHE)
-        unset(_fileName)
-        unset(_filePath)
+        unset(_found CACHE)
+        unset(_name)
+        unset(_path)
         unset(SrcFile)
     endif()
 endmacro()
@@ -910,18 +909,21 @@ endmacro()
 macro(CM_INITIALISE_PROJECT_ENVIRONMENT)
     cm_message_header(CM_INITIALISE_PROJECT_ENVIRONMENT)
 
+
     # ----------------------------------------
     # Build Type
     # ----------------------------------------
-    # Setup for single configuration system.
-    if(MINGW OR UNIX)
-        if(NOT MSCV AND NOT XCODE)
-            set(PROJECT_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Select build type.")
-            set_property(CACHE PROJECT_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo MinSizeRel)
+    if(NOT CMAKE_BUILD_TYPE)
+        # Setup for single configuration system.
+        if(MINGW OR UNIX)
+            if(NOT MSCV AND NOT XCODE)
+                set(PROJECT_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Select build type.")
+                set_property(CACHE PROJECT_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo MinSizeRel)
 
-            set(CMAKE_BUILD_TYPE ${PROJECT_BUILD_TYPE} CACHE STRING "Target mode of this project." FORCE)
+                set(CMAKE_BUILD_TYPE ${PROJECT_BUILD_TYPE} CACHE STRING "Target mode of this project." FORCE)
 
-            cm_message_status(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
+                cm_message_status(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
+            endif()
         endif()
     endif()
 
@@ -1041,9 +1043,9 @@ macro(CM_INITIALISE_LOCAL_PROJECT Title Description)
     # ----------------------------------------
     # Parse Options
     # ----------------------------------------
-    set(_oneValueArgs Major Minor Patch Tweak)
+    set(__oneValueArgs Major Minor Patch Tweak)
     set(_multiValueArgs Languages)
-    cmake_parse_arguments(CM_INITIALISE_LOCAL_PROJECT "" "${_oneValueArgs}" "${_multiValueArgs}" ${ARGN})
+    cmake_parse_arguments(CM_INITIALISE_LOCAL_PROJECT "" "${__oneValueArgs}" "${_multiValueArgs}" ${ARGN})
 
     # Set project and language.
     set(_languages "C" "CXX")
@@ -1111,7 +1113,7 @@ macro(CM_INITIALISE_LOCAL_PROJECT Title Description)
     # ----------------------------------------
     # Clean Up
     # ----------------------------------------
-    unset(_oneValueArgs)
+    unset(__oneValueArgs)
     unset(_multiValueArgs)
     unset(_languages)
     unset(CM_INITIALISE_LOCAL_PROJECT_Major)
@@ -1138,11 +1140,11 @@ macro(CM_INITIALISE_PROJECT_PATH)
     cm_message_verbose(STATUS "Setup default project paths.")
 
     # Parse options.
-    set(oneValueArgs Binary Include Library)
+    set(_oneValueArgs Binary Include Library)
     if(MSVC)
-        set(oneValueArgs ${oneValueArgs} PDB)
+        set(_oneValueArgs ${_oneValueArgs} PDB)
     endif()
-    cmake_parse_arguments(CM_INITIALISE_PROJECT_PATH "" "${oneValueArgs}" "" ${ARGN})
+    cmake_parse_arguments(CM_INITIALISE_PROJECT_PATH "" "${_oneValueArgs}" "" ${ARGN})
 
     # Parse binary path.
     set(PathBinary "bin")
@@ -1272,7 +1274,7 @@ macro(CM_INITIALISE_PROJECT_PATH)
     unset(BuildTarget)
     unset(BuildTargetDebug)
     unset(BuildTargetRelease)
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
     unset(CM_INITIALISE_PROJECT_PATH_Binary)
     unset(CM_INITIALISE_PROJECT_PATH_Include)
     unset(CM_INITIALISE_PROJECT_PATH_Library)
@@ -1360,10 +1362,10 @@ macro(INSTALL_SOURCES)
     cm_message_help("[SubPath]        -> Sub path of the current install diretory (${PROJECT_PATH_INSTALL}).")
 
     # Parse options.
-    set(oneValueArgs SubPath)
+    set(_oneValueArgs SubPath)
     #set(multiValueArgs Files)
-    #cmake_parse_arguments(INSTALL_SOURCES "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    cmake_parse_arguments(INSTALL_SOURCES "" "${oneValueArgs}" "" ${ARGN})
+    #cmake_parse_arguments(INSTALL_SOURCES "" "${_oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    cmake_parse_arguments(INSTALL_SOURCES "" "${_oneValueArgs}" "" ${ARGN})
 
     # Default options.
     if(NOT INSTALL_SOURCES_SubPath)
@@ -1382,7 +1384,7 @@ macro(INSTALL_SOURCES)
                 # Get path only.
                 # Example:
                 # c:/builds/library/include/core
-                get_filename_component(DestPath ${InstallFile} PATH)
+                get_name_component(DestPath ${InstallFile} PATH)
 
                 # Install file with sub path if exists.
                 # Example:
@@ -1399,7 +1401,7 @@ macro(INSTALL_SOURCES)
     endif()
 
     # Clean up.
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
     #unset( multiValueArgs)
     unset(INSTALL_SOURCES_Files)
     unset(INSTALL_SOURCES_SubPath)
@@ -1443,8 +1445,8 @@ macro(GENERATE_UUID Prefix Name)
     set(Type "MD5")
 
     # Parse options.
-    set(oneValueArgs Namespace Type)
-    cmake_parse_arguments(GENERATE_UUID "" "${oneValueArgs}" "" ${ARGN})
+    set(_oneValueArgs Namespace Type)
+    cmake_parse_arguments(GENERATE_UUID "" "${_oneValueArgs}" "" ${ARGN})
 
     # Namespace
     if(GENERATE_UUID_Namespace)
@@ -1461,7 +1463,7 @@ macro(GENERATE_UUID Prefix Name)
     cm_message_verbose(STATUS "Generated UUID: ${${Prefix}}")
 
     # Clean up.
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
     unset(GENERATE_UUID_Namespace)
     unset(GENERATE_UUID_Type)
 
@@ -1480,8 +1482,8 @@ macro(INSTALL_BINARY Prefix)
     cm_message_help("[SubPath]    -> Sub path in ${PROJECT_PATH_INSTALL}.")
 
     # Parse options.
-    set(oneValueArgs SubPath)
-    cmake_parse_arguments(INSTALL_BINARY_${Prefix} "" "${oneValueArgs}" "" ${ARGN})
+    set(_oneValueArgs SubPath)
+    cmake_parse_arguments(INSTALL_BINARY_${Prefix} "" "${_oneValueArgs}" "" ${ARGN})
 
     # Install debug files.
     if(${Prefix}_BINARY_DEBUG)
@@ -1498,7 +1500,7 @@ macro(INSTALL_BINARY Prefix)
     endif()
 
     # Clean up.
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
     unset(INSTALL_BINARY_${Prefix}_SubPath)
 
     cm_message_footer(INSTALL_BINARY_${Prefix})
@@ -1518,8 +1520,8 @@ macro(INSTALL_DEBUG_SYMBOLS)
         cm_message_help("[SubPath]    -> Sub path in ${PROJECT_PATH_INSTALL}. Default is 'bin'.")
 
         # Parse options.
-        set(oneValueArgs Name SubPath)
-        cmake_parse_arguments(INSTALL_DEBUG_SYMBOLS "" "${oneValueArgs}" "" ${ARGN})
+        set(_oneValueArgs Name SubPath)
+        cmake_parse_arguments(INSTALL_DEBUG_SYMBOLS "" "${_oneValueArgs}" "" ${ARGN})
 
         # Default options.
         set(Name "${PROJECT_NAME}")
@@ -1537,12 +1539,12 @@ macro(INSTALL_DEBUG_SYMBOLS)
 
         # Find the existence of the source.
         set(PdbFile "${CMAKE_CURRENT_BINARY_DIR}/Generated.pdb")
-        get_filename_component(_fileName ${PdbFile} NAME)
-        get_filename_component(_filePath ${PdbFile} PATH)
-        find_file(_fileFound NAMES ${_fileName} HINTS ${_filePath})
+        get_name_component(_name ${PdbFile} NAME)
+        get_name_component(_path ${PdbFile} PATH)
+        find_file(_found NAMES ${_name} HINTS ${_path})
 
         # Copy the file if exists.
-        if(_fileFound)
+        if(_found)
             install(
                 FILES "${PdbFile}"
                 DESTINATION "${Path}"
@@ -1555,18 +1557,18 @@ macro(INSTALL_DEBUG_SYMBOLS)
                 CONFIGURATIONS Release
                 RENAME "${Name}.pdb"
            )
-            cm_message_verbose(STATUS "Install debug symbol ${_fileName}.")
+            cm_message_verbose(STATUS "Install debug symbol ${_name}.")
         else()
             cm_message_debug("" "Failed to locate: ${PdbFile}")
         endif()
 
         # Clean up.
-        unset(oneValueArgs)
+        unset(_oneValueArgs)
         unset(INSTALL_DEBUG_SYMBOLS_Name)
         unset(INSTALL_DEBUG_SYMBOLS_SubPath)
-        unset(_fileFound CACHE)
-        unset(_fileName)
-        unset(_filePath)
+        unset(_found CACHE)
+        unset(_name)
+        unset(_path)
         unset(PdbFile)
 
         cm_message_footer(INSTALL_DEBUG_SYMBOLS)
@@ -1587,8 +1589,8 @@ macro(INSTALL_FILES Files)
     cm_message_help("[SubPath]    -> Sub path in the installation directory (${PROJECT_PATH_INSTALL}).")
 
     # Parse options.
-    set(oneValueArgs SubPath)
-    cmake_parse_arguments(INSTALL_FILES "" "${oneValueArgs}" "" ${ARGN})
+    set(_oneValueArgs SubPath)
+    cmake_parse_arguments(INSTALL_FILES "" "${_oneValueArgs}" "" ${ARGN})
 
     # Working variables.
     set(Path "${PROJECT_PATH_INSTALL}${INSTALL_FILES_SubPath}")
@@ -1601,7 +1603,7 @@ macro(INSTALL_FILES Files)
 
     # Clean up.
     unset(Path)
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
     unset(INSTALL_FILES_SubPath)
 
     cm_message_footer(INSTALL_FILES)
@@ -1621,10 +1623,10 @@ macro(INSTALL_HEADERS)
     cm_message_help("[SubPath]        -> Sub path of the current install diretory (${PROJECT_PATH_INSTALL}).")
 
     # Parse options.
-    set(oneValueArgs SubPath)
+    set(_oneValueArgs SubPath)
     #set(multiValueArgs Files)
-    #cmake_parse_arguments(INSTALL_HEADERS "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    cmake_parse_arguments(INSTALL_HEADERS "" "${oneValueArgs}" "" ${ARGN})
+    #cmake_parse_arguments(INSTALL_HEADERS "" "${_oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    cmake_parse_arguments(INSTALL_HEADERS "" "${_oneValueArgs}" "" ${ARGN})
 
     # Default options.
     if(NOT INSTALL_HEADERS_SubPath)
@@ -1643,7 +1645,7 @@ macro(INSTALL_HEADERS)
                 # Get path only.
                 # Example:
                 # c:/builds/library/include/core
-                get_filename_component(DestPath ${InstallFile} PATH)
+                get_name_component(DestPath ${InstallFile} PATH)
 
                 # Install file with sub path if exists.
                 # Example:
@@ -1660,7 +1662,7 @@ macro(INSTALL_HEADERS)
     endif()
 
     # Clean up.
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
     #unset(multiValueArgs)
     unset(INSTALL_HEADERS_Files)
     unset(INSTALL_HEADERS_SubPath)
@@ -1707,8 +1709,8 @@ macro(REMOVE_VALUE Prefix Value)
 
     # Parse options.
     set(options CACHING)
-    set(oneValueArgs Description)
-    cmake_parse_arguments(REMOVE_VALUE "${options}" "${oneValueArgs}" "" ${ARGN})
+    set(_oneValueArgs Description)
+    cmake_parse_arguments(REMOVE_VALUE "${options}" "${_oneValueArgs}" "" ${ARGN})
 
     string(REPLACE "${Value}" "" NoSpace "${${Prefix}}")
     string(REPLACE " ${Value}" "" Space "${${Prefix}}")
@@ -1733,7 +1735,7 @@ macro(REMOVE_VALUE Prefix Value)
     unset(Space)
     unset(ValueToSet)
     unset(options)
-    unset(oneValueArgs)
+    unset(_oneValueArgs)
     unset(REMOVE_VALUE_CACHING)
     unset(REMOVE_VALUE_Description)
 
