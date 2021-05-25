@@ -766,8 +766,8 @@ macro(CM_INITIALISE_CMAKE_SYSTEM)
     cm_initialise_project_environment()
 
     cm_project_compiler_apply_options()
-    cm_add_definition(VAL_VERSION="${PROJECT_VERSION}")
-    cm_add_definition(VAL_RELEASE="${PROJECT_BUILD_TIME}")
+    #cm_add_definition(VERSION="${PROJECT_VERSION}")
+    cm_add_definition(RELEASE="${PROJECT_BUILD_TIME}")
 endmacro()
 
 

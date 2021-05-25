@@ -41,12 +41,7 @@ macro(CM_COMPILER_CXX_INITIALISE_STANDARD)
     set(_cxxStdName "Manually specified")
     if(CMAKE_CXX_COMPILER_ID)
         # Option for C++ standard.
-        set(PROJECT_COMPILER_CXX_ENABLE_STANDARD_MODE "ISO C++11" CACHE STRING "Select C++ standards.")
-        set_property(
-            CACHE PROJECT_COMPILER_CXX_ENABLE_STANDARD_MODE PROPERTY
-            STRINGS "Legacy C++ 98" "ISO C++11" "ISO C++14" "ISO C++17" "ISO C++20"
-        )
-
+        cm_user_compiler_cxx_standard(11 "")
 
         # Apply C++ standard.
         if(PROJECT_COMPILER_CXX_ENABLE_STANDARD)
@@ -55,19 +50,19 @@ macro(CM_COMPILER_CXX_INITIALISE_STANDARD)
             if(PROJECT_COMPILER_CXX_ENABLE_STANDARD_MODE STREQUAL "ISO C++20")
                 set(_cxxStdName "ISO C++20")
                 set(_cxxStdFlag "-std=c++20")
-                set(_cxxStdDef "VAL_CXX20_SUPPORT")
+                set(_cxxStdDef "20")
             elseif(PROJECT_COMPILER_CXX_ENABLE_STANDARD_MODE STREQUAL "ISO C++17")
                 set(_cxxStdName "ISO C++17")
                 set(_cxxStdFlag "-std=c++17")
-                set(_cxxStdDef "VAL_CXX17_SUPPORT")
+                set(_cxxStdDef "17")
             elseif(PROJECT_COMPILER_CXX_ENABLE_STANDARD_MODE STREQUAL "ISO C++14")
                 set(_cxxStdName "ISO C++14")
                 set(_cxxStdFlag "-std=c++14")
-                set(_cxxStdDef "VAL_CXX14_SUPPORT")
+                set(_cxxStdDef "14")
             elseif(PROJECT_COMPILER_CXX_ENABLE_STANDARD_MODE STREQUAL "ISO C++11")
                 set(_cxxStdName "ISO C++11")
                 set(_cxxStdFlag "-std=c++11")
-                set(_cxxStdDef "VAL_CXX11_SUPPORT")
+                set(_cxxStdDef "11")
             else()
                 set(_cxxStdName "Legacy C++ 98")
             endif()
@@ -75,14 +70,14 @@ macro(CM_COMPILER_CXX_INITIALISE_STANDARD)
             # Reauired CMake macro "check_cxx_compiler_flag".
             # NB! This will be perfom just once.
             # Lower version of CMake there was no flag check, so we assume that the flags are supported by the compiler.
-            if(_cxxStdDef)
+            if(_cxxStdFlag)
                 if(CMAKE_MAJOR_VERSION GREATER 2)
-                    if(NOT ${_cxxStdDef}_STATE)
+                    if(NOT CXX_HAS_STANDARD${_cxxStdDef})
                         cm_message_status(STATUS "Check supported flag: ${_cxxStdFlag}")
                     endif()
 
-                    check_cxx_compiler_flag(${_cxxStdFlag} ${_cxxStdDef}_STATE)
-                    if(NOT ${_cxxStdDef}_STATE)
+                    check_cxx_compiler_flag(${_cxxStdFlag} CXX_HAS_STANDARD${_cxxStdDef})
+                    if(NOT CXX_HAS_STANDARD${_cxxStdDef})
                         cm_message_status("" "The compiler has no support for C++ standard ${_cxxStdName}.")
                         set(_cxxStdName "Legacy C++ 98")
                         unset(_cxxStdFlag)
@@ -96,8 +91,8 @@ macro(CM_COMPILER_CXX_INITIALISE_STANDARD)
 
                 # Add value as definition so we can access in our code.
                 if(_cxxStdDef)
-                    cm_add_definition(VAL_CXX_STANDARD_SUPPORT)
-                    cm_add_definition(${_cxxStdDef})
+                    cm_add_definition(CXX_STANDARD_SUPPORT)
+                    cm_add_definition(CXX_STANDARD_VERSION=${_cxxStdDef})
                 endif()
             endif()
         endif()
@@ -152,7 +147,7 @@ macro(CM_COMPILER_INITIALISE_FLAGS)
     if(CMAKE_CXX_COMPILER_LOADED)
         set(PROJECT_COMPILER_CXX_ENABLE_FLAGS "" CACHE STRING "Flags for the CXX compiler (seperate with comma).")
         option(PROJECT_COMPILER_CXX_ENABLE_FLAG "Apply selected CXX compiler flags." ON)
-        option(PROJECT_COMPILER_CXX_ENABLE_STANDARD "Apply selected CXX compiler standard." ON)
+        option(PROJECT_COMPILER_CXX_ENABLE_STANDARD "Apply selected CXX compiler standard." OFF)
         cm_compiler_cxx_initialise_standard()
     endif()
 
@@ -624,4 +619,42 @@ macro(CM_COMPILER_MSVC_SETUP_WARNING Prefix ID Desc Value Force)
         "" "/w1${ID}" "/w2${ID}" "/w3${ID}" "/w4${ID}"
         "/wd${ID}" "/we${ID}" "/wn${ID}"
     )
+endmacro()
+
+
+
+
+# ************************************************************
+# User Customization
+# ************************************************************
+# ----------------------------------------
+# Default C++ Standard Version
+# ----------------------------------------
+macro(CM_USER_COMPILER_CXX_STANDARD Value)
+    set(_iso "ISO C++11")
+    if(${Value} EQUAL 11)
+        set(_iso "ISO C++11")
+    elseif(${Value} EQUAL 14)
+        set(_iso "ISO C++14")
+    elseif(${Value} EQUAL 17)
+        set(_iso "ISO C++17")
+    elseif(${Value} EQUAL 20)
+        set(_iso "ISO C++20")
+    else()
+        set(_iso "Legacy C++ 98")
+    endif()
+
+    set(_force FORCE)
+    if(${ARGC} GREATER 1)
+        set(_force "")
+    endif()
+
+    set(PROJECT_COMPILER_CXX_ENABLE_STANDARD_MODE "${_iso}" CACHE STRING "Select C++ standards." ${_force})
+    set_property(
+        CACHE PROJECT_COMPILER_CXX_ENABLE_STANDARD_MODE PROPERTY
+        STRINGS "Legacy C++ 98" "ISO C++11" "ISO C++14" "ISO C++17" "ISO C++20"
+    )
+
+    unset(_iso)
+    unset(_force)
 endmacro()
