@@ -57,28 +57,28 @@ macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
     message_help("      Otherwise default location is used (./plugins).")
     message_help("[INSTALL]")
     message_help("      Also adding into the INSTALL target.")
-    
+
     # Default values.
     set(Path "${PROJECT_PATH_TEMPLATE}")
     set(InstallLocation "./plugins")
     set(InstallPath "${PROJECT_PATH_INSTALL}")
-    
+
     # Parse options.
     cm_message_status(STATUS "Configure plugins.cfg.")
     set(options INSTALL)
     set(oneValueArgs Path SubPath InstallPath InstallLocation)
     cmake_parse_arguments(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG "${options}" "${oneValueArgs}" "" ${ARGN})
-    
+
     if(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_Path)
         set(Path "${OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_Path}")
     endif()
-    
+
     cm_message_status(STATUS "Selected plugins:")
     foreach(Var ${Plugins})
         cm_message_status(STATUS " * ${Var}")
     endforeach()
     unset(Var)
-    
+
     # Work vars.
     set(PluginDebug "")
     set(PluginRelease "")
@@ -106,8 +106,8 @@ macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
         set(PROJECT_TEMPLATE_PLUGIN_PATH_OGRE ${OGRE_PATH_PLUGIN_DEBUG})
     endif()
     configure_file("${Path}/plugins_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/plugins_d.cfg")
-    
-    
+
+
     # ----------------------------------------
     # Release
     # ----------------------------------------
@@ -137,8 +137,8 @@ macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
             "${PROJECT_PATH_OUTPUT_EXECUTABLE}/${OGRE_CONFIGURE_PLUGIN_CONFIG_CFG_SubPath}/plugins.cfg"
         )
     endif()
-    
-    
+
+
     # ----------------------------------------
     # Install
     # ----------------------------------------
@@ -158,10 +158,10 @@ macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
         endif()
         string(REPLACE ";" "" PROJECT_TEMPLATE_SELECTED_PLUGIN_OGRE ${PluginDebug})
         configure_file("${Path}/plugins_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/plugins_install_d.cfg")
-        
+
         string(REPLACE ";" "" PROJECT_TEMPLATE_SELECTED_PLUGIN_OGRE ${PluginRelease})
         configure_file("${Path}/plugins_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/plugins_install.cfg")
-        
+
         # Copy correct file based on the configuration.
         cm_message_status(STATUS "Adding 'plugins.cfg' into the INSTALL target at destination ${InstallPath}")
 
@@ -191,8 +191,8 @@ macro(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG Plugins)
     unset(SelectedPluginRelease CACHE)
     unset(PluginDebug CACHE)
     unset(PluginRelease CACHE)
-    
-    message_footer(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG)
+
+    cm_message_footer(OGRE_CONFIGURE_PLUGIN_CONFIG_CFG)
 endmacro()
 
 
@@ -225,13 +225,13 @@ macro(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
     message_help("      Otherwise default location is used (./data/media/ogre).")
     message_help("[INSTALL]")
     message_help("      Also adding into the INSTALL target.")
-    
+
     # Default values.
     set(Path "${PROJECT_PATH_TEMPLATE}")
     set(MediaLocation "${PROJECT_PATH_MEDIA_OGRE}")
     set(InstallLocation "./data/media/ogre")
     set(InstallPath "${PROJECT_PATH_INSTALL}")
-    
+
     # Parse options.
     cm_message_status(STATUS "Configure resources.cfg.")
     set(options INSTALL)
@@ -246,7 +246,7 @@ macro(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
         set(MediaLocation "${OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_MediaLocation}")
     endif()
 
-    
+
     # Add to ALL_CopyData target.
     set(PROJECT_TEMPLATE_MEDIA_OGRE "${MediaLocation}")
     configure_file("${Path}/resources_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/resources.cfg")
@@ -272,7 +272,7 @@ macro(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
         install(FILES "${CMAKE_CURRENT_BINARY_DIR}/resources_install.cfg" DESTINATION "${InstallPath}" RENAME "resources.cfg")
     endif()
 
-    
+
     # Clean up.
     unset(oneValueArgs)
     unset(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_INSTALL)
@@ -281,7 +281,7 @@ macro(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
     unset(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_InstallPath)
     unset(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_MediaLocation)
     unset(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_InstallLocation)
-    
-    message_footer(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
+
+    cm_message_footer(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
 endmacro()
 

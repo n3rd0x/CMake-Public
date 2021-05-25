@@ -584,9 +584,9 @@ endmacro()
 
 
 # ************************************************************
-# Generate dynamic library extension
+# Generate Dynamic Library Extension
 # ************************************************************
-macro(GENERATE_DYNAMIC_EXTENSION Value)
+macro(CM_GENERATE_DYNAMIC_EXTENSION Value)
     if(WIN32)
         set(${Value} "dll")
     elseif(APPLE)
@@ -624,10 +624,10 @@ endmacro()
 
 
 # ************************************************************
-# Create dynamic library extension
+# Create Dynamic Library Extension
 # ************************************************************
-macro(CREATE_DYNAMIC_EXTENSION Value)
-    generate_dynamic_extension(suffix)
+macro(CM_CREATE_DYNAMIC_EXTENSION Value)
+    cm_generate_dynamic_extension(suffix)
     set(${Value} "${${Value}}.${suffix}")
     unset(suffix)
 endmacro()
@@ -636,9 +636,9 @@ endmacro()
 
 
 # ************************************************************
-# Create executable extension
+# Create Executable Extension
 # ************************************************************
-macro(CREATE_EXECUTABLE_EXTENSION Value)
+macro(CM_CREATE_EXECUTABLE_EXTENSION Value)
     if(WIN32)
         set(${Value} "${${Value}}.exe")
     endif()
@@ -1176,7 +1176,7 @@ macro(CM_INITIALISE_PROJECT_PATH)
     set(PROJECT_PATH_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/Output")
 
     # Install directory.
-    package_get_environment_path(PROJECT_INSTALL INSTALL_ROOT)
+    cm_package_get_environment_path(PROJECT_INSTALL INSTALL_ROOT)
     if(PROJECT_INSTALL_ENV_INSTALL_ROOT)
         cm_message_verbose(STATUS "Using INSTALL_ROOT environment variable.")
         set(PROJECT_PATH_INSTALL "${PROJECT_INSTALL_ENV_INSTALL_ROOT}" CACHE PATH "Installation directory.")
@@ -1302,7 +1302,7 @@ macro(INITIALISE_PROJECT_SDK)
     if(NOT DEFINED PROJECT_PATH_SDK_HOME)
         # Find for defined environment variables.
         cm_message_verbose(STATUS "SDK doesn't exists. Create the SDK path.")
-        package_get_environment_path(PROJECT_SDK SDK_ROOT)
+        cm_package_get_environment_path(PROJECT_SDK SDK_ROOT)
         if(PROJECT_SDK_ENV_SDK_ROOT)
             cm_message_verbose(STATUS "Set SDK home to ${PROJECT_SDK_ENV_SDK_ROOT}.")
             set(PROJECT_PATH_SDK_HOME "${PROJECT_SDK_ENV_SDK_ROOT}" CACHE PATH "Path to the SDK directory.")
@@ -1414,7 +1414,7 @@ endmacro()
 # Copy "as it" into destination
 #macro(COPY_RAW SRC DEST)
     #if(WIN32)
-    #    package_get_environment_path(WINDOWS windir)
+    #    cm_package_get_environment_path(WINDOWS windir)
     #    if(DEFINED WINDOWS_ENV_windir)
     #        find_file(PROGRAM_FOUND NAMES "xcopy.exe" HINTS "${WINDOWS_ENV_windir}" PATH_SUFFIXES "system32")
     #        execute_process(COMMAND xcopy "${SRC}" "${DST}" /y /s /e /i /d)
@@ -1774,7 +1774,7 @@ endmacro()
 # ************************************************************
 # Verify Visual Studio environment.
 macro(VERIFY_MSVC_ENV Output)
-    package_get_environment_path(VERIFY VisualStudioVersion)
+    cm_package_get_environment_path(VERIFY VisualStudioVersion)
     if(VERIFY_ENV_VisualStudioVersion)
         cm_message_status(STATUS "Visual Studio environment exists.")
         cm_message_status(STATUS "Visual Studio version: ${VERIFY_ENV_VisualStudioVersion}")
