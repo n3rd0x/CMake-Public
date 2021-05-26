@@ -147,7 +147,6 @@ macro(CM_COMPILER_INITIALISE_FLAGS)
     if(CMAKE_CXX_COMPILER_LOADED)
         set(PROJECT_COMPILER_CXX_ENABLE_FLAGS "" CACHE STRING "Flags for the CXX compiler (seperate with comma).")
         option(PROJECT_COMPILER_CXX_ENABLE_FLAG "Apply selected CXX compiler flags." ON)
-        option(PROJECT_COMPILER_CXX_ENABLE_STANDARD "Apply selected CXX compiler standard." OFF)
         cm_compiler_cxx_initialise_standard()
     endif()
 
@@ -645,8 +644,10 @@ macro(CM_USER_COMPILER_CXX_STANDARD Value)
     endif()
 
     set(_force FORCE)
+    set(_state ON)
     if(${ARGC} GREATER 1)
         set(_force "")
+        set(_state OFF)
     endif()
 
     set(PROJECT_COMPILER_CXX_ENABLE_STANDARD_MODE "${_iso}" CACHE STRING "Select C++ standards." ${_force})
@@ -654,6 +655,7 @@ macro(CM_USER_COMPILER_CXX_STANDARD Value)
         CACHE PROJECT_COMPILER_CXX_ENABLE_STANDARD_MODE PROPERTY
         STRINGS "Legacy C++ 98" "ISO C++11" "ISO C++14" "ISO C++17" "ISO C++20"
     )
+    option(PROJECT_COMPILER_CXX_ENABLE_STANDARD "Apply selected CXX compiler standard." ${_state})
 
     unset(_iso)
     unset(_force)

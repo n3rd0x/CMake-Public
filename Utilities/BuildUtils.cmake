@@ -531,8 +531,6 @@ macro(CM_COPY_PROJECT_TEMPLATE)
     unset(_oneValueArgs)
     unset(COPY_PROJECT_TEMPLATE_Source)
     unset(COPY_PROJECT_TEMPLATE_Destination)
-
-    cm_message_footer(COPY_PROJECT_TEMPLATE)
 endmacro()
 
 
