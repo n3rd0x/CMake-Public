@@ -1023,11 +1023,11 @@ endmacro()
 # [Description] -> Project description.
 # Optional:
 # [Description] -> Description of this project.
-# [Major]       -> The major version.
-# [Minor]       -> The minor version.
-# [Path]        -> The patch version.
-# [Tweak]       -> The tweak version.
-# [Languages]   -> Languages to use.
+# [MAJOR]       -> The major version.
+# [MINOR]       -> The minor version.
+# [PATCH]        -> The patch version.
+# [TWAEK]       -> The tweak version.
+# [LANGUAGES]   -> Languages to use.
 macro(CM_INITIALISE_LOCAL_PROJECT Title Description)
     # ----------------------------------------
     # Policies
@@ -1041,14 +1041,14 @@ macro(CM_INITIALISE_LOCAL_PROJECT Title Description)
     # ----------------------------------------
     # Parse Options
     # ----------------------------------------
-    set(__oneValueArgs Major Minor Patch Tweak)
-    set(_multiValueArgs Languages)
+    set(__oneValueArgs MAJOR MINOR PATCH TWEAK)
+    set(_multiValueArgs LANGUAGES)
     cmake_parse_arguments(CM_INITIALISE_LOCAL_PROJECT "" "${__oneValueArgs}" "${_multiValueArgs}" ${ARGN})
 
     # Set project and language.
     set(_languages "C" "CXX")
-    if(CM_INITIALISE_LOCAL_PROJECT_Languages)
-        set(_languages ${CM_INITIALISE_LOCAL_PROJECT_Languages})
+    if(CM_INITIALISE_LOCAL_PROJECT_LANGUAGES)
+        set(_languages ${CM_INITIALISE_LOCAL_PROJECT_LANGUAGES})
     endif()
     project(${Title} LANGUAGES ${_languages})
     list(JOIN _languages " " _languages)
@@ -1058,29 +1058,29 @@ macro(CM_INITIALISE_LOCAL_PROJECT Title Description)
     set(PROJECT_DESCRIPTION ${Description})
 
     # Major version.
-    if(CM_INITIALISE_LOCAL_PROJECT_Major)
-        set(PROJECT_VERSION_MAJOR ${CM_INITIALISE_LOCAL_PROJECT_Major})
+    if(CM_INITIALISE_LOCAL_PROJECT_MAJOR)
+        set(PROJECT_VERSION_MAJOR ${CM_INITIALISE_LOCAL_PROJECT_MAJOR})
     else()
         set(PROJECT_VERSION_MAJOR ${CMAKE_PROJECT_VERSION_MAJOR})
     endif()
 
     # Minor version.
-    if(CM_INITIALISE_LOCAL_PROJECT_Minor)
-        set(PROJECT_VERSION_MINOR ${CM_INITIALISE_LOCAL_PROJECT_Minor})
+    if(CM_INITIALISE_LOCAL_PROJECT_MINOR)
+        set(PROJECT_VERSION_MINOR ${CM_INITIALISE_LOCAL_PROJECT_MINOR})
     else()
         set(PROJECT_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
     endif()
 
     # Patch version.
-    if(CM_INITIALISE_LOCAL_PROJECT_Patch)
-        set(PROJECT_VERSION_PATCH ${CM_INITIALISE_LOCAL_PROJECT_Patch})
+    if(CM_INITIALISE_LOCAL_PROJECT_PATCH)
+        set(PROJECT_VERSION_PATCH ${CM_INITIALISE_LOCAL_PROJECT_PATCH})
     else()
         set(PROJECT_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
     endif()
 
     # Tweak version.
-    if(CM_INITIALISE_LOCAL_PROJECT_Tweak)
-        set(PROJECT_VERSION_TWEAK ${CM_INITIALISE_LOCAL_PROJECT_Tweak})
+    if(CM_INITIALISE_LOCAL_PROJECT_TWEAK)
+        set(PROJECT_VERSION_TWEAK ${CM_INITIALISE_LOCAL_PROJECT_TWEAK})
     else()
         set(PROJECT_VERSION_TWEAK ${CMAKE_PROJECT_VERSION_TWEAK})
     endif()
@@ -1114,11 +1114,11 @@ macro(CM_INITIALISE_LOCAL_PROJECT Title Description)
     unset(__oneValueArgs)
     unset(_multiValueArgs)
     unset(_languages)
-    unset(CM_INITIALISE_LOCAL_PROJECT_Major)
-    unset(CM_INITIALISE_LOCAL_PROJECT_Minor)
-    unset(CM_INITIALISE_LOCAL_PROJECT_Patch)
-    unset(CM_INITIALISE_LOCAL_PROJECT_Tweak)
-    unset(CM_INITIALISE_LOCAL_PROJECT_Languages)
+    unset(CM_INITIALISE_LOCAL_PROJECT_MAJOR)
+    unset(CM_INITIALISE_LOCAL_PROJECT_MINOR)
+    unset(CM_INITIALISE_LOCAL_PROJECT_PATCH)
+    unset(CM_INITIALISE_LOCAL_PROJECT_TWEAK)
+    unset(CM_INITIALISE_LOCAL_PROJECT_LANGUAGES)
 endmacro()
 
 
