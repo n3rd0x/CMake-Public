@@ -251,9 +251,9 @@ macro(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG)
     set(PROJECT_TEMPLATE_MEDIA_OGRE "${MediaLocation}")
     configure_file("${Path}/resources_in.cfg" "${CMAKE_CURRENT_BINARY_DIR}/resources.cfg")
     if(OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_SubPath)
-        add_data_target("${CMAKE_CURRENT_BINARY_DIR}/resources.cfg" SubPath "${OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_SubPath}")
+        cm_add_data_target("${CMAKE_CURRENT_BINARY_DIR}/resources.cfg" SubPath "${OGRE_CONFIGURE_RESOURCE_CONFIG_CFG_SubPath}")
     else()
-        add_data_target("${CMAKE_CURRENT_BINARY_DIR}/resources.cfg")
+        cm_add_data_target("${CMAKE_CURRENT_BINARY_DIR}/resources.cfg")
     endif()
 
 

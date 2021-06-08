@@ -99,27 +99,27 @@ endmacro()
 # [GENERATE]    -> The source file is a template file..
 # [Name]        -> Destination name. Default: Same as the source..
 # [SubPath]     -> Sub path of output directory..
-macro(ADD_DATA_TARGET SrcFile)
-    cm_message_header(ADD_DATA_TARGET)
+macro(CM_ADD_DATA_TARGET SrcFile)
+    cm_message_header(CM_ADD_DATA_TARGET)
 
     # ----------------------------------------
     # Parse Options
     # ----------------------------------------
     set(_options GENERATE)
-    set(__oneValueArgs Name SubPath)
-    cmake_parse_arguments(ADD_DATA_TARGET "${_options}" "${__oneValueArgs}" "" ${ARGN})
+    set(_oneValueArgs Name SubPath)
+    cmake_parse_arguments(CM_ADD_DATA_TARGET "${_options}" "${_oneValueArgs}" "" ${ARGN})
 
     # Find the existence of the source.
-    get_name_component(_name ${SrcFile} NAME)
-    get_name_component(_path ${SrcFile} PATH)
+    get_filename_component(_name ${SrcFile} NAME)
+    get_filename_component(_path ${SrcFile} PATH)
     find_file(_found NAMES ${_name} HINTS ${_path})
     if(_found)
         # Working vars.
         set(_fileToCopy "${_found}")
 
         # Parse "Name".
-        if(ADD_DATA_TARGET_Name)
-            set(_name ${ADD_DATA_TARGET_Name})
+        if(CM_ADD_DATA_TARGET_Name)
+            set(_name ${CM_ADD_DATA_TARGET_Name})
         endif()
 
         # Default output path.
@@ -130,12 +130,12 @@ macro(ADD_DATA_TARGET SrcFile)
         endif()
 
         # Parse "SubPath".
-        if(ADD_DATA_TARGET_SubPath)
-            set(_outputPath "${_outputPath}${ADD_DATA_TARGET_SubPath}")
+        if(CM_ADD_DATA_TARGET_SubPath)
+            set(_outputPath "${_outputPath}${CM_ADD_DATA_TARGET_SubPath}")
         endif()
 
         # Generate template file and add command.
-        if(ADD_DATA_TARGET_GENERATE)
+        if(CM_ADD_DATA_TARGET_GENERATE)
             cm_message_verbose(STATUS "Generate from template file.")
             configure_file(${_fileToCopy} "${CMAKE_CURRENT_BINARY_DIR}/${_name}")
             set(_fileToCopy "${CMAKE_CURRENT_BINARY_DIR}/${_name}")
@@ -149,7 +149,7 @@ macro(ADD_DATA_TARGET SrcFile)
             "${_outputPath}/${_name}"
        )
 
-        if(ADD_DATA_TARGET_GENERATE)
+        if(CM_ADD_DATA_TARGET_GENERATE)
             cm_message_verbose(STATUS "Adding [${_fileToCopy}] to ALL_CopyData target.")
         else()
             cm_message_verbose(STATUS "Adding [${SrcFile}] to ALL_CopyData target.")
@@ -162,15 +162,15 @@ macro(ADD_DATA_TARGET SrcFile)
 
     # Clean up.
     unset(_options)
-    unset(__oneValueArgs)
+    unset(_oneValueArgs)
     unset(_found CACHE)
     unset(_name)
     unset(_path)
-    unset(ADD_DATA_TARGET_GENERATE)
-    unset(ADD_DATA_TARGET_Name)
-    unset(ADD_DATA_TARGET_SubPath)
+    unset(CM_ADD_DATA_TARGET_GENERATE)
+    unset(CM_ADD_DATA_TARGET_Name)
+    unset(CM_ADD_DATA_TARGET_SubPath)
 
-    cm_message_footer(ADD_DATA_TARGET)
+    cm_message_footer(CM_ADD_DATA_TARGET)
 endmacro()
 
 
@@ -193,8 +193,8 @@ macro(CM_ADD_VALUE Prefix Value)
         # Parse Options
         # ----------------------------------------
         set(_options AS_STRING CACHING)
-        set(__oneValueArgs Description)
-        cmake_parse_arguments(CM_ADD_VALUE "${_options}" "${__oneValueArgs}" "" ${ARGN})
+        set(_oneValueArgs Description)
+        cmake_parse_arguments(CM_ADD_VALUE "${_options}" "${_oneValueArgs}" "" ${ARGN})
 
 
         # ----------------------------------------
@@ -236,7 +236,7 @@ macro(CM_ADD_VALUE Prefix Value)
         # Clean Up
         # ----------------------------------------
         unset(_options)
-        unset(__oneValueArgs)
+        unset(_oneValueArgs)
         unset(_valueFound)
         unset(_values)
         unset(CM_ADD_VALUE_AS_STRING)
@@ -344,7 +344,7 @@ macro(BUILD_GROUP_FILES)
                 set(${BUILD_GROUP_FILES_Prefix}_GROUP_HEADER_FILES ${${BUILD_GROUP_FILES_Prefix}_GROUP_HEADER_FILES} ${header})
 
                 # Find and add includes directory.
-                get_name_component(_path ${header} PATH)
+                get_filename_component(_path ${header} PATH)
                 if(_path)
                     cm_message_debug(STATUS "Path located: ${_path}")
                     if(NOT ${BUILD_GROUP_FILES_Prefix}_PATH_GROUP_HEADER)
@@ -551,8 +551,8 @@ macro(CM_COPY_SINGLE_FILE SrcFile DstFile)
     cmake_parse_arguments(COPY_SINGLE_FILE "" "${_oneValueArgs}" "" ${ARGN})
 
     # Find the existence of the source.
-    get_name_component(_name ${SrcFile} NAME)
-    get_name_component(_path ${SrcFile} PATH)
+    get_filename_component(_name ${SrcFile} NAME)
+    get_filename_component(_path ${SrcFile} PATH)
     find_file(_found NAMES ${_name} HINTS ${_path})
 
     # Copy the file if exists.
@@ -693,8 +693,8 @@ macro(GENERATE_DEBUG_SYMBOLS)
         # "Hack" to make the output name as the "Project Name" due to a lower case naming.
         # Find the existence of the source.
         set(SrcFile "${CMAKE_CURRENT_BINARY_DIR}/Generated.pdb")
-        get_name_component(_name ${SrcFile} NAME)
-        get_name_component(_path ${SrcFile} PATH)
+        get_filename_component(_name ${SrcFile} NAME)
+        get_filename_component(_path ${SrcFile} PATH)
         find_file(_found NAMES ${_name} HINTS ${_path})
         if(_found)
             #cm_copy_single_file(${_found} "${PROJECT_PATH_OUTPUT_EXECUTABLE}/Debug/${PROJECT_NAME}_d.pdb")
@@ -1041,9 +1041,9 @@ macro(CM_INITIALISE_LOCAL_PROJECT Title Description)
     # ----------------------------------------
     # Parse Options
     # ----------------------------------------
-    set(__oneValueArgs Major Minor Patch Tweak)
+    set(_oneValueArgs Major Minor Patch Tweak)
     set(_multiValueArgs Languages)
-    cmake_parse_arguments(CM_INITIALISE_LOCAL_PROJECT "" "${__oneValueArgs}" "${_multiValueArgs}" ${ARGN})
+    cmake_parse_arguments(CM_INITIALISE_LOCAL_PROJECT "" "${_oneValueArgs}" "${_multiValueArgs}" ${ARGN})
 
     # Set project and language.
     set(_languages "C" "CXX")
@@ -1111,7 +1111,7 @@ macro(CM_INITIALISE_LOCAL_PROJECT Title Description)
     # ----------------------------------------
     # Clean Up
     # ----------------------------------------
-    unset(__oneValueArgs)
+    unset(_oneValueArgs)
     unset(_multiValueArgs)
     unset(_languages)
     unset(CM_INITIALISE_LOCAL_PROJECT_Major)
@@ -1382,7 +1382,7 @@ macro(INSTALL_SOURCES)
                 # Get path only.
                 # Example:
                 # c:/builds/library/include/core
-                get_name_component(DestPath ${InstallFile} PATH)
+                get_filename_component(DestPath ${InstallFile} PATH)
 
                 # Install file with sub path if exists.
                 # Example:
@@ -1537,8 +1537,8 @@ macro(INSTALL_DEBUG_SYMBOLS)
 
         # Find the existence of the source.
         set(PdbFile "${CMAKE_CURRENT_BINARY_DIR}/Generated.pdb")
-        get_name_component(_name ${PdbFile} NAME)
-        get_name_component(_path ${PdbFile} PATH)
+        get_filename_component(_name ${PdbFile} NAME)
+        get_filename_component(_path ${PdbFile} PATH)
         find_file(_found NAMES ${_name} HINTS ${_path})
 
         # Copy the file if exists.
@@ -1643,7 +1643,7 @@ macro(INSTALL_HEADERS)
                 # Get path only.
                 # Example:
                 # c:/builds/library/include/core
-                get_name_component(DestPath ${InstallFile} PATH)
+                get_filename_component(DestPath ${InstallFile} PATH)
 
                 # Install file with sub path if exists.
                 # Example:

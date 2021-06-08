@@ -86,7 +86,7 @@ macro(PACKAGE_ADD_PARENT_DIR Prefix)
         #    endif()
         #endforeach()
         set(PathCpy ${${Prefix}_INCLUDE_DIR})
-        get__filename_component(Path "${PathCpy}" PATH)
+        get_filename_component(Path "${PathCpy}" PATH)
         if(PACKAGE_ADD_PARENT_DIR_ADD_PARENT)
             set(${Prefix}_INCLUDE_DIR ${Path} ${${Prefix}_INCLUDE_DIR})
         else()
@@ -863,6 +863,12 @@ endmacro()
 # Include Options
 # Ex: /usr/include/json -> /usr/include
 # ************************************************************
+macro(CM_USER_PACKAGE_INCLUDE_OPTIONS Prefix Value)
+    set(${Prefix}_PATH_INCLUDE_MODE "${Value}" CACHE STRING "Include path options.")
+    set_property(CACHE ${Prefix}_PATH_INCLUDE_MODE PROPERTY STRINGS "" "IncludeParent" "ParentOnly")
+endmacro()
+
+
 macro(CM_PACKAGE_INCLUDE_OPTIONS Prefix)
     if(${Prefix}_FOUND)
         set(_value "")
@@ -870,14 +876,15 @@ macro(CM_PACKAGE_INCLUDE_OPTIONS Prefix)
             set(_value ${ARGN})
         endif()
 
-        set(${Prefix}_PATH_INCLUDE_MODE "${_value}" CACHE STRING "Include path options.")
-        set_property(CACHE ${Prefix}_PATH_INCLUDE_MODE PROPERTY STRINGS "" "Include Parent" "Parent Only")
+        if(NOT ${Prefix}_PATH_INCLUDE_MODE)
+            cm_user_packagee_include_options(${Prefix} "")
+        endif()
 
         set(_opt ${${Prefix}_PATH_INCLUDE_MODE})
-        get__filename_component(_path "${${Prefix}_INCLUDE_DIR}" PATH)
-        if(_opt STREQUAL "Include Parent")
+        get_filename_component(_path "${${Prefix}_INCLUDE_DIR}" PATH)
+        if(_opt STREQUAL "IncludeParent")
             list(APPEND ${Prefix}_INCLUDE_DIR ${_path})
-        elseif(_opt STREQUAL "Parent Only")
+        elseif(_opt STREQUAL "ParentOnly")
             set(${Prefix}_INCLUDE_DIR ${_path})
         endif()
 
