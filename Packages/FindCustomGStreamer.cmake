@@ -5,10 +5,10 @@
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
 # and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -49,7 +49,7 @@ package_create_search_path_library(GSTREAMER)
 
 # ************************************************************
 # Clear
-set(GSTREAMER_CLEAR_IF_CHANGED 
+set(GSTREAMER_CLEAR_IF_CHANGED
     GSTREAMER_PREFIX_PATH
 )
 foreach(VAR ${GSTREAMER_CLEAR_IF_CHANGED})
@@ -89,4 +89,3 @@ package_validate(GSTREAMER)
 package_add_parent_dir(GSTREAMER ADD_PARENT)
 package_end(GSTREAMER)
 message_footer(GSTREAMER)
-
