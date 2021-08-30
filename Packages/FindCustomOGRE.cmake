@@ -29,7 +29,7 @@ package_create_home_path(OGRE OGRE_ROOT)
 
 # Specifiy version prefix.
 set(OGRE_OPT_VERSION_PREFIX "" CACHE STRING "Append version prefix into the search.")
-set(OGRE_OPT_VERSION "Legacy" CACHE STRING "Select OGRE version.")
+set(OGRE_OPT_VERSION "Legacy" CACHE STRING "Select OGRE version to search.")
 set_property(CACHE OGRE_OPT_VERSION PROPERTY STRINGS "Legacy" "Current" "Next")
 
 
@@ -213,6 +213,7 @@ set(_LocalVars
     OGRE_Volume_PATH_INCLUDE
     OGRE_Volume_LIBRARY_DEBUG
     OGRE_Volume_LIBRARY_RELEASE
+
     OGRE_Plugin_BSPSceneManager_BINARY_DEBUG
     OGRE_Plugin_BSPSceneManager_BINARY_RELEASE
     OGRE_Plugin_BSPSceneManager_PATH_INCLUDE
@@ -223,6 +224,13 @@ set(_LocalVars
     OGRE_Plugin_CgProgramManager_PATH_INCLUDE
     OGRE_Plugin_CgProgramManager_LIBRARY_DEBUG
     OGRE_Plugin_CgProgramManager_LIBRARY_RELEASE
+
+    OGRE_Plugin_DotScene_BINARY_DEBUG
+    OGRE_Plugin_DotScene_BINARY_RELEASE
+    OGRE_Plugin_DotScene_PATH_INCLUDE
+    OGRE_Plugin_DotScene_LIBRARY_DEBUG
+    OGRE_Plugin_DotScene_LIBRARY_RELEASE
+
     OGRE_Plugin_OctreeSceneManager_BINARY_DEBUG
     OGRE_Plugin_OctreeSceneManager_BINARY_RELEASE
     OGRE_Plugin_OctreeSceneManager_PATH_INCLUDE
@@ -243,6 +251,13 @@ set(_LocalVars
     OGRE_Plugin_PCZSceneManager_PATH_INCLUDE
     OGRE_Plugin_PCZSceneManager_LIBRARY_DEBUG
     OGRE_Plugin_PCZSceneManager_LIBRARY_RELEASE
+
+    OGRE_Codec_Assimp_BINARY_DEBUG
+    OGRE_Codec_Assimp_BINARY_RELEASE
+    OGRE_Codec_Assimp_PATH_INCLUDE
+    OGRE_Codec_Assimp_LIBRARY_DEBUG
+    OGRE_Codec_Assimp_LIBRARY_RELEASE
+
     OGRE_Codec_EXR_BINARY_DEBUG
     OGRE_Codec_EXR_BINARY_RELEASE
     OGRE_Codec_EXR_PATH_INCLUDE
@@ -258,6 +273,7 @@ set(_LocalVars
     OGRE_Codec_STBI_PATH_INCLUDE
     OGRE_Codec_STBI_LIBRARY_DEBUG
     OGRE_Codec_STBI_LIBRARY_RELEASE
+
     OGRE_RenderSystem_Direct3D9_BINARY_DEBUG
     OGRE_RenderSystem_Direct3D9_BINARY_RELEASE
     OGRE_RenderSystem_Direct3D9_PATH_INCLUDE
@@ -285,6 +301,11 @@ set(_LocalVars
     OGRE_Bites_PATH_INCLUDE
     OGRE_Bites_LIBRARY_DEBUG
     OGRE_Bites_LIBRARY_RELEASE
+    OGRE_BitesQt_BINARY_DEBUG
+    OGRE_BitesQt_BINARY_RELEASE
+    OGRE_BitesQt_PATH_INCLUDE
+    OGRE_BitesQt_LIBRARY_DEBUG
+    OGRE_BitesQt_LIBRARY_RELEASE
     OGRE_MeshLodGenerator_BINARY_DEBUG
     OGRE_MeshLodGenerator_BINARY_RELEASE
     OGRE_MeshLodGenerator_PATH_INCLUDE
@@ -361,23 +382,16 @@ package_make_library(OGRE_LIBRARY OGRE_LIBRARY_DEBUG OGRE_LIBRARY_RELEASE)
 # ************************************************************
 # Search the components
 # ************************************************************
-if("${OGRE_OPT_VERSION}" STREQUAL "Next")
-    package_find_path(OGRE_HlmsCommon_PATH_INCLUDE "OgreHlmsBufferManager.h" "${OGRE_SEARCH_PATH_INCLUDE}" "Hlms/Common")
-    ogre_find_component_library(HlmsPbs "OgreHlmsPbs" "OgreHlmsPbs.h" "Hlms/Pbs")
-    ogre_find_component_library(HlmsUnlit "OgreHlmsUnlit" "OgreHlmsUnlit.h" "Hlms/Unlit")
-    ogre_find_component_library(MeshLodGenerator "OgreMeshLodGenerator" "OgreMeshLodGenerator.h" "MeshLodGenerator")
-elseif("${OGRE_OPT_VERSION}" STREQUAL "Current")
-    ogre_find_component_library(Bites "OgreBites" "OgreApplicationContext.h" "Bites")
-    ogre_find_component_library(MeshLodGenerator "OgreMeshLodGenerator" "OgreMeshLodGenerator.h" "MeshLodGenerator")
-    ogre_find_component_library(Paging "OgrePaging" "OgrePaging.h" "Paging")
-    ogre_find_component_library(RTShaderSystem "OgreRTShaderSystem" "OgreRTShaderSystem.h" "RTShaderSystem")
-    ogre_find_component_library(Terrain "OgreTerrain" "OgreTerrain.h" "Terrain")
-else()
-    ogre_find_component_library(Paging "OgrePaging" "OgrePaging.h" "Paging")
-    ogre_find_component_library(RTShaderSystem "OgreRTShaderSystem" "OgreRTShaderSystem.h" "RTShaderSystem")
-    ogre_find_component_library(Terrain "OgreTerrain" "OgreTerrain.h" "Terrain")
-    ogre_find_component_library(Volume "OgreVolume" "OgreVolumeSource.h" "Volume")
-endif()
+package_find_path(OGRE_HlmsCommon_PATH_INCLUDE "OgreHlmsBufferManager.h" "${OGRE_SEARCH_PATH_INCLUDE}" "Hlms/Common")
+ogre_find_component_library(HlmsPbs "OgreHlmsPbs" "OgreHlmsPbs.h" "Hlms/Pbs")
+ogre_find_component_library(HlmsUnlit "OgreHlmsUnlit" "OgreHlmsUnlit.h" "Hlms/Unlit")
+
+ogre_find_component_library(Bites "OgreBites" "OgreApplicationContext.h" "Bites")
+ogre_find_component_library(BitesQt "OgreBitesQt" "OgreApplicationContextQt.h" "Bites")
+ogre_find_component_library(MeshLodGenerator "OgreMeshLodGenerator" "OgreMeshLodGenerator.h" "MeshLodGenerator")
+ogre_find_component_library(Paging "OgrePaging" "OgrePaging.h" "Paging")
+ogre_find_component_library(RTShaderSystem "OgreRTShaderSystem" "OgreRTShaderSystem.h" "RTShaderSystem")
+ogre_find_component_library(Terrain "OgreTerrain" "OgreTerrain.h" "Terrain")
 ogre_find_component_library(Overlay "OgreOverlay" "OgreOverlaySystem.h" "Overlay")
 
 
@@ -403,22 +417,14 @@ if(WIN32)
     unset(OGRE_BINARY_NAMES_DEBUG)
     unset(OGRE_BINARY_NAMES_RELEASE)
 
-    if("${OGRE_OPT_VERSION}" STREQUAL "Next")
-        ogre_find_component_library(HlmsPbs "OgreHlmsPbs" "OgreHlmsPbs.h" "Hlms/Pbs")
-        ogre_find_component_library(HlmsUnlit "OgreHlmsUnlit" "OgreHlmsUnlit.h" "Hlms/Unlit")
-        ogre_find_component_library(MeshLodGenerator "OgreMeshLodGenerator" "OgreMeshLodGenerator.h" "MeshLodGenerator")
-    elseif("${OGRE_OPT_VERSION}" STREQUAL "Current")
-        ogre_find_component_binary(Bites "OgreBites")
-        ogre_find_component_binary(MeshLodGenerator "MeshLodGenerator")
-        ogre_find_component_binary(Paging "OgrePaging")
-        ogre_find_component_binary(Terrain "OgreTerrain")
-        ogre_find_component_binary(Volume "OgreVolume")
-    else()
-        ogre_find_component_library(Paging "OgrePaging" "OgrePaging.h" "Paging")
-        ogre_find_component_binary(Paging "OgrePaging")
-        ogre_find_component_binary(Terrain "OgreTerrain")
-        ogre_find_component_binary(Volume "OgreVolume")
-    endif()
+    ogre_find_component_binary(HlmsPbs "OgreHlmsPbs" "OgreHlmsPbs.h" "Hlms/Pbs")
+    ogre_find_component_binary(HlmsUnlit "OgreHlmsUnlit" "OgreHlmsUnlit.h" "Hlms/Unlit")
+
+    ogre_find_component_binary(Bites "OgreBites")
+    ogre_find_component_binary(MeshLodGenerator "MeshLodGenerator")
+    ogre_find_component_binary(Paging "OgrePaging")
+    ogre_find_component_binary(Terrain "OgreTerrain")
+    ogre_find_component_binary(Volume "OgreVolume")
     ogre_find_component_binary(Overlay "OgreOverlay")
 endif()
 
@@ -434,37 +440,23 @@ set(OGRE_SEARCH_PLUGINS
     ${OGRE_SEARCH_PATH_BINARY}
     ${OGRE_SEARCH_PATH_PLUGIN}
 )
-if("${OGRE_OPT_VERSION}" STREQUAL "Next")
-    ogre_find_extra_component_library(Plugin_ParticleFX "Plugin_ParticleFX" "OgreParticleFXPlugin.h" "Plugins/ParticleFX;OGRE/ParticleFX")
-    ogre_find_extra_component_library(RenderSystem_GL3Plus "RenderSystem_GL3Plus" "OgreGL3PlusPlugin.h" "RenderSystems/GL3Plus;OGRE/GL3Plus")
-    ogre_find_extra_component_library(RenderSystem_Metal "RenderSystem_Metal" "OgreMetalPlugin.h" "RenderSystems/Metal")
-    ogre_find_extra_component_library(RenderSystem_NULL "RenderSystem_NULL" "OgreNULLPlugin.h" "RenderSystems/NULL")
-elseif("${OGRE_OPT_VERSION}" STREQUAL "Current")
-    ogre_find_extra_component_library(Plugin_BSPSceneManager "Plugin_BSPSceneManager" "OgreBspSceneManagerPlugin.h" "Plugins/BSPSceneManager;OGRE/BSPSceneManager")
-    ogre_find_extra_component_library(Plugin_CgProgramManager "Plugin_CgProgramManager" "OgreCgProgram.h" "Plugins/CgProgramManager;OGRE/CgProgramManager")
-    ogre_find_extra_component_library(Plugin_OctreeSceneManager "Plugin_OctreeSceneManager" "OgreOctreePlugin.h" "Plugins/OctreeSceneManager;OGRE/OctreeSceneManager")
-    ogre_find_extra_component_library(Plugin_OctreeZone "Plugin_OctreeZone" "OgreOctreeZonePlugin.h" "Plugins/OctreeZone;OGRE/OctreeZone")
-    ogre_find_extra_component_library(Plugin_PCZSceneManager "Plugin_PCZSceneManager" "OgrePCZPlugin.h" "Plugins/PCZSceneManager;OGRE/PCZSceneManager")
-    ogre_find_extra_component_library(Plugin_ParticleFX "Plugin_ParticleFX" "OgreParticleFXPlugin.h" "Plugins/ParticleFX;OGRE/ParticleFX")
-    ogre_find_extra_component_library(Codec_EXR "Codec_EXR" "OgreEXRCodec.h" "Plugins/EXRCodec;OGRE/EXRCodec")
-    ogre_find_extra_component_library(Codec_FreeImage "Codec_FreeImage" "OgreFreeImageCodec.h" "Plugins/FreeImageCodec;OGRE/FreeImageCodec")
-    ogre_find_extra_component_library(Codec_STBI "Codec_STBI" "OgreSTBICodec.h" "Plugins/STBICodec;OGRE/STBICodec")
-    ogre_find_extra_component_library(RenderSystem_GL "RenderSystem_GL" "OgreGLPlugin.h" "RenderSystems/GL;OGRE/GL")
-    ogre_find_extra_component_library(RenderSystem_GL3Plus "RenderSystem_GL3Plus" "OgreGL3PlusPlugin.h" "RenderSystems/GL3Plus;OGRE/GL3Plus")
-    ogre_find_extra_component_library(RenderSystem_Direct3D9 "RenderSystem_Direct3D9" "OgreD3D9Plugin.h" "RenderSystems/Direct3D9")
-    ogre_find_extra_component_library(RenderSystem_Direct3D11 "RenderSystem_Direct3D11" "OgreD3D11Plugin.h" "RenderSystems/Direct3D11")
-else()
-    ogre_find_extra_component_library(Plugin_BSPSceneManager "Plugin_BSPSceneManager" "OgreBspSceneManagerPlugin.h" "Plugins/BSPSceneManager;OGRE/BSPSceneManager")
-    ogre_find_extra_component_library(Plugin_CgProgramManager "Plugin_CgProgramManager" "OgreCgProgram.h" "Plugins/CgProgramManager;OGRE/CgProgramManager")
-    ogre_find_extra_component_library(Plugin_OctreeSceneManager "Plugin_OctreeSceneManager" "OgreOctreePlugin.h" "Plugins/OctreeSceneManager;OGRE/OctreeSceneManager")
-    ogre_find_extra_component_library(Plugin_OctreeZone "Plugin_OctreeZone" "OgreOctreeZonePlugin.h" "Plugins/OctreeZone;OGRE/OctreeZone")
-    ogre_find_extra_component_library(Plugin_PCZSceneManager "Plugin_PCZSceneManager" "OgrePCZPlugin.h" "Plugins/PCZSceneManager;OGRE/PCZSceneManager")
-    ogre_find_extra_component_library(Plugin_ParticleFX "Plugin_ParticleFX" "OgreParticleFXPlugin.h" "Plugins/ParticleFX;OGRE/ParticleFX")
-    ogre_find_extra_component_library(RenderSystem_GL "RenderSystem_GL" "OgreGLPlugin.h" "RenderSystems/GL;OGRE/GL")
-    ogre_find_extra_component_library(RenderSystem_GL3Plus "RenderSystem_GL3Plus" "OgreGL3PlusPlugin.h" "RenderSystems/GL3Plus;OGRE/GL3Plus")
-    ogre_find_extra_component_library(RenderSystem_Direct3D9 "RenderSystem_Direct3D9" "OgreD3D9Plugin.h" "RenderSystems/Direct3D9")
-    ogre_find_extra_component_library(RenderSystem_Direct3D11 "RenderSystem_Direct3D11" "OgreD3D11Plugin.h" "RenderSystems/Direct3D11")
-endif()
+ogre_find_extra_component_library(Plugin_BSPSceneManager "Plugin_BSPSceneManager" "OgreBspSceneManagerPlugin.h" "Plugins/BSPSceneManager;OGRE/BSPSceneManager")
+ogre_find_extra_component_library(Plugin_CgProgramManager "Plugin_CgProgramManager" "OgreCgProgram.h" "Plugins/CgProgramManager;OGRE/CgProgramManager")
+ogre_find_extra_component_library(Plugin_OctreeSceneManager "Plugin_OctreeSceneManager" "OgreOctreePlugin.h" "Plugins/OctreeSceneManager;OGRE/OctreeSceneManager")
+ogre_find_extra_component_library(Plugin_OctreeZone "Plugin_OctreeZone" "OgreOctreeZonePlugin.h" "Plugins/OctreeZone;OGRE/OctreeZone")
+ogre_find_extra_component_library(Plugin_PCZSceneManager "Plugin_PCZSceneManager" "OgrePCZPlugin.h" "Plugins/PCZSceneManager;OGRE/PCZSceneManager")
+ogre_find_extra_component_library(Plugin_ParticleFX "Plugin_ParticleFX" "OgreParticleFXPlugin.h" "Plugins/ParticleFX;OGRE/ParticleFX")
+
+ogre_find_extra_component_library(Codec_EXR "Codec_EXR" "OgreEXRCodec.h" "Plugins/EXRCodec;OGRE/EXRCodec")
+ogre_find_extra_component_library(Codec_FreeImage "Codec_FreeImage" "OgreFreeImageCodec.h" "Plugins/FreeImageCodec;OGRE/FreeImageCodec")
+ogre_find_extra_component_library(Codec_STBI "Codec_STBI" "OgreSTBICodec.h" "Plugins/STBICodec;OGRE/STBICodec")
+
+ogre_find_extra_component_library(RenderSystem_GL "RenderSystem_GL" "OgreGLPlugin.h" "RenderSystems/GL;OGRE/GL")
+ogre_find_extra_component_library(RenderSystem_GL3Plus "RenderSystem_GL3Plus" "OgreGL3PlusPlugin.h" "RenderSystems/GL3Plus;OGRE/GL3Plus")
+ogre_find_extra_component_library(RenderSystem_Direct3D9 "RenderSystem_Direct3D9" "OgreD3D9Plugin.h" "RenderSystems/Direct3D9")
+ogre_find_extra_component_library(RenderSystem_Direct3D11 "RenderSystem_Direct3D11" "OgreD3D11Plugin.h" "RenderSystems/Direct3D11")
+ogre_find_extra_component_library(RenderSystem_Metal "RenderSystem_Metal" "OgreMetalPlugin.h" "RenderSystems/Metal")
+ogre_find_extra_component_library(RenderSystem_NULL "RenderSystem_NULL" "OgreNULLPlugin.h" "RenderSystems/NULL")
 
 
 # Set plugin paths.
