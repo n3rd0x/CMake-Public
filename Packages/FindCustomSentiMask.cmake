@@ -125,9 +125,9 @@ cm_package_find_library(SENTIMASK_LIBRARY_RELEASE "${SENTIMASK_LIBRARY_NAMES}" "
 cm_package_make_library(SENTIMASK_LIBRARY SENTIMASK_LIBRARY_DEBUG SENTIMASK_LIBRARY_RELEASE)
 cm_package_find_path(SENTIMASK_PATH_DATA "FacesDetect45.ndf" "${SENTIMASK_SEARCH_PATH_BINARY}" "Data")
 if(SENTIMASK_PATH_DATA)
-    add_data_target("${SENTIMASK_PATH_DATA}/FacesDetect45.ndf" SubPath "/data")
-    add_data_target("${SENTIMASK_PATH_DATA}/FacesDetectSegmentsFeaturePointsTrack.ndf" SubPath "/data")
-    add_data_target("${SENTIMASK_PATH_DATA}/FacesDetectSegmentsOrientation.ndf" SubPath "/data")
+    cm_add_data_target("${SENTIMASK_PATH_DATA}/FacesDetect45.ndf" SubPath "/data")
+    cm_add_data_target("${SENTIMASK_PATH_DATA}/FacesDetectSegmentsFeaturePointsTrack.ndf" SubPath "/data")
+    cm_add_data_target("${SENTIMASK_PATH_DATA}/FacesDetectSegmentsOrientation.ndf" SubPath "/data")
 endif()
 
 

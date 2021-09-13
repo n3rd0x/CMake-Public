@@ -347,7 +347,7 @@ cm_message_footer(QT)
 # ************************************************************
 macro(QT_COPY_CONFIGURATION_FILE)
     if(QT_FOUND)
-        add_data_target(
+        cm_add_data_target(
             "${PROJECT_PATH_CMAKE_TEMPLATE}/qt_in.conf"
             Name "qt.conf"
             GENERATE
