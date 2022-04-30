@@ -60,7 +60,9 @@ set(QT_AVAILABLE_COMPONENTS
     Qt5OpenGLExtensions_DIR
     Qt5PrintSupport_DIR
     Qt5Qml_DIR
+    Qt5QmlModels_DIR
     Qt5Quick_DIR
+    Qt5QuickWidgets_DIR
     Qt5QuickTest_DIR
     Qt5Script_DIR
     Qt5ScriptTools_DIR
