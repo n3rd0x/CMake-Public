@@ -877,7 +877,7 @@ macro(CM_PACKAGE_INCLUDE_OPTIONS Prefix)
         endif()
 
         if(NOT ${Prefix}_PATH_INCLUDE_MODE)
-            cm_user_packagee_include_options(${Prefix} "")
+            cm_user_package_include_options(${Prefix} "")
         endif()
 
         set(_opt ${${Prefix}_PATH_INCLUDE_MODE})
