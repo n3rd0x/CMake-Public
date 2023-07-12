@@ -247,6 +247,28 @@ endmacro()
 
 
 
+# ************************************************************
+# Initialise Project SDK
+# ************************************************************
+macro(CM_INITIALISE_PROJECT_SDK)
+    if(NOT DEFINED PROJECT_PATH_SDK_HOME)
+        # Find for defined environment variables.
+        cm_message_verbose(STATUS "SDK doesn't exists. Create the SDK path.")
+        cm_package_get_environment_path(PROJECT_SDK SDK_ROOT)
+        if(PROJECT_SDK_ENV_SDK_ROOT)
+            cm_message_verbose(STATUS "Set SDK home to ${PROJECT_SDK_ENV_SDK_ROOT}.")
+            set(PROJECT_PATH_SDK_HOME "${PROJECT_SDK_ENV_SDK_ROOT}" CACHE PATH "Path to the SDK directory.")
+        else()
+            set(PROJECT_PATH_SDK_HOME "" CACHE PATH "Path to the SDK directory.")
+        endif()
+
+        # Clean up.
+        unset(PROJECT_SDK_ENV_SDK_ROOT)
+    endif()
+endmacro()
+
+
+
 
 # ************************************************************
 # Generate group files, create a common variable for all grouped files.
